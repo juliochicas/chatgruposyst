@@ -1,14 +1,19 @@
+// Archivo: backend/src/models/Plan.ts
+// Sistema de planes tipo Zendesk/HubSpot pero más simple
+
 import {
   Table,
   Column,
+  Model,
+  DataType,
+  HasMany,
   CreatedAt,
   UpdatedAt,
-  Model,
   PrimaryKey,
   AutoIncrement,
-  AllowNull,
-  Unique
+  Default
 } from "sequelize-typescript";
+import Company from "./Company";
 
 @Table
 class Plan extends Model<Plan> {
@@ -17,49 +22,67 @@ class Plan extends Model<Plan> {
   @Column
   id: number;
 
-  @AllowNull(false)
-  @Unique
   @Column
-  name: string;
+  name: string; // "Starter", "Professional", "Enterprise"
+
+  @Column(DataType.DECIMAL(10, 2))
+  monthlyPrice: number;
+
+  @Column(DataType.DECIMAL(10, 2))
+  yearlyPrice: number;
+
+  // Límites del plan
+  @Column(DataType.JSON)
+  limits: {
+    users: number;
+    channels: number;
+    contacts: number;
+    messagesPerMonth: number;
+    aiCredits: number;
+    storage: number; // GB
+    automations: number;
+    integrations: string[]; // ["whatsapp", "facebook", "instagram", "shopify", "ai"]
+  };
+
+  // Características del plan
+  @Column(DataType.JSON)
+  features: {
+    // Canales
+    whatsapp: boolean;
+    facebook: boolean;
+    instagram: boolean;
+    tiktok: boolean;
+    
+    // Funcionalidades
+    aiAssistant: boolean;
+    aiAutomation: boolean;
+    shopifyIntegration: boolean;
+    stripeIntegration: boolean;
+    advancedAnalytics: boolean;
+    customReports: boolean;
+    apiAccess: boolean;
+    whitelabel: boolean;
+    
+    // Soporte
+    supportLevel: "community" | "email" | "priority" | "dedicated";
+    sla: number; // horas de respuesta
+  };
+
+  @Default(true)
+  @Column
+  isActive: boolean;
 
   @Column
-  users: number;
+  stripeProductId: string;
 
-  @Column
-  connections: number;
-
-  @Column
-  queues: number;
-
-  @Column
-  value: number;
+  @HasMany(() => Company)
+  companies: Company[];
 
   @CreatedAt
   createdAt: Date;
 
   @UpdatedAt
   updatedAt: Date;
-
-  @Column
-  useSchedules: boolean;   
-
-  @Column
-  useCampaigns: boolean; 
-  
-  @Column
-  useInternalChat: boolean;   
-  
-  @Column
-  useExternalApi: boolean;   
-
-  @Column
-  useKanban: boolean;
-
-  @Column
-  useOpenAi: boolean;
-
-  @Column
-  useIntegrations: boolean;
 }
 
 export default Plan;
