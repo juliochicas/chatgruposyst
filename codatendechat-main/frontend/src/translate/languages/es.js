@@ -1574,6 +1574,10 @@ const messages = {
         ERR_FETCH_WAPP_MSG: "Error al buscar el mensaje en WhatsApp, tal vez sea muy antiguo.",
         ERR_QUEUE_COLOR_ALREADY_EXISTS: "Este color ya está en uso, elija otro.",
         ERR_WAPP_GREETING_REQUIRED: "El mensaje de saludo es obligatorio cuando hay más de una cola.",
+        ERR_CHANNEL_NAME_ALREADY_EXISTS: "Ya existe un canal con ese nombre.",
+        ERR_CHANNEL_NOT_FOUND: "Canal no encontrado.",
+        ERR_CHANNEL_IN_USE: "No se puede eliminar un canal con tickets vinculados.",
+        ERR_CHANNEL_ADAPTER_NOT_IMPLEMENTED: "El canal no tiene adaptador configurado.",
       },
     }
   }

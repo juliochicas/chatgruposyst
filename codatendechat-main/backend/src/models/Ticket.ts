@@ -27,6 +27,7 @@ import Tag from "./Tag";
 import TicketTag from "./TicketTag";
 import QueueIntegrations from "./QueueIntegrations";
 import Prompt from "./Prompt";
+import Channel from "./Channel";
 
 @Table
 class Ticket extends Model<Ticket> {
@@ -74,6 +75,19 @@ class Ticket extends Model<Ticket> {
 
   @BelongsTo(() => Whatsapp)
   whatsapp: Whatsapp;
+
+  @ForeignKey(() => Channel)
+  @Column
+  channelId: number;
+
+  @BelongsTo(() => Channel)
+  channel: Channel;
+
+  @Column
+  channelType: string;
+
+  @Column
+  channelExternalId: string;
 
   @ForeignKey(() => Queue)
   @Column

@@ -1609,6 +1609,10 @@ const messages = {
 				ERR_FETCH_WAPP_MSG: "Error fetching WhatsApp message, it might be too old.",
 				ERR_QUEUE_COLOR_ALREADY_EXISTS: "This color is already in use, choose another.",
 				ERR_WAPP_GREETING_REQUIRED: "Greeting message is required when there is more than one queue.",
+				ERR_CHANNEL_NAME_ALREADY_EXISTS: "A channel with this name already exists.",
+				ERR_CHANNEL_NOT_FOUND: "Channel not found.",
+				ERR_CHANNEL_IN_USE: "Cannot remove a channel with linked tickets.",
+				ERR_CHANNEL_ADAPTER_NOT_IMPLEMENTED: "Channel has no adapter configured.",
 			},
 		}
 	},

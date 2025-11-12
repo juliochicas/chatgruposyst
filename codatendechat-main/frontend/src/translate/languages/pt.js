@@ -1650,6 +1650,13 @@ const messages = {
             "Esta cor já está em uso, escolha outra.",
         ERR_WAPP_GREETING_REQUIRED:
             "A mensagem de saudação é obrigatório quando há mais de uma fila.",
+        ERR_CHANNEL_NAME_ALREADY_EXISTS:
+            "Já existe um canal com este nome.",
+        ERR_CHANNEL_NOT_FOUND: "Canal não encontrado.",
+        ERR_CHANNEL_IN_USE:
+            "Não é possível remover canais com tickets vinculados.",
+        ERR_CHANNEL_ADAPTER_NOT_IMPLEMENTED:
+            "Canal sem adaptador configurado.",
       },
     },
   },
