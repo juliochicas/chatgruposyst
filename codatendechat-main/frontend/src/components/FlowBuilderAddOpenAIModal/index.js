@@ -85,15 +85,15 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
   const [activeModal, setActiveModal] = useState(false);
   const [integration, setIntegration] = useState();
   const [labels, setLabels] = useState({
-    title: "Adicionar OpenAI ao fluxo",
-    btn: "Adicionar",
+    title: "Agregar OpenAI al flujo",
+    btn: "Agregar",
   });
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar OpenAI do fluxo",
-        btn: "Salvar",
+        title: "Editar OpenAI del flujo",
+        btn: "Guardar",
       });
       console.log("FlowTybebotEdit", data);
       setIntegration({
@@ -102,8 +102,8 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Cria OpenAI no fluxo",
-        btn: "Salvar",
+        title: "Crear OpenAI en el flujo",
+        btn: "Guardar",
       });
       setIntegration(initialState);
       setActiveModal(true);
@@ -152,7 +152,7 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
         scroll="paper"
       >
         <DialogTitle id="form-dialog-title">
-          {open === "create" ? `Adicionar OpenAI ao fluxo` : `Editar OpenAI`}
+          {open === "create" ? `Agregar OpenAI al flujo` : `Editar OpenAI`}
         </DialogTitle>
         <Formik
           initialValues={integration}
@@ -390,7 +390,7 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
                   className={classes.btnWrapper}
                   disabled={isSubmitting}
                 >
-                  {open === "create" ? `Adicionar` : "Editar"}
+                  {open === "create" ? `Agregar` : "Editar"}
                 </Button>
               </DialogActions>
             </Form>

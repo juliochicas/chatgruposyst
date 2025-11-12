@@ -77,13 +77,13 @@ const selectFieldStyles = {
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, "Muito curto!")
-    .max(50, "Muito longo!")
-    .required("Digite um nome!"),
+    .min(2, "¡Muy corto!")
+    .max(50, "¡Muy largo!")
+    .required("¡Ingresa un nombre!"),
   text: Yup.string()
-    .min(2, "Muito curto!")
-    .max(50, "Muito longo!")
-    .required("Digite uma mensagem!")
+    .min(2, "¡Muy corto!")
+    .max(50, "¡Muy largo!")
+    .required("¡Ingresa un mensaje!")
 });
 
 const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
@@ -99,23 +99,23 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
   const [arrayOption, setArrayOption] = useState([]);
 
   const [labels, setLabels] = useState({
-    title: "Adicionar menu ao fluxo",
-    btn: "Adicionar"
+    title: "Agregar menú al flujo",
+    btn: "Agregar"
   });
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar menu",
-        btn: "Salvar"
+        title: "Editar menú",
+        btn: "Guardar"
       });
       setTextDig(data.data.message);
       setArrayOption(data.data.arrayOption);
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar menu ao fluxo",
-        btn: "Adicionar"
+        title: "Agregar menú al flujo",
+        btn: "Agregar"
       });
       setTextDig();
       setArrayOption([]);
@@ -169,7 +169,7 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
         <Stack>
           <Stack dividers style={{ gap: "8px", padding: "16px" }}>
             <TextField
-              label={"Mensagem de explicação do menu"}
+              label={"Mensaje de explicación del menú"}
               rows={4}
               name="text"
               multiline
@@ -180,7 +180,7 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
               style={{ width: "100%" }}
             />
             <Stack direction={"row"} justifyContent={"space-between"}>
-              <Typography>Adicionar Opção</Typography>
+              <Typography>Agregar opción</Typography>
               <Button
                 onClick={() =>
                   setArrayOption(old => [
@@ -196,10 +196,10 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
             </Stack>
             {arrayOption.map((item, index) => (
               <Stack width={"100%"} key={item.number}>
-                <Typography>Digite {item.number}</Typography>
+                <Typography>Ingrese {item.number}</Typography>
                 <Stack direction={"row"} width={"100%"} style={{ gap: "8px" }}>
                   <TextField
-                    placeholder={"Digite opção"}
+                    placeholder={"Ingresa la opción"}
                     variant="outlined"
                     defaultValue={item.value}
                     style={{ width: "100%" }}

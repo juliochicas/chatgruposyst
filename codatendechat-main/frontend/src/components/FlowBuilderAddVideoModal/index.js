@@ -67,8 +67,8 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
   const [preview, setPreview] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar video ao fluxo",
-    btn: "Adicionar"
+    title: "Agregar video al flujo",
+    btn: "Agregar"
   });
 
   const [medias, setMedias] = useState([]);
@@ -77,15 +77,15 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
     if (open === "edit") {
       setLabels({
         title: "Editar video",
-        btn: "Salvar"
+        btn: "Guardar"
       });
       setPreview(process.env.REACT_APP_BACKEND_URL + '/public/' + data.data.url)
       setRecord(data.data.record)
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar video ao fluxo",
-        btn: "Adicionar"
+        title: "Agregar video al flujo",
+        btn: "Agregar"
       });
       setActiveModal(true);
     } else {
@@ -150,7 +150,7 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
           onSave({
             url: res.data.name,
           });
-          toast.success("Audio adicionada com sucesso!");
+          toast.success("¡Video agregado con éxito!");
           setLoading(false);
           setMedias([]);
           setPreview();
@@ -165,7 +165,7 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
     }
 
     if(e.target.files[0].size > 20000000){
-      toast.error("Arquivo é muito grande! 20MB máximo")
+      toast.error("¡Archivo demasiado grande! Máximo 20MB")
       return
     }
 
@@ -190,7 +190,7 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
                 <Stack direction={'row'} justifyContent={'center'}>
                 <video controls="controls" width="552px">
                   <source src={preview} type="video/mp4" />
-                  seu navegador não suporta HTML5
+                  tu navegador no soporta HTML5
                 </video>
                 </Stack>
               )}

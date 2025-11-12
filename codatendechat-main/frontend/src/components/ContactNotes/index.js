@@ -80,7 +80,7 @@ export function ContactNotes ({ ticket }) {
             })
             await loadNotes()
             setNewNote({ note: '' })
-            toast.success('Observação adicionada com sucesso!')
+            toast.success(i18n.t("contactNotes.addSuccess"))
         } catch (e) {
             toast.error(e)
         }
@@ -98,7 +98,7 @@ export function ContactNotes ({ ticket }) {
             await deleteNote(selectedNote.id)
             await loadNotes()
             setSelectedNote({})
-            toast.success('Observação excluída com sucesso!')
+            toast.success(i18n.t("contactNotes.deleteSuccess"))
         } catch (e) {
             toast.error(e)
         }
@@ -129,12 +129,12 @@ export function ContactNotes ({ ticket }) {
     return (
         <>
             <ConfirmationModal
-                title="Excluir Registro"
+                title={i18n.t("contactNotes.modalTitle")}
                 open={showOnDeleteDialog}
                 onClose={setShowOnDeleteDialog}
                 onConfirm={handleDelete}
             >
-                Deseja realmente excluir este registro?
+                {i18n.t("contactNotes.modalMessage")}
             </ConfirmationModal>
             <Formik
                 initialValues={newNote}
@@ -185,12 +185,12 @@ export function ContactNotes ({ ticket }) {
                                             variant="outlined"
                                             fullWidth
                                         >
-                                            Cancelar
+                                            {i18n.t("contactNotes.buttons.close")}
                                         </Button>
                                     </Grid>
                                     <Grid xs={6} item>
                                         <ButtonWithSpinner loading={loading} color="primary" type="submit" variant="contained" autoFocus fullWidth>
-                                            Salvar
+                                            {i18n.t("contactNotes.buttons.save")}
                                         </ButtonWithSpinner>
                                     </Grid>
                                 </Grid>

@@ -134,6 +134,7 @@ const messages = {
 					status: "Status (Current)",
 				},
 				charts: {
+					createdTickets: "Tickets created: {{count}}",
 					user: {
 						label: "Conversations Chart",
 						title: "Total Conversations by Users",
@@ -222,6 +223,13 @@ const messages = {
 					whatsapp: "WhatsApp",
 					charges: "Billing: Monthly",
 					total: "Total",
+					paymentInfo: "Payment information",
+					labels: {
+						email: "Email",
+						name: "Name",
+						address: "Address",
+						total: "Total"
+					}
 				},
 				form: {
 					firstName: {
@@ -1500,6 +1508,16 @@ const messages = {
 					edit: "Edit contact",
 				},
 				extraInfo: "Other information",
+			},
+			contactNotes: {
+				modalTitle: "Delete record",
+				modalMessage: "Do you really want to delete this record?",
+				addSuccess: "Note added successfully!",
+				deleteSuccess: "Note deleted successfully!",
+				buttons: {
+					save: "Save",
+					close: "Close"
+				}
 			},
 			fileModal: {
 				title: {

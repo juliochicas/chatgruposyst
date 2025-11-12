@@ -75,13 +75,13 @@ const selectFieldStyles = {
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, "Muito curto!")
-    .max(50, "Muito longo!")
-    .required("Digite um nome!"),
+    .min(2, "¡Muy corto!")
+    .max(50, "¡Muy largo!")
+    .required("¡Ingresa un nombre!"),
   text: Yup.string()
-    .min(2, "Muito curto!")
-    .max(50, "Muito longo!")
-    .required("Digite uma mensagem!")
+    .min(2, "¡Muy corto!")
+    .max(50, "¡Muy largo!")
+    .required("¡Ingresa un mensaje!")
 });
 
 const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
@@ -97,15 +97,15 @@ const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
   const [valueCondition, setValueCondition] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar condição ao fluxo",
-    btn: "Adicionar"
+    title: "Agregar condición al flujo",
+    btn: "Agregar"
   });
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar condição",
-        btn: "Salvar"
+        title: "Editar condición",
+        btn: "Guardar"
       });
       setTextDig(data.data.key);
       setRule(data.data.condition);
@@ -113,8 +113,8 @@ const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar condição ao fluxo",
-        btn: "Adicionar"
+        title: "Agregar condición al flujo",
+        btn: "Agregar"
       });
       setTextDig();
       setRule();
@@ -169,7 +169,7 @@ const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
             style={{ height: "250px", gap: "8px", padding: "16px" }}
           >
             <TextField
-              label={"Campo da condição (Digiter apenas 1 chave)"}
+              label={"Campo de la condición (ingresa solo una clave)"}
               rows={7}
               name="text"
               variant="outlined"
@@ -180,13 +180,13 @@ const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
             />
             <FormControl sx={{ width: "95%" }} size="medium">
               <InputLabel sx={selectFieldStyles} id="demo-simple-select-label">
-                Regra de validação
+                Regla de validación
               </InputLabel>
               <Select
                 labelId="demo-simple-select-label"
                 id="demo-simple-select"
                 value={rule}
-                label="Regra de validação"
+                label="Regla de validación"
                 onChange={e => setRule(e.target.value)}
                 variant="outlined"
                 color="primary"
@@ -200,7 +200,7 @@ const FlowBuilderConditionModal = ({ open, onSave, onUpdate, data, close }) => {
               </Select>
             </FormControl>
             <TextField
-              label={"Valor da condição a ser analisada"}
+              label={"Valor de la condición a analizar"}
               rows={7}
               name="text"
               variant="outlined"

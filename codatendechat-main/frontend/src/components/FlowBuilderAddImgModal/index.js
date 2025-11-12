@@ -68,8 +68,8 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
   const [oldImage, setOldImage] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar imagem ao fluxo",
-    btn: "Adicionar"
+    title: "Agregar imagen al flujo",
+    btn: "Agregar"
   });
 
   const [medias, setMedias] = useState([]);
@@ -77,16 +77,16 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar imagem",
-        btn: "Salvar"
+        title: "Editar imagen",
+        btn: "Guardar"
       });
       setOldImage(data.data.url)
       setPreview(process.env.REACT_APP_BACKEND_URL + '/public/' + data.data.url)
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar imagem ao fluxo",
-        btn: "Adicionar"
+        title: "Agregar imagen al flujo",
+        btn: "Agregar"
       });
       setActiveModal(true);
     } else {
@@ -151,7 +151,7 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
           onSave({
             url: res.data.name
           });
-          toast.success("Imagem adicionada com sucesso!");
+          toast.success("¡Imagen agregada con éxito!");
           setLoading(false);
           setMedias([]);
           setPreview();
@@ -166,7 +166,7 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
     }
 
     if(e.target.files[0].size > 2000000){
-      toast.error("Arquivo é muito grande! 2MB máximo")
+      toast.error("¡Archivo demasiado grande! Máximo 2MB")
       return
     }
 
@@ -190,7 +190,7 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
               {preview && <img src={preview} style={{ width: "552px" }} />}
               {!loading && open !== "edit" && (
                 <Button variant="contained" component="label">
-                  Enviar imagem
+                  Enviar imagen
                   <input
                     type="file"
                     accept="image/png, image/jpg, image/jpeg"

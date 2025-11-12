@@ -107,7 +107,7 @@ const FlowBuilderTicketModal = ({
 
     const handleSaveContact = () => {
         if (!selectedQueue) {
-            return toast.error('Adicione uma fila')
+            return toast.error('Agrega una fila')
         }
         if (open === 'edit') {
             const queue = queues.find(item => item.id === selectedQueue)
@@ -129,7 +129,7 @@ const FlowBuilderTicketModal = ({
         <div className={classes.root}>
             <Dialog open={activeModal} onClose={handleClose} fullWidth="md" scroll="paper">
                 <DialogTitle id="form-dialog-title">
-                    {open === 'create' ? `Adicionar um intervalo ao fluxo` : `Editar intervalo`}
+                    {open === 'create' ? `Agregar ticket al flujo` : `Editar ticket`}
                 </DialogTitle>
                 <Stack>
                     <DialogContent dividers>
@@ -153,7 +153,7 @@ const FlowBuilderTicketModal = ({
                             }}
                             renderValue={() => {
                                 if (selectedQueue === "") {
-                                    return "Selecione uma Conexão"
+                                    return "Selecciona una conexión"
                                 }
                                 const queue = queues.find(w => w.id === selectedQueue)
                                 return queue.name
@@ -182,7 +182,7 @@ const FlowBuilderTicketModal = ({
                             className={classes.btnWrapper}
                             onClick={handleSaveContact}
                         >
-                            {open === 'create' ? `Adicionar` : 'Editar'}
+                            {open === 'create' ? `Agregar` : 'Editar'}
                         </Button>
                     </DialogActions>
                 </Stack>

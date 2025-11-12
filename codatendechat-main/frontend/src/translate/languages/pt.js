@@ -135,6 +135,7 @@ const messages = {
           status: "Status (Atual)",
         },
         charts: {
+          createdTickets: "Atendimentos criados: {{count}}",
           user: {
             label: "Gráfico de Conversas",
             title: "Total de Conversas por Usuários",
@@ -225,6 +226,13 @@ const messages = {
           whatsapp: "Whatsapp",
           charges: "Cobrança: Mensal",
           total: "Total",
+          paymentInfo: "Informações de pagamento",
+          labels: {
+            email: "E-mail",
+            name: "Nome",
+            address: "Endereço",
+            total: "Total"
+          }
         },
         form: {
           firstName: {
@@ -1528,6 +1536,16 @@ const messages = {
           edit: "Editar contato",
         },
         extraInfo: "Outras informações",
+      },
+      contactNotes: {
+        modalTitle: "Excluir registro",
+        modalMessage: "Deseja realmente excluir este registro?",
+        addSuccess: "Observação adicionada com sucesso!",
+        deleteSuccess: "Observação excluída com sucesso!",
+        buttons: {
+          save: "Salvar",
+          close: "Fechar"
+        }
       },
       fileModal: {
         title: {
