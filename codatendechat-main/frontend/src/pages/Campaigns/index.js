@@ -218,6 +218,16 @@ const Campaigns = () => {
     }
   };
 
+  const formatProvider = (val) => {
+    switch (val) {
+      case "ultramsg":
+        return i18n.t("campaigns.provider.ultramsg");
+      case "whatsapp":
+      default:
+        return i18n.t("campaigns.provider.whatsapp");
+    }
+  };
+
   const cancelCampaign = async (campaign) => {
     try {
       await api.post(`/campaigns/${campaign.id}/cancel`);
@@ -323,6 +333,9 @@ const Campaigns = () => {
                 {i18n.t("campaigns.table.whatsapp")}
               </TableCell>
               <TableCell align="center">
+                {i18n.t("campaigns.table.provider")}
+              </TableCell>
+              <TableCell align="center">
                 {i18n.t("campaigns.table.scheduledAt")}
               </TableCell>
               <TableCell align="center">
@@ -347,9 +360,14 @@ const Campaigns = () => {
                       : i18n.t("campaigns.table.notDefined")}
                   </TableCell>
                   <TableCell align="center">
-                    {campaign.whatsappId
-                      ? campaign.whatsapp.name
-                      : i18n.t("campaigns.table.notDefined2")}
+                    {campaign.provider === "whatsapp"
+                      ? campaign.whatsappId
+                        ? campaign.whatsapp.name
+                        : i18n.t("campaigns.table.notDefined2")
+                      : formatProvider(campaign.provider)}
+                  </TableCell>
+                  <TableCell align="center">
+                    {formatProvider(campaign.provider)}
                   </TableCell>
                   <TableCell align="center">
                     {campaign.scheduledAt

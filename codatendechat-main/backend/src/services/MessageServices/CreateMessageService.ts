@@ -14,6 +14,10 @@ export interface MessageData {
   mediaUrl?: string;
   ack?: number;
   queueId?: number;
+  channelId?: number;
+  channelType?: string;
+  channelExternalId?: string;
+  metadata?: Record<string, unknown>;
 }
 interface Request {
   messageData: MessageData;

@@ -50,7 +50,7 @@ const ListService = async ({
     order: [["name", "ASC"]],
     include: [
       { model: ContactList },
-      { model: Whatsapp, attributes: ["id", "name"] }
+      { model: Whatsapp, attributes: ["id", "name"], required: false }
     ]
   });
 

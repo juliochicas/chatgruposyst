@@ -3,6 +3,7 @@ import Channel from "../../models/Channel";
 import ShowChannelService from "../../services/ChannelService/ShowChannelService";
 import { ChannelAdapter } from "./ChannelAdapter";
 import WhatsappChannelAdapter from "./WhatsappChannelAdapter";
+import MetaChannelAdapter from "./MetaChannelAdapter";
 
 class ChannelManager {
   private static adapters = new Map<number, ChannelAdapter>();
@@ -35,6 +36,14 @@ class ChannelManager {
 
     if (type === "whatsapp") {
       return new WhatsappChannelAdapter(channel);
+    }
+
+    if (type && type.startsWith("instagram")) {
+      return new MetaChannelAdapter(channel);
+    }
+
+    if (type && type.startsWith("facebook")) {
+      return new MetaChannelAdapter(channel);
     }
 
     throw new AppError("ERR_CHANNEL_ADAPTER_NOT_IMPLEMENTED");

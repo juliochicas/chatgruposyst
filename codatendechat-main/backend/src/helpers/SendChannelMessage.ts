@@ -9,6 +9,7 @@ export type ChannelMessageData = {
   body: string;
   mediaPath?: string;
   fileName?: string;
+  metadata?: Record<string, unknown>;
 };
 
 const SendChannelMessage = async (

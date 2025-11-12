@@ -6,6 +6,7 @@ export interface SendMessagePayload {
   body: string;
   mediaPath?: string;
   fileName?: string;
+  metadata?: Record<string, unknown>;
 }
 
 export interface ChannelAdapter {

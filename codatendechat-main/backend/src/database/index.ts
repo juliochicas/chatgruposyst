@@ -94,7 +94,7 @@ const models = [
   FlowAudioModel,
   FlowCampaignModel,
   FlowImgModel,
-  Channel
+  Channel,
 ];
 
 sequelize.addModels(models);

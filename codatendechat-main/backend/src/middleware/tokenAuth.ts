@@ -19,10 +19,7 @@ const tokenAuth = async (req: Request, res: Response, next: NextFunction): Promi
       throw new Error();
     }
   } catch (err) {
-    throw new AppError(
-      "Acesso não permitido",
-      401
-    );
+    throw new AppError("Acceso no permitido", 401);
   }
 
   return next();

@@ -4,6 +4,7 @@ import CreateChannelService from "../services/ChannelService/CreateChannelServic
 import ListChannelService from "../services/ChannelService/ListChannelService";
 import UpdateChannelService from "../services/ChannelService/UpdateChannelService";
 import DeleteChannelService from "../services/ChannelService/DeleteChannelService";
+import ChannelManager from "../libs/channels/ChannelManager";
 
 export const index = async (req: Request, res: Response): Promise<Response> => {
   const { companyId } = req.user;
@@ -77,6 +78,8 @@ export const update = async (req: Request, res: Response): Promise<Response> => 
     metadata
   });
 
+  ChannelManager.clear(Number(channelId));
+
   return res.json(channel);
 };
 
@@ -90,6 +93,8 @@ export const remove = async (req: Request, res: Response): Promise<Response> => 
     companyId,
     force: force === "true"
   });
+
+  ChannelManager.clear(Number(channelId));
 
   return res.status(204).send();
 };

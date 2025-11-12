@@ -34,7 +34,7 @@ const UpdateFlowBuilderService = async ({
 
     return 'ok';
   } catch (error) {
-    console.error("Erro ao inserir o usuário:", error);
+    console.error("Error al registrar el usuario:", error);
 
     return error
   }

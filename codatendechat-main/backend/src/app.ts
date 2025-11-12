@@ -12,7 +12,7 @@ import AppError from "./errors/AppError";
 import routes from "./routes";
 import { logger } from "./utils/logger";
 import { messageQueue, sendScheduledMessages } from "./queues";
-import bodyParser from 'body-parser';
+import bodyParser from "body-parser";
 
 Sentry.init({ dsn: process.env.SENTRY_DSN });
 
@@ -23,8 +23,25 @@ app.set("queues", {
   sendScheduledMessages
 });
 
-const bodyparser = require('body-parser');
-app.use(bodyParser.json({ limit: '10mb' }));
+const rawBodySaver = (req: any, res, buf: Buffer) => {
+  if (buf && buf.length) {
+    req.rawBody = Buffer.from(buf);
+  }
+};
+
+app.use(
+  bodyParser.json({
+    limit: "10mb",
+    verify: rawBodySaver
+  })
+);
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+    limit: "10mb",
+    verify: rawBodySaver
+  })
+);
 
 app.use(
   cors({
@@ -33,7 +50,6 @@ app.use(
   })
 );
 app.use(cookieParser());
-app.use(express.json());
 app.use(Sentry.Handlers.requestHandler());
 app.use("/public", express.static(uploadConfig.directory));
 app.use(routes);

@@ -120,6 +120,11 @@ export default function Options(props) {
   const [sendGreetingMessageOneQueues, setSendGreetingMessageOneQueues] = useState("disabled");
   const [loadingSendGreetingMessageOneQueues, setLoadingSendGreetingMessageOneQueues] = useState(false);
 
+  const [ultraMsgInstanceId, setUltraMsgInstanceId] = useState("");
+  const [ultraMsgToken, setUltraMsgToken] = useState("");
+  const [loadingUltraMsgInstance, setLoadingUltraMsgInstance] = useState(false);
+  const [loadingUltraMsgToken, setLoadingUltraMsgToken] = useState(false);
+
   const { update } = useSettings();
 
   useEffect(() => {
@@ -193,6 +198,24 @@ export default function Options(props) {
       const asaasType = settings.find((s) => s.key === "asaas");
       if (asaasType) {
         setAsaasType(asaasType.value);
+      }
+
+      const instanceSetting = settings.find(
+        (s) => s.key === "ULTRAMSG_INSTANCE_ID"
+      );
+      if (instanceSetting) {
+        setUltraMsgInstanceId(instanceSetting.value);
+      } else {
+        setUltraMsgInstanceId("");
+      }
+
+      const tokenSetting = settings.find(
+        (s) => s.key === "ULTRAMSG_TOKEN"
+      );
+      if (tokenSetting) {
+        setUltraMsgToken(tokenSetting.value);
+      } else {
+        setUltraMsgToken("");
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -370,6 +393,28 @@ export default function Options(props) {
     });
     toast.success(i18n.t("settings.options.toasts.success"));
     setLoadingAsaasType(false);
+  }
+
+  async function handleUltraMsgInstance(value) {
+    setUltraMsgInstanceId(value);
+    setLoadingUltraMsgInstance(true);
+    await update({
+      key: "ULTRAMSG_INSTANCE_ID",
+      value,
+    });
+    toast.success(i18n.t("settings.options.toasts.success"));
+    setLoadingUltraMsgInstance(false);
+  }
+
+  async function handleUltraMsgToken(value) {
+    setUltraMsgToken(value);
+    setLoadingUltraMsgToken(true);
+    await update({
+      key: "ULTRAMSG_TOKEN",
+      value,
+    });
+    toast.success(i18n.t("settings.options.toasts.success"));
+    setLoadingUltraMsgToken(false);
   }
   return (
     <>
@@ -718,6 +763,55 @@ export default function Options(props) {
             </TextField>
             <FormHelperText>
               {loadingAsaasType && i18n.t("settings.options.updating")}
+            </FormHelperText>
+          </FormControl>
+        </Grid>
+      </Grid>
+      {/*-----------------ULTRAMSG-----------------*/}
+      <Grid spacing={3} container style={{ marginBottom: 10 }}>
+        <Tabs
+          indicatorColor="primary"
+          textColor="primary"
+          scrollButtons="on"
+          variant="scrollable"
+          className={classes.tab}
+        >
+          <Tab label={i18n.t("settings.options.tabs.ultraMsg")} />
+        </Tabs>
+        <Grid xs={12} sm={12} md={6} item>
+          <FormControl className={classes.selectContainer}>
+            <TextField
+              id="ultraMsgInstanceId"
+              name="ultraMsgInstanceId"
+              margin="dense"
+              label={i18n.t("settings.options.fields.ultraMsg.instanceId")}
+              variant="outlined"
+              value={ultraMsgInstanceId}
+              onChange={(e) => setUltraMsgInstanceId(e.target.value)}
+              onBlur={(e) => handleUltraMsgInstance(e.target.value)}
+            />
+            <FormHelperText>
+              {loadingUltraMsgInstance && i18n.t("settings.options.updating")}
+            </FormHelperText>
+          </FormControl>
+        </Grid>
+        <Grid xs={12} sm={12} md={6} item>
+          <FormControl className={classes.selectContainer}>
+            <TextField
+              id="ultraMsgToken"
+              name="ultraMsgToken"
+              margin="dense"
+              label={i18n.t("settings.options.fields.ultraMsg.token")}
+              variant="outlined"
+              value={ultraMsgToken}
+              onChange={(e) => setUltraMsgToken(e.target.value)}
+              onBlur={(e) => handleUltraMsgToken(e.target.value)}
+            />
+            <FormHelperText>
+              {loadingUltraMsgToken && i18n.t("settings.options.updating")}
+            </FormHelperText>
+            <FormHelperText>
+              {i18n.t("settings.options.fields.ultraMsg.helper")}
             </FormHelperText>
           </FormControl>
         </Grid>

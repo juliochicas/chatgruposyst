@@ -862,6 +862,7 @@ const messages = {
           files: "Lista de arquivos",
           prompts: "Open.Ai",
           queueIntegration: "Integrações",
+          channels: "Canais",
         },
         appBar: {
           refresh: "Recarregar página",
@@ -896,6 +897,53 @@ const messages = {
           deleteTitle: "Excluir",
           deleteMessage:
               "Você tem certeza? Essa ação não pode ser revertida! e será removida das filas e conexões vinculadas",
+        },
+      },
+      channels: {
+        title: "Canais",
+        buttons: {
+          add: "Adicionar canal",
+          connectMeta: "Conectar Meta",
+        },
+        table: {
+          name: "Nome",
+          type: "Tipo",
+          provider: "Fornecedor",
+          status: "Status",
+          externalId: "ID externo",
+          updatedAt: "Atualizado em",
+          actions: "Ações",
+        },
+        toasts: {
+          created: "Canal criado com sucesso!",
+          updated: "Canal atualizado com sucesso!",
+          deleted: "Canal removido com sucesso!",
+          connected: "Conexão com Meta concluída. Revise a lista de canais.",
+          connectionFailed: "Não foi possível concluir a conexão com Meta.",
+          authWindow: "Abrimos a janela de conexão. Conclua o fluxo no pop-up.",
+        },
+        confirmation: {
+          deleteTitle: "Remover canal",
+          deleteMessage: "Deseja remover o canal {{name}}?"
+        },
+        modal: {
+          addTitle: "Adicionar canal",
+          editTitle: "Editar canal",
+          name: "Nome",
+          provider: "Fornecedor",
+          type: "Tipo",
+          status: "Status",
+          externalId: "ID externo",
+          accessToken: "Access Token",
+          refreshToken: "Refresh Token",
+          tokenExpiresAt: "Token expira em",
+          metadata: "Metadados (JSON)",
+          save: "Salvar",
+          cancel: "Cancelar",
+        },
+        status: {
+          active: "Ativo",
+          inactive: "Inativo",
         },
       },
       files: {
@@ -1134,6 +1182,7 @@ const messages = {
         table: {
           name: "Nome",
           whatsapp: "Conexão",
+          provider: "Provedor",
           contactList: "Lista de Contatos",
           status: "Status",
           scheduledAt: "Agendamento",
@@ -1170,6 +1219,10 @@ const messages = {
             contactList: "Lista de Contato",
             tagList: "Lista de Tags",
             fileList: "Lista de Arquivos",
+            provider: "Provedor de envio",
+            providerWhatsapp: "WhatsApp (nativo)",
+            providerUltraMsg: "UltraMsg",
+            providerHelper: "UltraMsg não suporta envio de mídias por este painel; apenas mensagens de texto serão enviadas.",
           },
           buttons: {
             add: "Adicionar",
@@ -1191,6 +1244,10 @@ const messages = {
           cancel: "Campanha cancelada",
           restart: "Campanha reiniciada",
           deleted: "Registro excluído",
+        },
+        provider: {
+          whatsapp: "WhatsApp",
+          ultramsg: "UltraMsg",
         },
       },
       subscription: {
@@ -1421,6 +1478,11 @@ const messages = {
             sendGreetingMessageOneQueues: {
               title: "Enviar saudação quando houver somente 1 fila<",
             },
+            ultraMsg: {
+              instanceId: "Instance ID do UltraMsg",
+              token: "Token do UltraMsg",
+              helper: "Informe as credenciais da sua instância UltraMsg para habilitar envios em massa.",
+            },
             disabled: "Desabilitado",
             active: "Ativo",
             enabled: "Habilitado",
@@ -1428,6 +1490,7 @@ const messages = {
           updating: "Atualizando...",
           tabs: {
             integrations: "INTEGRAÇÕES",
+            ultraMsg: "UltraMsg",
           },
         },
         helps: {
@@ -1657,6 +1720,10 @@ const messages = {
             "Não é possível remover canais com tickets vinculados.",
         ERR_CHANNEL_ADAPTER_NOT_IMPLEMENTED:
             "Canal sem adaptador configurado.",
+        ERR_INVALID_SIGNATURE: "Assinatura inválida.",
+        ERR_CHANNEL_MISSING_TOKEN: "Canal sem token configurado.",
+        ERR_META_API_CALL_FAILED: "Falha ao comunicar com a API Meta.",
+        ERR_CHANNEL_MISSING_RECIPIENT: "Canal sem destinatário configurado.",
       },
     },
   },

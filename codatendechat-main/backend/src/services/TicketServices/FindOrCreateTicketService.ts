@@ -6,6 +6,7 @@ import ShowTicketService from "./ShowTicketService";
 import FindOrCreateATicketTrakingService from "./FindOrCreateATicketTrakingService";
 import Setting from "../../models/Setting";
 import Whatsapp from "../../models/Whatsapp";
+import ApplyTicketTagsService from "./ApplyTicketTagsService";
 
 interface TicketData {
   status?: string;
@@ -123,6 +124,12 @@ const FindOrCreateTicketService = async (
   }
 
   ticket = await ShowTicketService(ticket.id, companyId);
+
+  await ApplyTicketTagsService({
+    ticket,
+    channel: null,
+    channelTypeFallback: "whatsapp"
+  });
 
   return ticket;
 };

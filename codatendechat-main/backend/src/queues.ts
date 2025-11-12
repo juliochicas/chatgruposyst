@@ -28,6 +28,10 @@ import FilesOptions from './models/FilesOptions';
 import { addSeconds, differenceInSeconds } from "date-fns";
 import formatBody from "./helpers/Mustache";
 import { ClosedAllOpenTickets } from "./services/WbotServices/wbotClosedTickets";
+import {
+  GetActiveCredentialService,
+  sendTextMessage
+} from "./services/CampaignService/UltraMsgProvider";
 
 
 const nodemailer = require('nodemailer');
@@ -81,7 +85,7 @@ async function handleSendMessage(job) {
     const whatsapp = await Whatsapp.findByPk(data.whatsappId);
 
     if (whatsapp == null) {
-      throw Error("Whatsapp não identificado");
+      throw Error("WhatsApp no identificado");
     }
 
     const messageData: MessageData = data.data;
@@ -179,13 +183,19 @@ async function handleSendMessage(job) {
                   //   ticket,
                   // });
 
-                  logger.info(`Atendimento Perdido: ${ticket.id} - Empresa: ${companyId}`);
+                logger.info(
+                  `Atención perdida: ${ticket.id} - Empresa: ${companyId}`
+                );
                 });
               } else {
-                logger.info(`Nenhum atendimento perdido encontrado - Empresa: ${companyId}`);
+                logger.info(
+                  `No se encontraron atenciones pendientes - Empresa: ${companyId}`
+                );
               }
             } else {
-              logger.info(`Condição não respeitada - Empresa: ${companyId}`);
+              logger.info(
+                `Condición no cumplida - Empresa: ${companyId}`
+              );
             }
           }
         }
@@ -260,7 +270,9 @@ async function handleSendScheduledMessage(job) {
     scheduleRecord = await Schedule.findByPk(schedule.id);
   } catch (e) {
     Sentry.captureException(e);
-    logger.info(`Erro ao tentar consultar agendamento: ${schedule.id}`);
+    logger.info(
+      `Error al consultar el agendamiento: ${schedule.id}`
+    );
   }
 
   try {
@@ -349,15 +361,15 @@ async function getCampaign(id) {
           {
             model: ContactListItem,
             as: "contacts",
-            attributes: ["id", "name", "number", "email", "isWhatsappValid"],
-            where: { isWhatsappValid: true }
+            attributes: ["id", "name", "number", "email", "isWhatsappValid"]
           }
         ]
       },
       {
         model: Whatsapp,
         as: "whatsapp",
-        attributes: ["id", "name"]
+        attributes: ["id", "name"],
+        required: false
       },
       {
         model: CampaignShipping,
@@ -530,12 +542,15 @@ async function handleProcessCampaign(job) {
 
       logger.info("[🚩] - Localizando e configurando a campanha");
 
-      const { contacts } = campaign.contactList;
-      if (isArray(contacts)) {
+      const contacts = campaign.contactList?.contacts || [];
+      const eligibleContacts = campaign.provider === "whatsapp"
+        ? contacts.filter(contact => contact.isWhatsappValid)
+        : contacts;
+      if (isArray(eligibleContacts)) {
 
-        logger.info("[📌] - Quantidade de contatos a serem enviados: " + contacts.length);
+        logger.info("[📌] - Quantidade de contatos a serem enviados: " + eligibleContacts.length);
 
-        const contactData = contacts.map(contact => ({
+        const contactData = eligibleContacts.map(contact => ({
           contactId: contact.id,
           campaignId: campaign.id,
           variables: settings.variables,
@@ -582,7 +597,7 @@ async function handlePrepareContact(job) {
     const contact = await getContact(contactId);
 
     const campaignShipping: any = {};
-    campaignShipping.number = contact.number;
+    campaignShipping.number = (contact.number || "").replace(/\D/g, "");
     campaignShipping.contactId = contactId;
     campaignShipping.campaignId = campaignId;
 
@@ -596,7 +611,8 @@ async function handlePrepareContact(job) {
         variables,
         contact
       );
-      campaignShipping.message = `\u200c ${message}`;
+      campaignShipping.message =
+        campaign.provider === "ultramsg" ? message : `\u200c ${message}`;
     }
 
     const [record, created] = await CampaignShipping.findOrCreate({
@@ -648,9 +664,62 @@ async function handleDispatchCampaign(job) {
     const { data } = job;
     const { campaignShippingId, campaignId }: DispatchCampaignData = data;
     const campaign = await getCampaign(campaignId);
-    const wbot = await GetWhatsappWbot(campaign.whatsapp);
 
     logger.info("[🏁] - Disparando campanha | CampaignShippingId: " + campaignShippingId + " CampanhaID: " + campaignId);
+
+    const campaignShipping = await CampaignShipping.findByPk(
+      campaignShippingId,
+      {
+        include: [{ model: ContactListItem, as: "contact" }]
+      }
+    );
+
+    let body = campaignShipping.message || "";
+    body = body.replace(/\u200c/g, "").trim();
+
+    if (campaign.provider === "ultramsg") {
+      const credential = await GetActiveCredentialService(campaign.companyId);
+
+      if (!credential) {
+        logger.error(
+          `campaignQueue -> DispatchCampaign -> error: UltraMsg credential not configured for company ${campaign.companyId}`
+        );
+        return;
+      }
+
+      if (!campaignShipping.number) {
+        logger.error(
+          `campaignQueue -> DispatchCampaign -> error: destination number missing (campaignShippingId=${campaignShippingId})`
+        );
+        return;
+      }
+
+      const destination = campaignShipping.number.replace(/\D/g, "");
+
+      await sendTextMessage({
+        instanceId: credential.instanceId,
+        token: credential.token,
+        to: destination,
+        body
+      });
+
+      await campaignShipping.update({ deliveredAt: moment() });
+      await verifyAndFinalizeCampaign(campaign);
+
+      const io = getIO();
+      io.to(`company-${campaign.companyId}-mainchannel`).emit(`company-${campaign.companyId}-campaign`, {
+        action: "update",
+        record: campaign
+      });
+
+      logger.info(
+        `[🏁] - Campanha UltraMsg enviada para: Campanha=${campaignId};Contato=${campaignShipping.contact?.name || destination}`
+      );
+
+      return;
+    }
+
+    const wbot = await GetWhatsappWbot(campaign.whatsapp);
 
     if (!wbot) {
       logger.error(`campaignQueue -> DispatchCampaign -> error: wbot not found`);
@@ -667,19 +736,9 @@ async function handleDispatchCampaign(job) {
       return;
     }
 
-    logger.info("[🚩] - Disparando campanha | CampaignShippingId: " + campaignShippingId + " CampanhaID: " + campaignId);
-
-    const campaignShipping = await CampaignShipping.findByPk(
-      campaignShippingId,
-      {
-        include: [{ model: ContactListItem, as: "contact" }]
-      }
-    );
-
     const chatId = `${campaignShipping.number}@s.whatsapp.net`;
 
-    let body = campaignShipping.message;
-
+    logger.info("[🚩] - Disparando campanha | CampaignShippingId: " + campaignShippingId + " CampanhaID: " + campaignId);
     if (!isNil(campaign.fileListId)) {
 
       logger.info("[🚩] - Recuperando a lista de arquivos | CampaignShippingId: " + campaignShippingId + " CampanhaID: " + campaignId);

@@ -119,7 +119,7 @@ export const provider = async (ticket: Ticket, msg: proto.IWebMessageInfo, compa
                         await sleep(2000)
                         await wbot.sendMessage(`${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`, textMessage);
                       } catch (error) {
-                        console.log('Não consegui enviar a mensagem!')
+                        console.log('No fue posible enviar el mensaje.')
                       }
                     } else {
                       let nome
@@ -250,17 +250,22 @@ export const provider = async (ticket: Ticket, msg: proto.IWebMessageInfo, compa
                         });
 
                       } catch (error) {
-                        console.log('11 Não consegui enviar a mensagem!')
+                        console.log('No fue posible enviar el mensaje (11).')
                       }
                     }
                   })
                   .catch(async function (error) {
                     try {
-                      const bodyBoleto = { text: formatBody(`Não consegui encontrar seu cadastro.\n\nPor favor tente novamente!\nOu digite *#* para voltar ao *Menu Anterior*`, contact) };
+                      const bodyBoleto = {
+                        text: formatBody(
+                          `No pudimos encontrar tu registro.\n\nInténtalo nuevamente.\nO escribe *#* para volver al *Menú anterior*.`,
+                          contact
+                        )
+                      };
                       await sleep(2000)
                       await wbot.sendMessage(`${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`, bodyBoleto);
                     } catch (error) {
-                      console.log('111 Não consegui enviar a mensagem!')
+                      console.log('No fue posible enviar el mensaje (111).')
                     }
 
                   });
@@ -339,7 +344,10 @@ export const provider = async (ticket: Ticket, msg: proto.IWebMessageInfo, compa
 
                   if (totalCount_overdue === 0) {
                     const body = {
-                      text: formatBody(`Você não tem nenhuma fatura vencidada! \nVou te enviar a proxima fatura. Por favor aguarde!`, contact),
+                      text: formatBody(
+                        `No tienes facturas vencidas.\nTe enviaré la próxima factura. Por favor espera.`,
+                        contact
+                      ),
                     };
                     await sleep(2000)
                     await wbot.sendMessage(`${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`, body);
@@ -513,7 +521,10 @@ export const provider = async (ticket: Ticket, msg: proto.IWebMessageInfo, compa
                     dueDate_overdue_corrigida = dueDate_overdue?.split('-')?.reverse()?.join('/');
                     value_overdue_corrigida = value_overdue.toLocaleString('pt-br', { style: 'currency', currency: 'BRL' });
                     const body = {
-                      text: formatBody(`Você tem *${totalCount_overdue}* fatura(s) vencidada(s)! \nVou te enviar. Por favor aguarde!`, contact),
+                      text: formatBody(
+                        `Tienes *${totalCount_overdue}* factura(s) vencidas.\nTe las enviaré ahora. Por favor espera.`,
+                        contact
+                      ),
                     };
                     await sleep(2000)
                     await wbot.sendMessage(`${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`, body);

@@ -26,6 +26,7 @@ import toastError from "../../errors/toastError";
 import {
   Box,
   FormControl,
+  FormHelperText,
   Grid,
   InputLabel,
   MenuItem,
@@ -106,6 +107,7 @@ const CampaignModal = ({
     contactListId: "",
     tagListId: "Nenhuma",
     companyId,
+    provider: "whatsapp",
   };
 
   const [campaign, setCampaign] = useState(initialState);
@@ -181,6 +183,8 @@ const CampaignModal = ({
               prevCampaignData[key] = value === null ? "" : value;
             }
           });
+
+          prevCampaignData.provider = data.provider || "whatsapp";
 
           return {...prevCampaignData, tagListId: data.tagId || "Nenhuma"};
         });
@@ -351,7 +355,14 @@ const CampaignModal = ({
             }, 400);
           }}
         >
-          {({ values, errors, touched, isSubmitting }) => (
+          {({
+            values,
+            errors,
+            touched,
+            isSubmitting,
+            setFieldValue,
+            setFieldTouched,
+          }) => (
             <Form>
               <DialogContent dividers>
                 <Grid spacing={2} container>
@@ -368,6 +379,60 @@ const CampaignModal = ({
                       className={classes.textField}
                       disabled={!campaignEditable}
                     />
+                  </Grid>
+                  <Grid xs={12} md={4} item>
+                    <FormControl
+                      variant="outlined"
+                      margin="dense"
+                      fullWidth
+                    >
+                      <InputLabel id="provider-selection-label">
+                        {i18n.t("campaigns.dialog.form.provider")}
+                      </InputLabel>
+                      <Select
+                        labelId="provider-selection-label"
+                        id="provider"
+                        name="provider"
+                        value={values.provider || "whatsapp"}
+                        onChange={(e) => {
+                          const value = e.target.value;
+                          setFieldValue("provider", value);
+                          setFieldTouched("provider", true, false);
+                          if (value !== "whatsapp") {
+                            setFieldValue("whatsappId", "");
+                            setFieldValue("fileListId", "");
+                            setFieldValue("mediaPath", null);
+                            setFieldValue("mediaName", null);
+                            if (attachment) {
+                              setAttachment(null);
+                            }
+                            if (attachmentFile.current) {
+                              attachmentFile.current.value = null;
+                            }
+                          }
+                        }}
+                        label={i18n.t("campaigns.dialog.form.provider")}
+                        disabled={!campaignEditable}
+                      >
+                        <MenuItem value="whatsapp">
+                          {i18n.t(
+                            "campaigns.dialog.form.providerWhatsapp"
+                          )}
+                        </MenuItem>
+                        <MenuItem value="ultramsg">
+                          {i18n.t(
+                            "campaigns.dialog.form.providerUltraMsg"
+                          )}
+                        </MenuItem>
+                      </Select>
+                      {values.provider === "ultramsg" && (
+                        <FormHelperText>
+                          {i18n.t(
+                            "campaigns.dialog.form.providerHelper"
+                          )}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
                   </Grid>
                   <Grid xs={12} md={4} item>
                     <FormControl
@@ -454,7 +519,9 @@ const CampaignModal = ({
                         id="whatsappId"
                         name="whatsappId"
                         error={touched.whatsappId && Boolean(errors.whatsappId)}
-                        disabled={!campaignEditable}
+                        disabled={
+                          values.provider !== "whatsapp" || !campaignEditable
+                        }
                       >
                         <MenuItem value="">Nenhuma</MenuItem>
                         {whatsapps &&
@@ -500,6 +567,9 @@ const CampaignModal = ({
                         placeholder={i18n.t("campaigns.dialog.form.fileList")}
                         labelId="fileListId-selection-label"
                         value={values.fileListId || ""}
+                        disabled={
+                          values.provider !== "whatsapp" || !campaignEditable
+                        }
                       >
                         <MenuItem value={""} >{"Nenhum"}</MenuItem>
                         {file.map(f => (
@@ -508,6 +578,11 @@ const CampaignModal = ({
                           </MenuItem>
                         ))}
                       </Field>
+                      {values.provider !== "whatsapp" && (
+                        <FormHelperText>
+                          {i18n.t("campaigns.dialog.form.providerHelper")}
+                        </FormHelperText>
+                      )}
                     </FormControl>
                   </Grid>
                   <Grid xs={12} item>
@@ -585,7 +660,10 @@ const CampaignModal = ({
                     {i18n.t("campaigns.dialog.buttons.cancel")}
                   </Button>
                 )}
-                {!attachment && !campaign.mediaPath && campaignEditable && (
+                {!attachment &&
+                  !campaign.mediaPath &&
+                  campaignEditable &&
+                  values.provider === "whatsapp" && (
                   <Button
                     color="primary"
                     onClick={() => attachmentFile.current.click()}
@@ -594,7 +672,7 @@ const CampaignModal = ({
                   >
                     {i18n.t("campaigns.dialog.buttons.attach")}
                   </Button>
-                )}
+                  )}
                 <Button
                   onClick={handleClose}
                   color="secondary"
