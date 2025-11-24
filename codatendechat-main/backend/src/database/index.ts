@@ -1,3 +1,6 @@
+// Asegurar que reflect-metadata esté disponible antes de importar modelos
+import "reflect-metadata";
+
 import { Sequelize } from "sequelize-typescript";
 import User from "../models/User";
 import Setting from "../models/Setting";
