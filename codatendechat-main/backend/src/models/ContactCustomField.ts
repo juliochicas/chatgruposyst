@@ -7,9 +7,9 @@ import {
   PrimaryKey,
   AutoIncrement,
   ForeignKey,
-  BelongsTo
+  BelongsTo,
+  DataType
 } from "sequelize-typescript";
-import { DataType } from "sequelize";
 import Contact from "./Contact";
 
 @Table
