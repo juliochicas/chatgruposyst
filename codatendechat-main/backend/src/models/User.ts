@@ -30,19 +30,19 @@ class User extends Model<User> {
   @Column(DataType.INTEGER)
   id: number;
 
-  @Column
+  @Column(DataType.STRING)
   name: string;
 
-  @Column
+  @Column(DataType.STRING)
   email: string;
   
-  @Column
+  @Column(DataType.STRING)
   allTicket: string;
 
   @Column(DataType.VIRTUAL)
   password: string;
 
-  @Column
+  @Column(DataType.STRING)
   passwordHash: string;
 
   @Default(0)
@@ -50,13 +50,13 @@ class User extends Model<User> {
   tokenVersion: number;
 
   @Default("admin")
-  @Column
+  @Column(DataType.STRING)
   profile: string;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   super: boolean;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   online: boolean;
 
   @CreatedAt

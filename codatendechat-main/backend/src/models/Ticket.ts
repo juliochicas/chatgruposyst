@@ -35,17 +35,17 @@ class Ticket extends Model<Ticket> {
   @Column(DataType.INTEGER)
   id: number;
 
-  @Column({ defaultValue: "pending" })
+  @Column({ defaultValue: "pending", type: DataType.STRING })
   status: string;
 
   @Column(DataType.INTEGER)
   unreadMessages: number;
 
-  @Column
+  @Column(DataType.STRING)
   lastMessage: string;
 
   @Default(false)
-  @Column
+  @Column(DataType.BOOLEAN)
   isGroup: boolean;
 
   @CreatedAt
@@ -109,7 +109,7 @@ class Ticket extends Model<Ticket> {
   company: Company;
 
   @Default(uuidv4())
-  @Column
+  @Column(DataType.STRING)
   uuid: string;
 
   @BeforeCreate
@@ -118,7 +118,7 @@ class Ticket extends Model<Ticket> {
   }
 
   @Default(false)
-  @Column
+  @Column(DataType.BOOLEAN)
   useIntegration: boolean;
 
   @ForeignKey(() => QueueIntegrations)
