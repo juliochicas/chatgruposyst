@@ -13,6 +13,7 @@ import {
   ForeignKey,
   BelongsTo
 } from "sequelize-typescript";
+import { DataType } from "sequelize";
 import ContactCustomField from "./ContactCustomField";
 import Ticket from "./Ticket";
 import Company from "./Company";
@@ -23,7 +24,7 @@ import Whatsapp from "./Whatsapp";
 class Contact extends Model<Contact> {
   @PrimaryKey
   @AutoIncrement
-  @Column
+  @Column(DataType.INTEGER)
   id: number;
 
   @Column
@@ -64,7 +65,7 @@ class Contact extends Model<Contact> {
   extraInfo: ContactCustomField[];
 
   @ForeignKey(() => Company)
-  @Column
+  @Column(DataType.INTEGER)
   companyId: number;
 
   @BelongsTo(() => Company)
@@ -78,7 +79,7 @@ class Contact extends Model<Contact> {
   schedules: Schedule[];
 
   @ForeignKey(() => Whatsapp)
-  @Column
+  @Column(DataType.INTEGER)
   whatsappId: number;
 
   @BelongsTo(() => Whatsapp)

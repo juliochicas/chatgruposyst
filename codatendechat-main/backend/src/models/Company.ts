@@ -27,7 +27,7 @@ import Whatsapp from "./Whatsapp";
 class Company extends Model<Company> {
   @PrimaryKey
   @AutoIncrement
-  @Column
+  @Column(DataType.INTEGER)
   id: number;
 
   @Column
@@ -57,7 +57,7 @@ class Company extends Model<Company> {
   schedules: [];
 
   @ForeignKey(() => Plan)
-  @Column
+  @Column(DataType.INTEGER)
   planId: number;
 
   @BelongsTo(() => Plan)

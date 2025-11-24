@@ -32,13 +32,13 @@ import Prompt from "./Prompt";
 class Ticket extends Model<Ticket> {
   @PrimaryKey
   @AutoIncrement
-  @Column
+  @Column(DataType.INTEGER)
   id: number;
 
   @Column({ defaultValue: "pending" })
   status: string;
 
-  @Column
+  @Column(DataType.INTEGER)
   unreadMessages: number;
 
   @Column
@@ -55,38 +55,38 @@ class Ticket extends Model<Ticket> {
   updatedAt: Date;
 
   @ForeignKey(() => User)
-  @Column
+  @Column(DataType.INTEGER)
   userId: number;
 
   @BelongsTo(() => User)
   user: User;
 
   @ForeignKey(() => Contact)
-  @Column
+  @Column(DataType.INTEGER)
   contactId: number;
 
   @BelongsTo(() => Contact)
   contact: Contact;
 
   @ForeignKey(() => Whatsapp)
-  @Column
+  @Column(DataType.INTEGER)
   whatsappId: number;
 
   @BelongsTo(() => Whatsapp)
   whatsapp: Whatsapp;
 
   @ForeignKey(() => Queue)
-  @Column
+  @Column(DataType.INTEGER)
   queueId: number;
 
   @BelongsTo(() => Queue)
   queue: Queue;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   chatbot: boolean;
 
   @ForeignKey(() => QueueOption)
-  @Column
+  @Column(DataType.INTEGER)
   queueOptionId: number;
 
   @BelongsTo(() => QueueOption)
@@ -102,7 +102,7 @@ class Ticket extends Model<Ticket> {
   tags: Tag[];
 
   @ForeignKey(() => Company)
-  @Column
+  @Column(DataType.INTEGER)
   companyId: number;
 
   @BelongsTo(() => Company)
@@ -122,44 +122,44 @@ class Ticket extends Model<Ticket> {
   useIntegration: boolean;
 
   @ForeignKey(() => QueueIntegrations)
-  @Column
+  @Column(DataType.INTEGER)
   integrationId: number;
 
   @BelongsTo(() => QueueIntegrations)
   queueIntegration: QueueIntegrations;
 
-  @Column
+  @Column(DataType.STRING)
   typebotSessionId: string;
 
   @Default(false)
-  @Column
+  @Column(DataType.BOOLEAN)
   typebotStatus: boolean
 
   @ForeignKey(() => Prompt)
-  @Column
+  @Column(DataType.INTEGER)
   promptId: number;
 
   @BelongsTo(() => Prompt)
   prompt: Prompt;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   fromMe: boolean;
 
   @AllowNull(false)
   @Default(0)
-  @Column
+  @Column(DataType.INTEGER)
   amountUsedBotQueues: number;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   flowWebhook: boolean;
 
-  @Column
+  @Column(DataType.STRING)
   lastFlowId: string;
 
-  @Column
+  @Column(DataType.STRING)
   hashFlowId: string;
 
-  @Column
+  @Column(DataType.STRING)
   flowStopped: string;
 
   @Column(DataType.JSON)

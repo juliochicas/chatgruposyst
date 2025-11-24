@@ -26,7 +26,7 @@ class ContactCustomField extends Model<ContactCustomField> {
   value: string;
 
   @ForeignKey(() => Contact)
-  @Column
+  @Column(DataType.INTEGER)
   contactId: number;
 
   @BelongsTo(() => Contact)
