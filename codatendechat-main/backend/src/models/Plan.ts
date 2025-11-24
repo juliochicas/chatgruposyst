@@ -7,31 +7,32 @@ import {
   PrimaryKey,
   AutoIncrement,
   AllowNull,
-  Unique
+  Unique,
+  DataType
 } from "sequelize-typescript";
 
 @Table
 class Plan extends Model<Plan> {
   @PrimaryKey
   @AutoIncrement
-  @Column
+  @Column(DataType.INTEGER)
   id: number;
 
   @AllowNull(false)
   @Unique
-  @Column
+  @Column(DataType.STRING)
   name: string;
 
-  @Column
+  @Column(DataType.INTEGER)
   users: number;
 
-  @Column
+  @Column(DataType.INTEGER)
   connections: number;
 
-  @Column
+  @Column(DataType.INTEGER)
   queues: number;
 
-  @Column
+  @Column(DataType.INTEGER)
   value: number;
 
   @CreatedAt
@@ -40,25 +41,25 @@ class Plan extends Model<Plan> {
   @UpdatedAt
   updatedAt: Date;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   useSchedules: boolean;   
 
-  @Column
+  @Column(DataType.BOOLEAN)
   useCampaigns: boolean; 
   
-  @Column
+  @Column(DataType.BOOLEAN)
   useInternalChat: boolean;   
   
-  @Column
+  @Column(DataType.BOOLEAN)
   useExternalApi: boolean;   
-
-  @Column
+  
+  @Column(DataType.BOOLEAN)
   useKanban: boolean;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   useOpenAi: boolean;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   useIntegrations: boolean;
 }
 
