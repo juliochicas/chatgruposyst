@@ -42,9 +42,6 @@ class Campaign extends Model<Campaign> {
   @Column({ defaultValue: "" })
   message5: string;
 
-  @Column({ defaultValue: "whatsapp" })
-  provider: string;
-
   @Column({ defaultValue: "INATIVA" })
   status: string; // INATIVA, PROGRAMADA, EM_ANDAMENTO, CANCELADA, FINALIZADA
 

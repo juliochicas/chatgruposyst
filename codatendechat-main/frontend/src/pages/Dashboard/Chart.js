@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { useTheme } from "@material-ui/core/styles";
 import {
 	CartesianGrid,
@@ -19,7 +18,6 @@ import useTickets from "../../hooks/useTickets";
 
 const Chart = ({ queueTicket }) => {
 	const theme = useTheme();
-	const { t } = useTranslation();
 
 	const { tickets, count } = useTickets({
 		queueIds: queueTicket ? `[${queueTicket}]` : "[]",
@@ -69,7 +67,7 @@ const Chart = ({ queueTicket }) => {
 
 	return (
 		<React.Fragment>
-			<Title>{t("dashboard.charts.createdTickets", { count })}</Title>
+			<Title>{`${"Atendimentos Criados: "}${count}`}</Title>
 			<ResponsiveContainer>
 				<LineChart
 					data={chartData}

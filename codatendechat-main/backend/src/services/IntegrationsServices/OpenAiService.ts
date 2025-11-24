@@ -119,11 +119,11 @@ export const handleOpenAi = async (
     limit: openAiSettings.maxMessages
   });
 
-  const promptSystem = `En las respuestas utiliza el nombre ${sanitizeName(
-    contact.name || "Cliente"
-  )} para identificar a la persona.\nTu respuesta debe usar como máximo ${
+  const promptSystem = `Nas respostas utilize o nome ${sanitizeName(
+    contact.name || "Amigo(a)"
+  )} para identificar o cliente.\nSua resposta deve usar no máximo ${
     openAiSettings.maxTokens
-  } tokens y evita truncar el final.\nSiempre que sea posible, menciona su nombre para hacer la atención más personalizada y cordial. Cuando la respuesta requiera una transferencia al sector de atención, comienza tu mensaje con 'Ação: Transferir para o setor de atendimento'.\n
+  } tokens e cuide para não truncar o final.\nSempre que possível, mencione o nome dele para ser mais personalizado o atendimento e mais educado. Quando a resposta requer uma transferência para o setor de atendimento, comece sua resposta com 'Ação: Transferir para o setor de atendimento'.\n
                 ${openAiSettings.prompt}\n`;
 
   let messagesOpenAi = [];

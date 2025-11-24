@@ -91,7 +91,7 @@ export function HelpManagerForm (props) {
                         <Grid xs={12} sm={6} md={3} item>
                             <Field
                                 as={TextField}
-                                label={i18n.t("settings.helps.grid.title")}
+                                label="Título"
                                 name="title"
                                 variant="outlined"
                                 className={classes.fullWidth}
@@ -101,7 +101,7 @@ export function HelpManagerForm (props) {
                         <Grid xs={12} sm={6} md={3} item>
                             <Field
                                 as={TextField}
-                                label={i18n.t("settings.helps.grid.video")}
+                                label="Código do Vídeo"
                                 name="video"
                                 variant="outlined"
                                 className={classes.fullWidth}
@@ -111,7 +111,7 @@ export function HelpManagerForm (props) {
                         <Grid xs={12} sm={12} md={6} item>
                             <Field
                                 as={TextField}
-                                label={i18n.t("settings.helps.grid.description")}
+                                label="Descrição"
                                 name="description"
                                 variant="outlined"
                                 className={classes.fullWidth}

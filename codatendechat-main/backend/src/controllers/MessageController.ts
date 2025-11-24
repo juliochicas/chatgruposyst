@@ -110,11 +110,11 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
     const whatsapp = await Whatsapp.findByPk(whatsappId);
 
     if (!whatsapp) {
-      throw new Error("No fue posible completar la operación.");
+      throw new Error("Não foi possível realizar a operação");
     }
 
     if (messageData.number === undefined) {
-      throw new Error("El número es obligatorio.");
+      throw new Error("O número é obrigatório");
     }
 
     const numberToTest = messageData.number;
@@ -183,7 +183,7 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
   } catch (err: any) {
     if (Object.keys(err).length === 0) {
       throw new AppError(
-        "No fue posible enviar el mensaje. Inténtalo nuevamente en unos instantes."
+        "Não foi possível enviar a mensagem, tente novamente em alguns instantes"
       );
     } else {
       throw new AppError(err.message);
@@ -204,11 +204,11 @@ export const sendMessageFlow = async (
     const whatsapp = await Whatsapp.findByPk(whatsappId);
 
     if (!whatsapp) {
-      throw new Error("No fue posible completar la operación.");
+      throw new Error("Não foi possível realizar a operação");
     }
 
     if (messageData.number === undefined) {
-      throw new Error("El número es obligatorio.");
+      throw new Error("O número é obrigatório");
     }
 
     const numberToTest = messageData.number;
@@ -251,11 +251,11 @@ export const sendMessageFlow = async (
       );
     }
 
-    return "Mensaje enviado";
+    return "Mensagem enviada";
   } catch (err: any) {
     if (Object.keys(err).length === 0) {
       throw new AppError(
-        "No fue posible enviar el mensaje. Inténtalo nuevamente en unos instantes."
+        "Não foi possível enviar a mensagem, tente novamente em alguns instantes"
       );
     } else {
       throw new AppError(err.message);

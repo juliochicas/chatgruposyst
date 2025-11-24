@@ -2,14 +2,12 @@ import React, {useContext} from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import useStyles from './styles';
 import { AuthContext } from "../../../context/Auth/AuthContext";
-import { useTranslation } from "react-i18next";
 
 function PaymentDetails(props) {
   const { formValues } = props;
   const classes = useStyles();
   const { firstName, address2, city, zipcode, state, country, plan } = formValues;
   const { user } = useContext(AuthContext);
-  const { t } = useTranslation();
 
 
   const newPlan = JSON.parse(plan);
@@ -18,12 +16,12 @@ function PaymentDetails(props) {
   return (
     <Grid item container direction="column" xs={12} sm={6}>
       <Typography variant="h6" gutterBottom className={classes.title}>
-        {t("checkoutPage.review.paymentInfo")}
+        Informação de pagamento
       </Typography>
       <Grid container>
         <React.Fragment>
           <Grid item xs={6}>
-            <Typography gutterBottom>{t("checkoutPage.review.labels.email")}:</Typography>
+            <Typography gutterBottom>Email:</Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography gutterBottom>{user.company.email}</Typography>
@@ -31,7 +29,7 @@ function PaymentDetails(props) {
         </React.Fragment>
         <React.Fragment>
           <Grid item xs={6}>
-            <Typography gutterBottom>{t("checkoutPage.review.labels.name")}:</Typography>
+            <Typography gutterBottom>Nome:</Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography gutterBottom>{firstName}</Typography>
@@ -39,7 +37,7 @@ function PaymentDetails(props) {
         </React.Fragment>
         <React.Fragment>
           <Grid item xs={6}>
-            <Typography gutterBottom>{t("checkoutPage.review.labels.address")}:</Typography>
+            <Typography gutterBottom>Endereço:</Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography gutterBottom>
@@ -49,7 +47,7 @@ function PaymentDetails(props) {
         </React.Fragment>
         <React.Fragment>
           <Grid item xs={6}>
-            <Typography gutterBottom>{t("checkoutPage.review.labels.total")}:</Typography>
+            <Typography gutterBottom>Total:</Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography gutterBottom>R${price.toLocaleString('pt-br', {minimumFractionDigits: 2})}</Typography>

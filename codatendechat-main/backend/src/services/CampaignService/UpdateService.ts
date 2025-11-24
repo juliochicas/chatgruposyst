@@ -18,8 +18,6 @@ interface Data {
   message4?: string;
   message5?: string;
   fileListId: number;
-  provider?: string;
-  whatsappId?: number;
 }
 
 const UpdateService = async (data: Data, companyId: number): Promise<Campaign> => {
@@ -76,16 +74,7 @@ const UpdateService = async (data: Data, companyId: number): Promise<Campaign> =
     }
   }
 
-  const payload: Data = {
-    ...data,
-    provider: data.provider || record.provider || "whatsapp"
-  };
-
-  if (payload.provider !== "whatsapp") {
-    payload.whatsappId = null;
-  }
-
-  await record.update(payload);
+  await record.update(data);
 
   await record.reload({
     include: [

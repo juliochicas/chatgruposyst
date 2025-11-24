@@ -133,8 +133,8 @@ const FlowBuilderSingleBlockModal = ({
   const [variables, setVariables] = useState([]);
 
   const [labels, setLabels] = useState({
-    title: "Agregar contenido al flujo",
-    btn: "Agregar",
+    title: "Adicionar conteúdo ao fluxo",
+    btn: "Adicionar",
   });
 
   const handleElements = (newNameFiles) => {
@@ -156,7 +156,7 @@ const FlowBuilderSingleBlockModal = ({
         .querySelector(`.${newArrMessage[i]}`)
         .querySelector(".MuiInputBase-input").value;
       if (!value) {
-        toast.error("¡Campos de mensaje vacíos!");
+        toast.error("Campos de mensagem vazio!");
         setLoading(false);
         throw "";
       }
@@ -173,7 +173,7 @@ const FlowBuilderSingleBlockModal = ({
         .querySelector(`.${newArrInterval[i]}`)
         .querySelector(".MuiInputBase-input").value;
       if (parseInt(value) === 0 || parseInt(value) > 120) {
-        toast.error("¡El intervalo no puede ser 0 ni mayor que 120!");
+        toast.error("Intervalo não pode ser 0 ou maior que 120!");
         setLoading(false);
         throw "";
       }
@@ -472,7 +472,7 @@ const FlowBuilderSingleBlockModal = ({
     }
 
     if (e.target.files[0].size > 2000000) {
-      toast.error("¡Archivo demasiado grande! Máximo 2MB");
+      toast.error("Arquivo é muito grande! 2MB máximo");
       return;
     }
     const imgBlob = URL.createObjectURL(e.target.files[0]);
@@ -497,7 +497,7 @@ const FlowBuilderSingleBlockModal = ({
     }
 
     if (e.target.files[0].size > 5000000) {
-      toast.error("¡Archivo demasiado grande! Máximo 5MB");
+      toast.error("Arquivo é muito grande! 5MB máximo");
       return;
     }
 
@@ -529,7 +529,7 @@ const FlowBuilderSingleBlockModal = ({
     }
 
     if (e.target.files[0].size > 20000000) {
-      toast.error("¡Archivo demasiado grande! Máximo 20MB");
+      toast.error("Arquivo é muito grande! 20MB máximo");
       return;
     }
     const videoBlob = URL.createObjectURL(e.target.files[0]);
@@ -571,7 +571,7 @@ const FlowBuilderSingleBlockModal = ({
         <Stack sx={{ position: "absolute", right: 6 }}>
           <Delete onClick={() => deleteElementsTypeOne(number, "img")} />
         </Stack>
-        <Typography textAlign={"center"}>Imagen</Typography>
+        <Typography textAlign={"center"}>Imagem</Typography>
         <Stack direction={"row"} justifyContent={"center"}>
           <img
             src={
@@ -589,7 +589,7 @@ const FlowBuilderSingleBlockModal = ({
             component="label"
             className={`btnImg${number}`}
           >
-            Enviar imagen
+            Enviar imagem
             <input
               type="file"
               accept="image/png, image/jpg, image/jpeg"
@@ -674,7 +674,7 @@ const FlowBuilderSingleBlockModal = ({
             defaultChecked={valueRecordDefault === "ok" ? false : true}
           />
           <Stack justifyContent={"center"}>
-            <Typography>Enviar como audio grabado en el momento</Typography>
+            <Typography>Enviar como audio gravado na hora</Typography>
           </Stack>
         </Stack>
       </Stack>
@@ -753,7 +753,7 @@ const FlowBuilderSingleBlockModal = ({
         </Stack>
         <Typography textAlign={"center"}>Texto</Typography>
         <TextField
-          label={"Mensaje"}
+          label={"Mensagem"}
           defaultValue={valueDefault}
           multiline
           rows={7}
@@ -784,7 +784,7 @@ const FlowBuilderSingleBlockModal = ({
         </Stack>
         <Typography textAlign={"center"}>Intervalo</Typography>
         <TextField
-          label={"Tiempo en segundos"}
+          label={"Tempo em segundos"}
           className={`interval${number}`}
           defaultValue={valueDefault}
           type="number"
@@ -910,8 +910,8 @@ const FlowBuilderSingleBlockModal = ({
     }
     if (open === "create") {
       setLabels({
-        title: "Agregar menú al flujo",
-        btn: "Agregar",
+        title: "Adicionar menu ao fluxo",
+        btn: "Adicionar",
       });
       setTextDig();
       setArrayOption([]);
@@ -1042,7 +1042,7 @@ const FlowBuilderSingleBlockModal = ({
         const verify = verifyButtonsUpload();
         if (verify) {
           setLoading(false);
-          return toast.error("Elimina las tarjetas vacías (Imagen, Audio y Video)");
+          return toast.error("Delete os cards vazios(Imagem, Audio e Video)");
         }
         await api
           .post("/flowbuilder/content", formData)
@@ -1115,7 +1115,7 @@ const FlowBuilderSingleBlockModal = ({
         const verify = verifyButtonsUpload();
         if (verify) {
           setLoading(false);
-          return toast.error("Elimina las tarjetas vacías (Imagen, Audio y Video)");
+          return toast.error("Delete os cards vazios(Imagem, Audio e Video)");
         }
         await api
           .post("/flowbuilder/content", formData)
@@ -1151,7 +1151,7 @@ const FlowBuilderSingleBlockModal = ({
       <Dialog open={activeModal} fullWidth="md" scroll="paper">
         {!loading && (
           <DialogTitle id="form-dialog-title">
-            Agregar contenido al flujo
+            Adicionar conteúdo ao fluxo
           </DialogTitle>
         )}
         <Stack>
@@ -1255,7 +1255,7 @@ const FlowBuilderSingleBlockModal = ({
                     marginRight: "4px",
                   }}
                 />
-                Imagen
+                Imagem
               </Button>
               <Button
                 variant="contained"

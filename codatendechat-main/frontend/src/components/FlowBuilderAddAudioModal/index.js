@@ -67,8 +67,8 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
   const [preview, setPreview] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Agregar audio al flujo",
-    btn: "Agregar"
+    title: "Adicionar audio ao fluxo",
+    btn: "Adicionar"
   });
 
   const [textDig, setTextDig] = useState();
@@ -79,15 +79,15 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
     if (open === "edit") {
       setLabels({
         title: "Editar audio",
-        btn: "Guardar"
+        btn: "Salvar"
       });
       setPreview(process.env.REACT_APP_BACKEND_URL + '/public/' + data.data.url)
       setRecord(data.data.record)
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Agregar audio al flujo",
-        btn: "Agregar"
+        title: "Adicionar audio ao fluxo",
+        btn: "Adicionar"
       });
       setTextDig("");
       setActiveModal(true);
@@ -155,7 +155,7 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
             url: res.data.name,
             record: record
           });
-          toast.success("¡Audio agregado con éxito!");
+          toast.success("Audio adicionada com sucesso!");
           setLoading(false);
           setMedias([]);
           setPreview();
@@ -170,7 +170,7 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
     }
 
     if(e.target.files[0].size > 5000000){
-      toast.error("¡Archivo demasiado grande! Máximo 5MB")
+      toast.error("Arquivo é muito grande! 5MB máximo")
       return
     }
 

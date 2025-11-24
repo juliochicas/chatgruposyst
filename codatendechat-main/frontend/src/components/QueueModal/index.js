@@ -101,31 +101,31 @@ const QueueModal = ({ open, onClose, queueId }) => {
 
   const [schedules, setSchedules] = useState([
     {
-      weekday: "Lunes",
+      weekday: "Segunda-feira",
       weekdayEn: "monday",
       startTime: "08:00",
       endTime: "18:00",
     },
     {
-      weekday: "Martes",
+      weekday: "Terça-feira",
       weekdayEn: "tuesday",
       startTime: "08:00",
       endTime: "18:00",
     },
     {
-      weekday: "Miércoles",
+      weekday: "Quarta-feira",
       weekdayEn: "wednesday",
       startTime: "08:00",
       endTime: "18:00",
     },
     {
-      weekday: "Jueves",
+      weekday: "Quinta-feira",
       weekdayEn: "thursday",
       startTime: "08:00",
       endTime: "18:00",
     },
     {
-      weekday: "Viernes",
+      weekday: "Sexta-feira",
       weekdayEn: "friday",
       startTime: "08:00",
       endTime: "18:00",

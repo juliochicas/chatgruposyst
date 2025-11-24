@@ -55,13 +55,13 @@ const useStyles = makeStyles(theme => ({
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, "¡Muy corto!")
-    .max(50, "¡Muy largo!")
-    .required("¡Ingresa un nombre!"),
+    .min(2, "Muito curto!")
+    .max(50, "Muito longo!")
+    .required("Digite um nome!"),
   text: Yup.string()
-    .min(2, "¡Muy corto!")
-    .max(50, "¡Muy largo!")
-    .required("¡Ingresa un mensaje!")
+    .min(2, "Muito curto!")
+    .max(50, "Muito longo!")
+    .required("Digite uma mensagem!")
 });
 
 const FlowBuilderAddTextModal = ({ open, onSave, onUpdate, data, close }) => {
@@ -71,8 +71,8 @@ const FlowBuilderAddTextModal = ({ open, onSave, onUpdate, data, close }) => {
   const [activeModal, setActiveModal] = useState(false);
 
   const [labels, setLabels] = useState({
-    title: "Agregar mensaje al flujo",
-    btn: "Agregar"
+    title: "Adicionar mensagem ao fluxo",
+    btn: "Adicionar"
   });
 
   const [textDig, setTextDig] = useState();
@@ -80,15 +80,15 @@ const FlowBuilderAddTextModal = ({ open, onSave, onUpdate, data, close }) => {
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar mensaje del flujo",
-        btn: "Guardar"
+        title: "Editar mensagem ao fluxo",
+        btn: "Salvar"
       });
       setTextDig(data.data.label);
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Agregar mensaje al flujo",
-        btn: "Agregar"
+        title: "Adicionar mensagem ao fluxo",
+        btn: "Adicionar"
       });
       setTextDig("");
       setActiveModal(true);
@@ -136,7 +136,7 @@ const FlowBuilderAddTextModal = ({ open, onSave, onUpdate, data, close }) => {
         <Stack>
           <DialogContent dividers>
             <TextField
-              label={"Mensaje"}
+              label={"Mensagem"}
               multiline
               rows={7}
               name="text"

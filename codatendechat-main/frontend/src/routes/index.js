@@ -40,7 +40,6 @@ import ForgetPassword from "../pages/ForgetPassWord/"; // Reset PassWd
 import CampaignsPhrase from "../pages/CampaignsPhrase";
 import FlowBuilder from "../pages/FlowBuilder";
 import FlowBuilderConfig from "../pages/FlowBuilderConfig";
-import Channels from "../pages/Channels";
 
 const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
@@ -99,12 +98,6 @@ const Routes = () => {
                   exact
                   path="/queue-integration"
                   component={QueueIntegration}
-                  isPrivate
-                />
-                <Route
-                  exact
-                  path="/channels"
-                  component={Channels}
                   isPrivate
                 />
 

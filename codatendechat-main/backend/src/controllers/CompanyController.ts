@@ -153,9 +153,7 @@ export const listPlan = async (req: Request, res: Response): Promise<Response> =
     const company = await ShowPlanCompanyService(id);
     return res.status(200).json(company);
   } else if (companyId.toString() !== id) {
-    return res
-      .status(400)
-      .json({ error: "No tienes permiso para acceder a este recurso." });
+    return res.status(400).json({ error: "Você não possui permissão para acessar este recurso!" });
   } else {
     const company = await ShowPlanCompanyService(id);
     return res.status(200).json(company);
@@ -177,9 +175,7 @@ export const indexPlan = async (req: Request, res: Response): Promise<Response> 
     const companies = await ListCompaniesPlanService();
     return res.json({ companies });
   } else {
-    return res
-      .status(400)
-      .json({ error: "No tienes permiso para acceder a este recurso." });
+    return res.status(400).json({ error: "Você não possui permissão para acessar este recurso!" });
   }
 
 };

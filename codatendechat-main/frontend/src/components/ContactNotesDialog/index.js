@@ -92,7 +92,7 @@ export default function ContactNotesDialog ({ modalOpen, onClose, ticket }) {
             })
             await loadNotes()
             setNewNote({ note: '' })
-            toast.success(i18n.t("contactNotes.addSuccess"))
+            toast.success('Observação adicionada com sucesso!')
         } catch (e) {
             toast.error(e)
         }
@@ -110,7 +110,7 @@ export default function ContactNotesDialog ({ modalOpen, onClose, ticket }) {
             await deleteNote(selectedNote.id)
             await loadNotes()
             setSelectedNote({})
-            toast.success(i18n.t("contactNotes.deleteSuccess"))
+            toast.success('Observação excluída com sucesso!')
         } catch (e) {
             toast.error(e)
         }
@@ -141,12 +141,12 @@ export default function ContactNotesDialog ({ modalOpen, onClose, ticket }) {
     return (
         <>
             <ConfirmationModal
-                title={i18n.t("contactNotes.modalTitle")}
+                title="Excluir Registro"
                 open={showOnDeleteDialog}
                 onClose={setShowOnDeleteDialog}
                 onConfirm={handleDelete}
             >
-                {i18n.t("contactNotes.modalMessage")}
+                Deseja realmente excluir este registro?
             </ConfirmationModal>
             <Dialog
                 open={open}
@@ -191,10 +191,10 @@ export default function ContactNotesDialog ({ modalOpen, onClose, ticket }) {
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={handleClose} color="primary">
-                                    {i18n.t("contactNotes.buttons.close")}
+                                    Fechar
                                 </Button>
                                 <ButtonWithSpinner loading={loading} color="primary" type="submit" variant="contained" autoFocus>
-                                    {i18n.t("contactNotes.buttons.save")}
+                                    Salvar
                                 </ButtonWithSpinner>
                             </DialogActions>
                         </Form>

@@ -17,8 +17,6 @@ interface Data {
   message4?: string;
   message5?: string;
   fileListId: number;
-  whatsappId?: number;
-  provider?: string;
 }
 
 const CreateService = async (data: Data): Promise<Campaign> => {
@@ -36,20 +34,11 @@ const CreateService = async (data: Data): Promise<Campaign> => {
     throw new AppError(err.message);
   }
 
-  const payload: Data = {
-    ...data,
-    provider: data.provider || "whatsapp"
-  };
-
-  if (payload.provider !== "whatsapp") {
-    payload.whatsappId = null;
+  if (data.scheduledAt != null && data.scheduledAt != "") {
+    data.status = "PROGRAMADA";
   }
 
-  if (payload.scheduledAt != null && payload.scheduledAt !== "") {
-    payload.status = "PROGRAMADA";
-  }
-
-  const record = await Campaign.create(payload);
+  const record = await Campaign.create(data);
 
   await record.reload({
     include: [

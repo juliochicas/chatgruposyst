@@ -87,10 +87,10 @@ const FlowBuilderIntervalModal = ({
 
   const handleSaveContact = async values => {
     if(!timerSec || parseInt(timerSec)  <= 0){
-      return toast.error('Agrega el valor del intervalo')
+      return toast.error('Adicione o valor de intervalo')
     }
     if(parseInt(timerSec) > 120){
-      return toast.error('Tiempo máximo alcanzado: 120 segundos')
+      return toast.error('Máximo de tempo atingido 120 segundos')
     }
     if(open === 'edit'){
       onUpdate({
@@ -110,12 +110,12 @@ const FlowBuilderIntervalModal = ({
     <div className={classes.root}>
       <Dialog open={activeModal} onClose={handleClose} fullWidth="md" scroll="paper">
         <DialogTitle id="form-dialog-title">
-          {open === 'create' ? `Agregar un intervalo al flujo`: `Editar intervalo`}
+          {open === 'create' ? `Adicionar um intervalo ao fluxo`: `Editar intervalo`}
         </DialogTitle>        
             <Stack>
               <DialogContent dividers>
                 <TextField
-                  label={'Tiempo en segundos'}
+                  label={'Tempo em segundos'}
                   name="timer"
                   type="number"
                   value={timerSec}
@@ -143,7 +143,7 @@ const FlowBuilderIntervalModal = ({
                   className={classes.btnWrapper}
                   onClick={() => handleSaveContact()}
                 >
-                  {open === 'create' ? `Agregar` : 'Editar'}                  
+                  {open === 'create' ? `Adicionar` : 'Editar'}                  
                 </Button>
               </DialogActions>
             </Stack>

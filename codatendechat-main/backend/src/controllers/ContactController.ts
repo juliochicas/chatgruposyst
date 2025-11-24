@@ -218,10 +218,8 @@ const createNewContact = async ( newContact : ContactData, companyId : number, s
     const number = newContact.number.replace(/\D/g, "");
     const validNumber = await CheckContactNumber(number, companyId);
 
-    if (!validNumber)
-      throw new AppError(
-        "No fue posible localizar el número informado en WhatsApp."
-      );
+    if( !validNumber )
+      throw new AppError("Não foi possível localizar o número informado no Whatsapp");
 
     newContact.number = number;
 

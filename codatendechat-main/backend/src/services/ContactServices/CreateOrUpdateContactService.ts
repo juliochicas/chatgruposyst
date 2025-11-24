@@ -16,7 +16,6 @@ interface Request {
   companyId: number;
   extraInfo?: ExtraInfo[];
   whatsappId?: number;
-  preserveRawNumber?: boolean;
 }
 
 const CreateOrUpdateContactService = async ({
@@ -27,11 +26,9 @@ const CreateOrUpdateContactService = async ({
   email = "",
   companyId,
   extraInfo = [],
-  whatsappId,
-  preserveRawNumber
+  whatsappId
 }: Request): Promise<Contact> => {
-  const number =
-    preserveRawNumber || isGroup ? rawNumber : rawNumber.replace(/[^0-9]/g, "");
+  const number = isGroup ? rawNumber : rawNumber.replace(/[^0-9]/g, "");
 
   const io = getIO();
   let contact: Contact | null;
@@ -45,6 +42,7 @@ const CreateOrUpdateContactService = async ({
 
   if (contact) {
     contact.update({ profilePicUrl });
+    console.log(contact.whatsappId)
     if (isNil(contact.whatsappId === null)) {
       contact.update({
         whatsappId

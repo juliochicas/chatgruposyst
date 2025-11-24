@@ -14,7 +14,6 @@ import Contact from "./Contact";
 import Ticket from "./Ticket";
 import Company from "./Company";
 import Queue from "./Queue";
-import Channel from "./Channel";
 
 @Table
 class Message extends Model<Message> {
@@ -109,22 +108,6 @@ class Message extends Model<Message> {
   @Default(false)
   @Column
   isEdited: boolean;
-
-  @ForeignKey(() => Channel)
-  @Column
-  channelId: number;
-
-  @BelongsTo(() => Channel)
-  channel: Channel;
-
-  @Column
-  channelType: string;
-
-  @Column
-  channelExternalId: string;
-
-  @Column(DataType.JSONB)
-  metadata: Record<string, unknown>;
 }
 
 export default Message;

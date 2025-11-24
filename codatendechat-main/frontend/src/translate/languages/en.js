@@ -134,7 +134,6 @@ const messages = {
 					status: "Status (Current)",
 				},
 				charts: {
-					createdTickets: "Tickets created: {{count}}",
 					user: {
 						label: "Conversations Chart",
 						title: "Total Conversations by Users",
@@ -223,13 +222,6 @@ const messages = {
 					whatsapp: "WhatsApp",
 					charges: "Billing: Monthly",
 					total: "Total",
-					paymentInfo: "Payment information",
-					labels: {
-						email: "Email",
-						name: "Name",
-						address: "Address",
-						total: "Total"
-					}
 				},
 				form: {
 					firstName: {
@@ -846,7 +838,6 @@ const messages = {
 					files: "File List",
 					prompts: "Open.AI",
 					queueIntegration: "Integrations",
-					channels: "Channels",
 				},
 				appBar: {
 					refresh: "Reload page",
@@ -880,53 +871,6 @@ const messages = {
 				confirmationModal: {
 					deleteTitle: "Delete",
 					deleteMessage: "Are you sure? This action cannot be undone! It will be removed from linked queues and connections",
-				},
-			},
-			channels: {
-				title: "Channels",
-				buttons: {
-					add: "Add channel",
-					connectMeta: "Connect Meta",
-				},
-				table: {
-					name: "Name",
-					type: "Type",
-					provider: "Provider",
-					status: "Status",
-					externalId: "External ID",
-					updatedAt: "Updated at",
-					actions: "Actions",
-				},
-				toasts: {
-					created: "Channel created successfully.",
-					updated: "Channel updated successfully.",
-					deleted: "Channel deleted successfully.",
-					connected: "Meta connection completed. Review the channel list.",
-					connectionFailed: "Unable to complete the Meta connection.",
-					authWindow: "We opened the connection window. Finish the flow in the popup.",
-				},
-				confirmation: {
-					deleteTitle: "Remove channel",
-					deleteMessage: "Do you want to remove the channel {{name}}?"
-				},
-				modal: {
-					addTitle: "Add channel",
-					editTitle: "Edit channel",
-					name: "Name",
-					provider: "Provider",
-					type: "Type",
-					status: "Status",
-					externalId: "External ID",
-					accessToken: "Access Token",
-					refreshToken: "Refresh Token",
-					tokenExpiresAt: "Token expires at",
-					metadata: "Metadata (JSON)",
-					save: "Save",
-					cancel: "Cancel",
-				},
-				status: {
-					active: "Active",
-					inactive: "Inactive",
 				},
 			},
 			files: {
@@ -1160,7 +1104,6 @@ const messages = {
 				table: {
 					name: "Name",
 					whatsapp: "Connection",
-					provider: "Provider",
 					contactList: "Contact List",
 					status: "Status",
 					scheduledAt: "Schedule",
@@ -1196,10 +1139,6 @@ const messages = {
 						contactList: "Contact List",
 						tagList: "Tag List",
 						fileList: "File List",
-						provider: "Delivery provider",
-						providerWhatsapp: "WhatsApp (native)",
-						providerUltraMsg: "UltraMsg",
-						providerHelper: "UltraMsg does not support media attachments from this panel; only text messages will be sent.",
 					},
 					buttons: {
 						add: "Add",
@@ -1221,10 +1160,6 @@ const messages = {
 					cancel: "Campaign canceled",
 					restart: "Campaign restarted",
 					deleted: "Record deleted",
-				},
-				provider: {
-					whatsapp: "WhatsApp",
-					ultramsg: "UltraMsg",
 				},
 			},
 			subscription: {
@@ -1453,11 +1388,6 @@ const messages = {
 						sendGreetingMessageOneQueues: {
 							title: "Send greeting when there's only 1 queue",
 						},
-						ultraMsg: {
-							instanceId: "UltraMsg Instance ID",
-							token: "UltraMsg Token",
-							helper: "Provide your UltraMsg credentials (instanceId and token) to enable broadcast sending.",
-						},
 						disabled: "Disabled",
 						active: "Active",
 						enabled: "Enabled",
@@ -1465,7 +1395,6 @@ const messages = {
 					updating: "Updating...",
 					tabs: {
 						integrations: "INTEGRATIONS",
-						ultraMsg: "UltraMsg",
 					},
 				},
 				helps: {
@@ -1572,16 +1501,6 @@ const messages = {
 				},
 				extraInfo: "Other information",
 			},
-			contactNotes: {
-				modalTitle: "Delete record",
-				modalMessage: "Do you really want to delete this record?",
-				addSuccess: "Note added successfully!",
-				deleteSuccess: "Note deleted successfully!",
-				buttons: {
-					save: "Save",
-					close: "Close"
-				}
-			},
 			fileModal: {
 				title: {
 					add: "Add file list",
@@ -1672,14 +1591,6 @@ const messages = {
 				ERR_FETCH_WAPP_MSG: "Error fetching WhatsApp message, it might be too old.",
 				ERR_QUEUE_COLOR_ALREADY_EXISTS: "This color is already in use, choose another.",
 				ERR_WAPP_GREETING_REQUIRED: "Greeting message is required when there is more than one queue.",
-				ERR_CHANNEL_NAME_ALREADY_EXISTS: "A channel with this name already exists.",
-				ERR_CHANNEL_NOT_FOUND: "Channel not found.",
-				ERR_CHANNEL_IN_USE: "Cannot remove a channel with linked tickets.",
-				ERR_CHANNEL_ADAPTER_NOT_IMPLEMENTED: "Channel has no adapter configured.",
-				ERR_INVALID_SIGNATURE: "Invalid signature.",
-				ERR_CHANNEL_MISSING_TOKEN: "Channel has no configured token.",
-				ERR_META_API_CALL_FAILED: "Failed to communicate with Meta API.",
-				ERR_CHANNEL_MISSING_RECIPIENT: "Channel has no recipient configured.",
 			},
 		}
 	},

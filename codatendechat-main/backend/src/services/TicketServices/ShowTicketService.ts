@@ -44,7 +44,7 @@ const ShowTicketService = async (
   });
 
   if (ticket?.companyId !== companyId) {
-    throw new AppError("No es posible consultar registros de otra empresa.");
+    throw new AppError("Não é possível consultar registros de outra empresa");
   }
 
   if (!ticket) {

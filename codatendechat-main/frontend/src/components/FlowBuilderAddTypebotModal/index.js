@@ -81,15 +81,15 @@ const FlowBuilderTypebotModal = ({ open, onSave, data, onUpdate, close }) => {
   const [activeModal, setActiveModal] = useState(false);
   const [integration, setIntegration] = useState();
   const [labels, setLabels] = useState({
-    title: "Agregar Typebot al flujo",
-    btn: "Agregar",
+    title: "Adicionar Typebot ao fluxo",
+    btn: "Adicionar",
   });
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar Typebot del flujo",
-        btn: "Guardar",
+        title: "Editar Typebot ao fluxo",
+        btn: "Salvar",
       });
       console.log("FlowTybebotEdit", data);
       setIntegration({
@@ -98,8 +98,8 @@ const FlowBuilderTypebotModal = ({ open, onSave, data, onUpdate, close }) => {
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Crear Typebot en el flujo",
-        btn: "Guardar",
+        title: "Editar Typebot do fluxo",
+        btn: "Salvar",
       });
       setIntegration(initialState);
       setActiveModal(true);
@@ -141,7 +141,7 @@ const FlowBuilderTypebotModal = ({ open, onSave, data, onUpdate, close }) => {
         scroll="paper"
       >
         <DialogTitle id="form-dialog-title">
-          {open === "create" ? `Agregar Typebot al flujo` : `Editar Typebot`}
+          {open === "create" ? `Adicionar Typebot ao fluxo` : `Editar Typebot`}
         </DialogTitle>
         <Formik
           initialValues={integration}
@@ -351,7 +351,7 @@ const FlowBuilderTypebotModal = ({ open, onSave, data, onUpdate, close }) => {
                   variant="contained"
                   className={classes.btnWrapper}
                 >
-                  {open === "create" ? `Agregar` : "Editar"}
+                  {open === "create" ? `Adicionar` : "Editar"}
                 </Button>
               </DialogActions>
             </Form>

@@ -188,7 +188,7 @@ const FlowBuilder = () => {
         setDeletingContact(null);
         setReloadData((old) => !old);
       });
-      toast.success("Flujo eliminado con éxito");
+      toast.success("Fluxo excluído com sucesso");
     } catch (err) {
       toastError(err);
     }
@@ -202,7 +202,7 @@ const FlowBuilder = () => {
           setDeletingContact(null);
           setReloadData((old) => !old);
         });
-      toast.success("Flujo duplicado con éxito");
+      toast.success("Fluxo duplicado com sucesso");
     } catch (err) {
       toastError(err);
     }
@@ -290,7 +290,7 @@ const FlowBuilder = () => {
           : `${i18n.t("contacts.confirmationModal.importMessage")}`}
       </ConfirmationModal>
       <MainHeader>
-        <Title>Flujos de conversación</Title>
+        <Title>Fluxos de conversa</Title>
         <MainHeaderButtonsWrapper>
           <TextField
             placeholder={i18n.t("contacts.searchPlaceholder")}
@@ -312,7 +312,7 @@ const FlowBuilder = () => {
           >
             <Stack direction={"row"} gap={1}>
               <AddCircle />
-              {"Agregar flujo"}
+              {"Adicionar Fluxo"}
             </Stack>
           </Button>
         </MainHeaderButtonsWrapper>

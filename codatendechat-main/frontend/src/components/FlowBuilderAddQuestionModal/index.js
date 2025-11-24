@@ -64,15 +64,15 @@ const FlowBuilderAddQuestionModal = ({
   const [activeModal, setActiveModal] = useState(false);
   const [integration, setIntegration] = useState();
   const [labels, setLabels] = useState({
-    title: "Agregar pregunta al flujo",
-    btn: "Agregar",
+    title: "Adicionar Perguta ao fluxo",
+    btn: "Adicionar",
   });
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar pregunta del flujo",
-        btn: "Guardar",
+        title: "Editar Perguta do fluxo",
+        btn: "Salvar",
       });
       console.log("FlowTybebotEdit", data.data.typebotIntegration);
       setMessage(data.data.typebotIntegration.message)
@@ -82,8 +82,8 @@ const FlowBuilderAddQuestionModal = ({
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Crear pregunta en el flujo",
-        btn: "Guardar",
+        title: "Cria Perguta no fluxo",
+        btn: "Salvar",
       });
       setIntegration(initialState);
       setActiveModal(true);
@@ -155,7 +155,7 @@ const FlowBuilderAddQuestionModal = ({
         scroll="paper"
       >
         <DialogTitle id="form-dialog-title">
-          {open === "create" ? `Agregar pregunta al flujo` : `Editar pregunta`}
+          {open === "create" ? `Adicionar Perguta ao fluxo` : `Editar Perguta`}
         </DialogTitle>
         <Formik
           initialValues={integration}
@@ -171,7 +171,7 @@ const FlowBuilderAddQuestionModal = ({
             <Form style={{ width: "100%" }}>
               <DialogContent dividers>
                 <TextField
-                  label={"Mensaje"}
+                  label={"Mensagem"}
                   multiline
                   rows={7}
                   name="message"
@@ -186,7 +186,7 @@ const FlowBuilderAddQuestionModal = ({
                 />
                 <Field
                   as={TextField}
-                  label="Guardar respuesta"
+                  label="Salvar resposta"
                   name="answerKey"
                   error={touched.answerKey && Boolean(errors.answerKey)}
                   helperText={touched.answerKey && errors.answerKey}
@@ -211,7 +211,7 @@ const FlowBuilderAddQuestionModal = ({
                   className={classes.btnWrapper}
                   disabled={isSubmitting}
                 >
-                  {open === "create" ? `Agregar` : "Editar"}
+                  {open === "create" ? `Adicionar` : "Editar"}
                 </Button>
               </DialogActions>
             </Form>

@@ -80,7 +80,7 @@ export function ContactNotes ({ ticket }) {
             })
             await loadNotes()
             setNewNote({ note: '' })
-            toast.success(i18n.t("contactNotes.addSuccess"))
+            toast.success('Observação adicionada com sucesso!')
         } catch (e) {
             toast.error(e)
         }
@@ -98,7 +98,7 @@ export function ContactNotes ({ ticket }) {
             await deleteNote(selectedNote.id)
             await loadNotes()
             setSelectedNote({})
-            toast.success(i18n.t("contactNotes.deleteSuccess"))
+            toast.success('Observação excluída com sucesso!')
         } catch (e) {
             toast.error(e)
         }
@@ -129,12 +129,12 @@ export function ContactNotes ({ ticket }) {
     return (
         <>
             <ConfirmationModal
-                title={i18n.t("contactNotes.modalTitle")}
+                title="Excluir Registro"
                 open={showOnDeleteDialog}
                 onClose={setShowOnDeleteDialog}
                 onConfirm={handleDelete}
             >
-                {i18n.t("contactNotes.modalMessage")}
+                Deseja realmente excluir este registro?
             </ConfirmationModal>
             <Formik
                 initialValues={newNote}
@@ -185,12 +185,12 @@ export function ContactNotes ({ ticket }) {
                                             variant="outlined"
                                             fullWidth
                                         >
-                                            {i18n.t("contactNotes.buttons.close")}
+                                            Cancelar
                                         </Button>
                                     </Grid>
                                     <Grid xs={6} item>
                                         <ButtonWithSpinner loading={loading} color="primary" type="submit" variant="contained" autoFocus fullWidth>
-                                            {i18n.t("contactNotes.buttons.save")}
+                                            Salvar
                                         </ButtonWithSpinner>
                                     </Grid>
                                 </Grid>

@@ -18,16 +18,6 @@ Link para o repositório do instalador atualizado:
 
 Consulte **[Implantação](#-implanta%C3%A7%C3%A3o)** para saber como implantar o projeto.
 
-### ☁️ Instalação alternativa (Docker Compose)
-
-Para um fluxo mais simples e reproduzível, foi adicionada uma opção baseada em Docker Compose:
-
-1. Copie o arquivo `infrastructure/docker/example.env` para `infrastructure/docker/.env` e ajuste as variáveis.
-2. Execute `docker compose up -d --build` na pasta `codatendechat-main/`.
-3. Verifique os serviços com `docker compose ps` ou os logs (`docker compose logs backend`).
-
-Essa abordagem roda Postgres, Redis, backend e frontend em contêineres isolados, sem alterar o instalador clássico.
-
 ### 📋 Pré-requisitos
 
 ```

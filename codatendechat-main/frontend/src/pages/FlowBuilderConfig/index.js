@@ -886,7 +886,7 @@ const FlowBuilderConfig = () => {
             <Typography
               style={{ color: "#010101", textShadow: "#010101 1px 0 10px" }}
             >
-              ¡No olvides guardar tu flujo!
+              Não se esqueça de salvar seu fluxo!
             </Typography>
           </Stack>
           <Stack direction={"row"} justifyContent={"end"}>
@@ -895,8 +895,8 @@ const FlowBuilderConfig = () => {
               variant="contained"
               color="primary"
               onClick={() => saveFlow()}
-              >
-              Guardar
+            >
+              Salvar
             </Button>
           </Stack>
 
@@ -965,7 +965,7 @@ const FlowBuilderConfig = () => {
                   spacing={1}
                 >
                   <Typography style={{ color: "#ffffff", textAlign: "center" }}>
-                    Agregar
+                    Adicionar
                   </Typography>
                   <Button
                     onClick={() => addNode("start")}
