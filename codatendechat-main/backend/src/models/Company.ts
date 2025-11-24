@@ -30,25 +30,25 @@ class Company extends Model<Company> {
   @Column(DataType.INTEGER)
   id: number;
 
-  @Column
+  @Column(DataType.STRING)
   name: string;
 
-  @Column
+  @Column(DataType.STRING)
   phone: string;
 
-  @Column
+  @Column(DataType.STRING)
   email: string;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   status: boolean;
 
-  @Column
+  @Column(DataType.STRING)
   dueDate: string;
 
-  @Column
+  @Column(DataType.STRING)
   recurrence: string;
 
-  @Column
+  @Column(DataType.STRING)
   language: string;
 
   @Column({
