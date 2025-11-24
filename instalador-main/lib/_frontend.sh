@@ -57,7 +57,14 @@ frontend_update() {
   sudo su - deploy <<EOF
   cd /home/deploy/${empresa_atualizar}
   pm2 stop ${empresa_atualizar}-frontend
-  git pull
+  
+  # Actualizar desde el repositorio
+  cd /tmp
+  rm -rf chatgruposyst-update-${empresa_atualizar}
+  git clone https://github.com/juliochicas/chatgruposyst.git chatgruposyst-update-${empresa_atualizar}
+  cp -r chatgruposyst-update-${empresa_atualizar}/codatendechat-main/* /home/deploy/${empresa_atualizar}/
+  rm -rf chatgruposyst-update-${empresa_atualizar}
+  
   cd /home/deploy/${empresa_atualizar}/frontend
   npm install
   rm -rf build

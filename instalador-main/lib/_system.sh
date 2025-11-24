@@ -39,9 +39,17 @@ system_git_clone() {
   sleep 2
 
   sudo su - deploy <<EOF
-  git clone https://atendechat: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@github.com/atendechat-org/codatendechat.git /home/deploy/${instancia_add}/
+  # Clonar el repositorio completo
+  git clone https://github.com/juliochicas/chatgruposyst.git /tmp/chatgruposyst-${instancia_add}
+  
+  # Copiar la carpeta codatendechat-main a la ubicación final
+  cp -r /tmp/chatgruposyst-${instancia_add}/codatendechat-main /home/deploy/${instancia_add}
+  
+  # Limpiar el directorio temporal
+  rm -rf /tmp/chatgruposyst-${instancia_add}
 
   sleep 2
+EOF
 }
 
 #######################################
