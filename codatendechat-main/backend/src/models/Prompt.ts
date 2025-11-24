@@ -8,7 +8,8 @@ import {
   Model,
   PrimaryKey,
   Table,
-  UpdatedAt
+  UpdatedAt,
+  DataType
 } from "sequelize-typescript";
 import Queue from "./Queue";
 import Company from "./Company";
@@ -17,52 +18,52 @@ import Company from "./Company";
 class Prompt extends Model<Prompt> {
   @PrimaryKey
   @AutoIncrement
-  @Column
+  @Column(DataType.INTEGER)
   id: number;
 
   @AllowNull(false)
-  @Column
+  @Column(DataType.STRING)
   name: string;
 
   @AllowNull(false)
-  @Column
+  @Column(DataType.STRING)
   prompt: string;
 
   @AllowNull(false)
-  @Column
+  @Column(DataType.STRING)
   apiKey: string;
 
-  @Column({ defaultValue: 10 })
+  @Column({ defaultValue: 10, type: DataType.INTEGER })
   maxMessages: number;
 
-  @Column({ defaultValue: 100 })
+  @Column({ defaultValue: 100, type: DataType.INTEGER })
   maxTokens: number;
 
-  @Column({ defaultValue: 1 })
+  @Column({ defaultValue: 1, type: DataType.INTEGER })
   temperature: number;
 
-  @Column({ defaultValue: 0 })
+  @Column({ defaultValue: 0, type: DataType.INTEGER })
   promptTokens: number;
 
-  @Column({ defaultValue: 0 })
+  @Column({ defaultValue: 0, type: DataType.INTEGER })
   completionTokens: number;
 
-  @Column({ defaultValue: 0 })
+  @Column({ defaultValue: 0, type: DataType.INTEGER })
   totalTokens: number;
 
-  @Column
+  @Column(DataType.STRING)
   model: string;
 
   @AllowNull
   @ForeignKey(() => Queue)
-  @Column
+  @Column(DataType.INTEGER)
   queueId: number;
 
   @BelongsTo(() => Queue)
   queue: Queue;
 
   @ForeignKey(() => Company)
-  @Column
+  @Column(DataType.INTEGER)
   companyId: number;
 
   @BelongsTo(() => Company)
