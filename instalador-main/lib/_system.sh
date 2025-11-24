@@ -40,7 +40,8 @@ system_git_clone() {
 
   sudo su - deploy <<EOF
   # Clonar el repositorio completo
-  git clone https://github.com/juliochicas/chatgruposyst.git /tmp/chatgruposyst-${instancia_add}
+  GIT_URL="${github_url:-https://github.com/juliochicas/chatgruposyst.git}"
+  git clone \${GIT_URL} /tmp/chatgruposyst-${instancia_add}
   
   # Copiar la carpeta codatendechat-main a la ubicación final
   cp -r /tmp/chatgruposyst-${instancia_add}/codatendechat-main /home/deploy/${instancia_add}

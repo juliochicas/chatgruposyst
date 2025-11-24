@@ -61,7 +61,8 @@ frontend_update() {
   # Actualizar desde el repositorio
   cd /tmp
   rm -rf chatgruposyst-update-${empresa_atualizar}
-  git clone https://github.com/juliochicas/chatgruposyst.git chatgruposyst-update-${empresa_atualizar}
+  GIT_URL="${github_url:-https://github.com/juliochicas/chatgruposyst.git}"
+  git clone \${GIT_URL} chatgruposyst-update-${empresa_atualizar}
   cp -r chatgruposyst-update-${empresa_atualizar}/codatendechat-main/* /home/deploy/${empresa_atualizar}/
   rm -rf chatgruposyst-update-${empresa_atualizar}
   

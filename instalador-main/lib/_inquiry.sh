@@ -8,6 +8,22 @@ get_mysql_root_password() {
   read -p "> " mysql_root_password
 }
 
+get_link_git() {
+  
+  print_banner
+  printf "${WHITE} 💻 Si el repositorio es PRIVADO, ingrese su GitHub Personal Access Token (deje vacío si es público):${GRAY_LIGHT}"
+  printf "\n"
+  printf "${WHITE} 💻 Para crear un token: https://github.com/settings/tokens (scope: repo)${GRAY_LIGHT}"
+  printf "\n\n"
+  read -p "> " github_token
+  
+  if [ -z "$github_token" ]; then
+    export github_url="https://github.com/juliochicas/chatgruposyst.git"
+  else
+    export github_url="https://${github_token}@github.com/juliochicas/chatgruposyst.git"
+  fi
+}
+
 
 
 get_instancia_add() {
