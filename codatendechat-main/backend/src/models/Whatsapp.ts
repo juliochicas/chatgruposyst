@@ -27,7 +27,7 @@ import {FlowBuilderModel} from "./FlowBuilder";
 class Whatsapp extends Model<Whatsapp> {
   @PrimaryKey
   @AutoIncrement
-  @Column
+  @Column(DataType.INTEGER)
   id: number;
 
   @AllowNull
@@ -41,16 +41,16 @@ class Whatsapp extends Model<Whatsapp> {
   @Column(DataType.TEXT)
   qrcode: string;
 
-  @Column
+  @Column(DataType.STRING)
   status: string;
 
-  @Column
+  @Column(DataType.STRING)
   battery: string;
 
-  @Column
+  @Column(DataType.BOOLEAN)
   plugged: boolean;
 
-  @Column
+  @Column(DataType.INTEGER)
   retries: number;
 
   @Default("")
@@ -73,12 +73,12 @@ class Whatsapp extends Model<Whatsapp> {
   @Column(DataType.TEXT)
   ratingMessage: string;
 
-  @Column({ defaultValue: "stable" })
+  @Column({ defaultValue: "stable", type: DataType.STRING })
   provider: string;
 
   @Default(false)
   @AllowNull
-  @Column
+  @Column(DataType.BOOLEAN)
   isDefault: boolean;
 
   @CreatedAt
@@ -97,13 +97,13 @@ class Whatsapp extends Model<Whatsapp> {
   whatsappQueues: WhatsappQueue[];
 
   @ForeignKey(() => Company)
-  @Column
+  @Column(DataType.INTEGER)
   companyId: number;
 
   @BelongsTo(() => Company)
   company: Company;
 
-  @Column
+  @Column(DataType.STRING)
   token: string;
 
   //@Default(0)
@@ -113,48 +113,48 @@ class Whatsapp extends Model<Whatsapp> {
   //@Column
   //sendIdQueue: number;
 
-  @Column
+  @Column(DataType.INTEGER)
   transferQueueId: number;
 
-  @Column
+  @Column(DataType.INTEGER)
   timeToTransfer: number;
 
   @ForeignKey(() => Prompt)
-  @Column
+  @Column(DataType.INTEGER)
   promptId: number;
 
   @BelongsTo(() => Prompt)
   prompt: Prompt;
 
   @ForeignKey(() => QueueIntegrations)
-  @Column
+  @Column(DataType.INTEGER)
   integrationId: number;
 
   @BelongsTo(() => QueueIntegrations)
   queueIntegrations: QueueIntegrations;
 
-  @Column
+  @Column(DataType.INTEGER)
   maxUseBotQueues: number;
 
-  @Column
+  @Column(DataType.STRING)
   timeUseBotQueues: string;
 
-  @Column
+  @Column(DataType.INTEGER)
   expiresTicket: number;
 
-  @Column
+  @Column(DataType.STRING)
   expiresInactiveMessage: string;
 
   @ForeignKey(() => FlowBuilderModel)
-  @Column
+  @Column(DataType.INTEGER)
   flowIdNotPhrase: number;
 
   @ForeignKey(() => FlowBuilderModel)
-  @Column
+  @Column(DataType.INTEGER)
   flowIdWelcome: number;
 
   @BelongsTo(() => FlowBuilderModel)
-  flowBuilder: FlowBuilderModel
+  flowBuilder: FlowBuilderModel;
 }
 
 export default Whatsapp;
