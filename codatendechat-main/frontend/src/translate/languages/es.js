@@ -517,26 +517,26 @@ const messages = {
             required: "Describa el entrenamiento para la Inteligencia Artificial",
           },
           modal: {
-            required: "Informe el modelo deseado para el Prompt",
+            required: "Ingrese el modelo deseado para el Prompt",
           },
           maxTokens: {
-            required: "Informe el número máximo de tokens en la respuesta",
+            required: "Ingrese el número máximo de tokens en la respuesta",
           },
           temperature: {
-            required: "Informe la temperatura",
+            required: "Ingrese la temperatura",
           },
           apikey: {
-            required: "Informe la API Key",
+            required: "Ingrese la API Key",
           },
           queueId: {
-            required: "Informe la cola",
+            required: "Seleccione la cola",
           },
           maxMessages: {
-            required: "Informe el número máximo de mensajes en el historial",
+            required: "Ingrese el número máximo de mensajes en el historial",
           },
         },
         success: "¡Prompt guardado con éxito!",
-        setor: "Informe el sector",
+        setor: "Seleccione el sector",
         title: {
           add: "Agregar Prompt",
           edit: "Editar Prompt",
@@ -1023,6 +1023,51 @@ const messages = {
         toasts: {
           deleted: "Registro eliminado",
           success: "Operación realizada con éxito",
+        },
+      },
+      contactListItems: {
+        title: "Contactos",
+        searchPlaceholder: "Buscar",
+        buttons: {
+          add: "Nuevo",
+          lists: "Listas",
+          import: "Importar",
+        },
+        download: "Haga clic aquí para descargar la planilla de ejemplo.",
+        dialog: {
+          name: "Nombre",
+          nameShort: "Nombre corto",
+          nameLong: "Nombre largo",
+          nameRequired: "El nombre es obligatorio",
+          number: "Número",
+          numberShort: "Número corto",
+          numberLong: "Número largo",
+          whatsapp: "WhatsApp",
+          email: "Correo electrónico",
+          emailInvalid: "Correo electrónico inválido",
+          okEdit: "Editar",
+          okAdd: "Agregar",
+          add: "Agregar",
+          edit: "Editar",
+          cancel: "Cancelar",
+        },
+        table: {
+          name: "Nombre",
+          number: "Número",
+          whatsapp: "WhatsApp",
+          email: "Correo electrónico",
+          actions: "Acciones",
+          whatsappValid: "WhatsApp Válido",
+          whatsappInvalid: "WhatsApp Inválido",
+        },
+        confirmationModal: {
+          deleteTitle: "Eliminar",
+          deleteMessage: "Esta acción no puede ser revertida.",
+          importMessage: "¿Desea importar los contactos de esta planilla?",
+          importTitlte: "Importar",
+        },
+        toasts: {
+          deleted: "Registro eliminado",
         },
       },
       campaigns: {
@@ -1556,6 +1601,17 @@ const messages = {
         ERR_FETCH_WAPP_MSG: "Error al buscar el mensaje en WhatsApp, tal vez sea muy antiguo.",
         ERR_QUEUE_COLOR_ALREADY_EXISTS: "Este color ya está en uso, elija otro.",
         ERR_WAPP_GREETING_REQUIRED: "El mensaje de saludo es obligatorio cuando hay más de una cola.",
+      },
+      flowBuilder: {
+        interval: {
+          addTitle: "Agregar un intervalo al flujo",
+          editTitle: "Editar intervalo",
+          timeLabel: "Tiempo en segundos",
+          addButton: "Agregar",
+          editButton: "Editar",
+          addValue: "Agregue el valor del intervalo",
+          maxTime: "Tiempo máximo alcanzado: 120 segundos",
+        },
       },
     }
   }

@@ -386,12 +386,12 @@ const ContactListItems = () => {
                     <IconButton>
                       {contact.isWhatsappValid ? (
                         <CheckCircleIcon
-                          titleAccess="Whatsapp Válido"
+                          titleAccess={i18n.t("contactListItems.table.whatsappValid")}
                           htmlColor="green"
                         />
                       ) : (
                         <BlockIcon
-                          titleAccess="Whatsapp Inválido"
+                          titleAccess={i18n.t("contactListItems.table.whatsappInvalid")}
                           htmlColor="grey"
                         />
                       )}

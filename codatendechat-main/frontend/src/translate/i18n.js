@@ -1,12 +1,12 @@
 import i18n from "i18next";
 import { messages } from "./languages";
 
-const savedLanguage = localStorage.getItem('i18nextLng') || 'en';
+const savedLanguage = localStorage.getItem('i18nextLng') || 'es';
 
 i18n.init({
 	debug: true,
 	defaultNS: ["translations"],
-	fallbackLng: "pt",
+	fallbackLng: "es",
 	ns: ["translations"],
 	resources: messages,
 	lng: savedLanguage,

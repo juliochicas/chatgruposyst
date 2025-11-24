@@ -86,7 +86,7 @@ const App = () => {
 
     useEffect(() => {
         const i18nlocale = localStorage.getItem("i18nextLng");
-        const browserLocale = i18nlocale?.substring(0, 2) ?? 'pt';
+        const browserLocale = i18nlocale?.substring(0, 2) ?? 'es';
 
         if (browserLocale === "pt"){
             setLocale(ptBR);
