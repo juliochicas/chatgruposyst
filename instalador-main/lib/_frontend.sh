@@ -164,6 +164,8 @@ frontend_nginx_setup() {
   frontend_hostname=$(echo "${frontend_url/https:\/\/}")
 
 sudo su - root << EOF
+# Eliminar enlace simbólico existente si existe
+rm -f /etc/nginx/sites-enabled/${instancia_add}-frontend
 
 cat > /etc/nginx/sites-available/${instancia_add}-frontend << 'END'
 server {

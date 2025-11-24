@@ -243,6 +243,9 @@ backend_nginx_setup() {
   backend_hostname=$(echo "${backend_url/https:\/\/}")
 
 sudo su - root << EOF
+# Eliminar enlace simbólico existente si existe
+rm -f /etc/nginx/sites-enabled/${instancia_add}-backend
+
 cat > /etc/nginx/sites-available/${instancia_add}-backend << 'END'
 server {
   server_name $backend_hostname;
