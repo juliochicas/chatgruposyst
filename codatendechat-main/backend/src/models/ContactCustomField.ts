@@ -9,13 +9,14 @@ import {
   ForeignKey,
   BelongsTo
 } from "sequelize-typescript";
+import { DataType } from "sequelize";
 import Contact from "./Contact";
 
 @Table
 class ContactCustomField extends Model<ContactCustomField> {
   @PrimaryKey
   @AutoIncrement
-  @Column
+  @Column(DataType.INTEGER)
   id: number;
 
   @Column
