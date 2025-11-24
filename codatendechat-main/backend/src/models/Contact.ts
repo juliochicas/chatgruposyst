@@ -27,29 +27,29 @@ class Contact extends Model<Contact> {
   @Column(DataType.INTEGER)
   id: number;
 
-  @Column
+  @Column(DataType.STRING)
   name: string;
 
   @AllowNull(false)
   @Unique
-  @Column
+  @Column(DataType.STRING)
   number: string;
 
   @AllowNull(false)
   @Default("")
-  @Column
+  @Column(DataType.STRING)
   email: string;
 
   @Default("")
-  @Column
+  @Column(DataType.STRING)
   profilePicUrl: string;
 
   @Default(false)
-  @Column
+  @Column(DataType.BOOLEAN)
   isGroup: boolean;
 
   @Default(false)
-  @Column
+  @Column(DataType.BOOLEAN)
   disableBot: boolean;
 
   @CreatedAt

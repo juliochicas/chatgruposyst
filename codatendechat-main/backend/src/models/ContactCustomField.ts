@@ -19,10 +19,10 @@ class ContactCustomField extends Model<ContactCustomField> {
   @Column(DataType.INTEGER)
   id: number;
 
-  @Column
+  @Column(DataType.STRING)
   name: string;
 
-  @Column
+  @Column(DataType.STRING)
   value: string;
 
   @ForeignKey(() => Contact)
