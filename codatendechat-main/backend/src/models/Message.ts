@@ -18,7 +18,7 @@ import Queue from "./Queue";
 @Table
 class Message extends Model<Message> {
   @PrimaryKey
-  @Column
+  @Column(DataType.STRING)
   id: string;
 
   @Column(DataType.STRING)
@@ -31,15 +31,15 @@ class Message extends Model<Message> {
   dataJson: string;
 
   @Default(0)
-  @Column
+  @Column(DataType.INTEGER)
   ack: number;
 
   @Default(false)
-  @Column
+  @Column(DataType.BOOLEAN)
   read: boolean;
 
   @Default(false)
-  @Column
+  @Column(DataType.BOOLEAN)
   fromMe: boolean;
 
   @Column(DataType.TEXT)
@@ -55,11 +55,11 @@ class Message extends Model<Message> {
     return null;
   }
 
-  @Column
+  @Column(DataType.STRING)
   mediaType: string;
 
   @Default(false)
-  @Column
+  @Column(DataType.BOOLEAN)
   isDeleted: boolean;
 
   @CreatedAt
@@ -71,42 +71,42 @@ class Message extends Model<Message> {
   updatedAt: Date;
 
   @ForeignKey(() => Message)
-  @Column
+  @Column(DataType.STRING)
   quotedMsgId: string;
 
   @BelongsTo(() => Message, "quotedMsgId")
   quotedMsg: Message;
 
   @ForeignKey(() => Ticket)
-  @Column
+  @Column(DataType.INTEGER)
   ticketId: number;
 
   @BelongsTo(() => Ticket)
   ticket: Ticket;
 
   @ForeignKey(() => Contact)
-  @Column
+  @Column(DataType.INTEGER)
   contactId: number;
 
   @BelongsTo(() => Contact, "contactId")
   contact: Contact;
 
   @ForeignKey(() => Company)
-  @Column
+  @Column(DataType.INTEGER)
   companyId: number;
 
   @BelongsTo(() => Company)
   company: Company;
 
   @ForeignKey(() => Queue)
-  @Column
+  @Column(DataType.INTEGER)
   queueId: number;
 
   @BelongsTo(() => Queue)
   queue: Queue;
   
   @Default(false)
-  @Column
+  @Column(DataType.BOOLEAN)
   isEdited: boolean;
 }
 
