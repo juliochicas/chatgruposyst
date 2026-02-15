@@ -67,8 +67,8 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
   const [preview, setPreview] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar video ao fluxo",
-    btn: "Adicionar"
+    title: i18n.t("flowBuilder.addVideo"),
+    btn: i18n.t("flowBuilder.add")
   });
 
   const [medias, setMedias] = useState([]);
@@ -76,16 +76,16 @@ const FlowBuilderAddVideoModal = ({ open, onSave, onUpdate, data, close }) => {
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar video",
-        btn: "Salvar"
+        title: i18n.t("flowBuilder.editVideo"),
+        btn: i18n.t("flowBuilder.save")
       });
       setPreview(process.env.REACT_APP_BACKEND_URL + '/public/' + data.data.url)
       setRecord(data.data.record)
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar video ao fluxo",
-        btn: "Adicionar"
+        title: i18n.t("flowBuilder.addVideo"),
+        btn: i18n.t("flowBuilder.add")
       });
       setActiveModal(true);
     } else {

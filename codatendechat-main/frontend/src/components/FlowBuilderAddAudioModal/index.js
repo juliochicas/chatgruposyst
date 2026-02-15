@@ -67,8 +67,8 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
   const [preview, setPreview] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar audio ao fluxo",
-    btn: "Adicionar"
+    title: i18n.t("flowBuilder.addAudio"),
+    btn: i18n.t("flowBuilder.add")
   });
 
   const [textDig, setTextDig] = useState();
@@ -78,16 +78,16 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar audio",
-        btn: "Salvar"
+        title: i18n.t("flowBuilder.editAudio"),
+        btn: i18n.t("flowBuilder.save")
       });
       setPreview(process.env.REACT_APP_BACKEND_URL + '/public/' + data.data.url)
       setRecord(data.data.record)
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar audio ao fluxo",
-        btn: "Adicionar"
+        title: i18n.t("flowBuilder.addAudio"),
+        btn: i18n.t("flowBuilder.add")
       });
       setTextDig("");
       setActiveModal(true);
@@ -195,7 +195,7 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
                 <Stack direction={'row'} justifyContent={'center'}>
                 <audio controls="controls">
                   <source src={preview} type="audio/mp3" />
-                  seu navegador não suporta HTML5
+                  {i18n.t("flowBuilder.browserNotSupportHtml5")}
                 </audio>
                 </Stack>
               )}
@@ -203,13 +203,13 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
                 <Stack direction={'row'} justifyContent={'center'}>
                 <Checkbox checked={record} onChange={(e) => setRecord(old => !old)}/>
                 <Stack justifyContent={'center'}>
-                <Typography>Enviar como audio gravado na hora</Typography>
+                <Typography>{i18n.t("flowBuilder.sendAsRecordedAudio")}</Typography>
                 </Stack>
                 </Stack>
               )}
               {!loading && open !== "edit" && (
                 <Button variant="contained" component="label">
-                  Enviar audio
+                  {i18n.t("flowBuilder.sendAudio")}
                   <input
                     type="file"
                     accept="audio/ogg, audio/mp3"

@@ -51,9 +51,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, "Muito curto!")
-    .max(50, "Muito longo!")
-    .required("Digite um nome!"),
+    .min(2, i18n.t("flowBuilder.tooShort"))
+    .max(50, i18n.t("flowBuilder.tooLong"))
+    .required(i18n.t("flowBuilder.enterName")),
 });
 
 const FlowBuilderModal = ({
@@ -115,7 +115,7 @@ const FlowBuilderModal = ({
     <div className={classes.root}>
       <Dialog open={open} onClose={handleClose} fullWidth="md" scroll="paper">
         <DialogTitle id="form-dialog-title">
-          {flowId ? `Editar Fluxo` : `Adicionar Fluxo`}
+          {flowId ? i18n.t("flowBuilder.editFlow") : i18n.t("flowBuilder.addFlow")}
         </DialogTitle>
         <Formik
           initialValues={contact}

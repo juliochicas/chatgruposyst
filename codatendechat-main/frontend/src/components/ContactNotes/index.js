@@ -129,7 +129,7 @@ export function ContactNotes ({ ticket }) {
     return (
         <>
             <ConfirmationModal
-                title="Excluir Registro"
+                title={i18n.t("contactNotes.deleteRecord")}
                 open={showOnDeleteDialog}
                 onClose={setShowOnDeleteDialog}
                 onConfirm={handleDelete}
@@ -185,12 +185,12 @@ export function ContactNotes ({ ticket }) {
                                             variant="outlined"
                                             fullWidth
                                         >
-                                            Cancelar
+                                            {i18n.t("contactNotes.cancel")}
                                         </Button>
                                     </Grid>
                                     <Grid xs={6} item>
                                         <ButtonWithSpinner loading={loading} color="primary" type="submit" variant="contained" autoFocus fullWidth>
-                                            Salvar
+                                            {i18n.t("contactNotes.save")}
                                         </ButtonWithSpinner>
                                     </Grid>
                                 </Grid>

@@ -224,8 +224,8 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
           {campaignEditable ? (
             <>
               {FlowCampaignId
-                ? `Editar campanha com fluxo por frase`
-                : `Nova campanha com fluxo por frase`}
+                ? i18n.t("campaignPhrase.editTitle")
+                : i18n.t("campaignPhrase.newTitle")}
             </>
           ) : (
             <>{`${i18n.t("campaigns.dialog.readonly")}`}</>
@@ -258,7 +258,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
                 />
               </Stack>
               <Stack gap={1}>
-                <Typography>Escolha um fluxo</Typography>
+                <Typography>{i18n.t("campaignPhrase.chooseFlow")}</Typography>
                 <Autocomplete
                   disablePortal
                   id="combo-box-demo"
@@ -276,7 +276,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
                       error={dataItemError.flowId}
                       variant="outlined"
                       style={{ width: "100%" }}
-                      placeholder="Escolha um fluxo"
+                      placeholder={i18n.t("campaignPhrase.chooseFlow")}
                     />
                   )}
                   renderTags={(value, getTagProps) =>
@@ -357,7 +357,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
                 </Select>
               </Stack>
               <Stack gap={1}>
-                <Typography>Qual frase dispara o fluxo?</Typography>
+                <Typography>{i18n.t("campaignPhrase.triggerPhrase")}</Typography>
                 <TextField
                   label={""}
                   name="text"
@@ -399,7 +399,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
                   clearErrors();
                 }}
               >
-                Cancelar
+                {i18n.t("campaignPhrase.cancel")}
               </Button>
               {FlowCampaignId ? (
                 <Button
@@ -407,7 +407,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
                   color="primary"
                   onClick={() => applicationSaveAndEdit()}
                 >
-                  Salvar campanha
+                  {i18n.t("campaignPhrase.saveCampaign")}
                 </Button>
               ) : (
                 <Button

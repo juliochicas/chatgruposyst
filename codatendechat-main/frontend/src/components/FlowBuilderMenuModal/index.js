@@ -77,13 +77,13 @@ const selectFieldStyles = {
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, "Muito curto!")
-    .max(50, "Muito longo!")
-    .required("Digite um nome!"),
+    .min(2, i18n.t("flowBuilder.tooShort"))
+    .max(50, i18n.t("flowBuilder.tooLong"))
+    .required(i18n.t("flowBuilder.enterName")),
   text: Yup.string()
-    .min(2, "Muito curto!")
-    .max(50, "Muito longo!")
-    .required("Digite uma mensagem!")
+    .min(2, i18n.t("flowBuilder.tooShort"))
+    .max(50, i18n.t("flowBuilder.tooLong"))
+    .required(i18n.t("flowBuilder.enterMessage"))
 });
 
 const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
@@ -99,23 +99,23 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
   const [arrayOption, setArrayOption] = useState([]);
 
   const [labels, setLabels] = useState({
-    title: "Adicionar menu ao fluxo",
-    btn: "Adicionar"
+    title: i18n.t("flowBuilder.addMenu"),
+    btn: i18n.t("flowBuilder.add")
   });
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar menu",
-        btn: "Salvar"
+        title: i18n.t("flowBuilder.editMenu"),
+        btn: i18n.t("flowBuilder.save")
       });
       setTextDig(data.data.message);
       setArrayOption(data.data.arrayOption);
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar menu ao fluxo",
-        btn: "Adicionar"
+        title: i18n.t("flowBuilder.addMenu"),
+        btn: i18n.t("flowBuilder.add")
       });
       setTextDig();
       setArrayOption([]);
@@ -180,7 +180,7 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
               style={{ width: "100%" }}
             />
             <Stack direction={"row"} justifyContent={"space-between"}>
-              <Typography>Adicionar Opção</Typography>
+              <Typography>{i18n.t("flowBuilder.addOption")}</Typography>
               <Button
                 onClick={() =>
                   setArrayOption(old => [
@@ -196,10 +196,10 @@ const FlowBuilderMenuModal = ({ open, onSave, onUpdate, data, close }) => {
             </Stack>
             {arrayOption.map((item, index) => (
               <Stack width={"100%"} key={item.number}>
-                <Typography>Digite {item.number}</Typography>
+                <Typography>{i18n.t("flowBuilder.typeNumber", { number: item.number })}</Typography>
                 <Stack direction={"row"} width={"100%"} style={{ gap: "8px" }}>
                   <TextField
-                    placeholder={"Digite opção"}
+                    placeholder={i18n.t("flowBuilder.typeOption")}
                     variant="outlined"
                     defaultValue={item.value}
                     style={{ width: "100%" }}

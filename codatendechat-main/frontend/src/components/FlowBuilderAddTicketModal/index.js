@@ -129,7 +129,7 @@ const FlowBuilderTicketModal = ({
         <div className={classes.root}>
             <Dialog open={activeModal} onClose={handleClose} fullWidth="md" scroll="paper">
                 <DialogTitle id="form-dialog-title">
-                    {open === 'create' ? `Adicionar um intervalo ao fluxo` : `Editar intervalo`}
+                    {open === 'create' ? i18n.t("flowBuilder.addTicket") : i18n.t("flowBuilder.editTicket")}
                 </DialogTitle>
                 <Stack>
                     <DialogContent dividers>
@@ -182,7 +182,7 @@ const FlowBuilderTicketModal = ({
                             className={classes.btnWrapper}
                             onClick={handleSaveContact}
                         >
-                            {open === 'create' ? `Adicionar` : 'Editar'}
+                            {open === 'create' ? i18n.t("flowBuilder.add") : i18n.t("flowBuilder.edit")}
                         </Button>
                     </DialogActions>
                 </Stack>

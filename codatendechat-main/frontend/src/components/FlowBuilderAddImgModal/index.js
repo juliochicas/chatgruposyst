@@ -68,8 +68,8 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
   const [oldImage, setOldImage] = useState();
 
   const [labels, setLabels] = useState({
-    title: "Adicionar imagem ao fluxo",
-    btn: "Adicionar"
+    title: i18n.t("flowBuilder.addImage"),
+    btn: i18n.t("flowBuilder.add")
   });
 
   const [medias, setMedias] = useState([]);
@@ -77,16 +77,16 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar imagem",
-        btn: "Salvar"
+        title: i18n.t("flowBuilder.editImage"),
+        btn: i18n.t("flowBuilder.save")
       });
       setOldImage(data.data.url)
       setPreview(process.env.REACT_APP_BACKEND_URL + '/public/' + data.data.url)
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar imagem ao fluxo",
-        btn: "Adicionar"
+        title: i18n.t("flowBuilder.addImage"),
+        btn: i18n.t("flowBuilder.add")
       });
       setActiveModal(true);
     } else {
@@ -190,7 +190,7 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
               {preview && <img src={preview} style={{ width: "552px" }} />}
               {!loading && open !== "edit" && (
                 <Button variant="contained" component="label">
-                  Enviar imagem
+                  {i18n.t("flowBuilder.sendImage")}
                   <input
                     type="file"
                     accept="image/png, image/jpg, image/jpeg"

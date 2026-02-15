@@ -64,15 +64,15 @@ const FlowBuilderAddQuestionModal = ({
   const [activeModal, setActiveModal] = useState(false);
   const [integration, setIntegration] = useState();
   const [labels, setLabels] = useState({
-    title: "Adicionar Perguta ao fluxo",
-    btn: "Adicionar",
+    title: i18n.t("flowBuilder.addQuestion"),
+    btn: i18n.t("flowBuilder.add"),
   });
 
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar Perguta do fluxo",
-        btn: "Salvar",
+        title: i18n.t("flowBuilder.editQuestion"),
+        btn: i18n.t("flowBuilder.save"),
       });
       console.log("FlowTybebotEdit", data.data.typebotIntegration);
       setMessage(data.data.typebotIntegration.message)
@@ -82,8 +82,8 @@ const FlowBuilderAddQuestionModal = ({
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Cria Perguta no fluxo",
-        btn: "Salvar",
+        title: i18n.t("flowBuilder.createQuestion"),
+        btn: i18n.t("flowBuilder.save"),
       });
       setIntegration(initialState);
       setActiveModal(true);
@@ -155,7 +155,7 @@ const FlowBuilderAddQuestionModal = ({
         scroll="paper"
       >
         <DialogTitle id="form-dialog-title">
-          {open === "create" ? `Adicionar Perguta ao fluxo` : `Editar Perguta`}
+          {open === "create" ? i18n.t("flowBuilder.addQuestion") : i18n.t("flowBuilder.editQuestion")}
         </DialogTitle>
         <Formik
           initialValues={integration}
@@ -186,7 +186,7 @@ const FlowBuilderAddQuestionModal = ({
                 />
                 <Field
                   as={TextField}
-                  label="Salvar resposta"
+                  label={i18n.t("flowBuilder.saveResponse")}
                   name="answerKey"
                   error={touched.answerKey && Boolean(errors.answerKey)}
                   helperText={touched.answerKey && errors.answerKey}
@@ -211,7 +211,7 @@ const FlowBuilderAddQuestionModal = ({
                   className={classes.btnWrapper}
                   disabled={isSubmitting}
                 >
-                  {open === "create" ? `Adicionar` : "Editar"}
+                  {open === "create" ? i18n.t("flowBuilder.add") : i18n.t("flowBuilder.edit")}
                 </Button>
               </DialogActions>
             </Form>

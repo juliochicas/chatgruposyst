@@ -55,13 +55,13 @@ const useStyles = makeStyles(theme => ({
 
 const ContactSchema = Yup.object().shape({
   name: Yup.string()
-    .min(2, "Muito curto!")
-    .max(50, "Muito longo!")
-    .required("Digite um nome!"),
+    .min(2, i18n.t("flowBuilder.tooShort"))
+    .max(50, i18n.t("flowBuilder.tooLong"))
+    .required(i18n.t("flowBuilder.enterName")),
   text: Yup.string()
-    .min(2, "Muito curto!")
-    .max(50, "Muito longo!")
-    .required("Digite uma mensagem!")
+    .min(2, i18n.t("flowBuilder.tooShort"))
+    .max(50, i18n.t("flowBuilder.tooLong"))
+    .required(i18n.t("flowBuilder.enterMessage"))
 });
 
 const FlowBuilderAddTextModal = ({ open, onSave, onUpdate, data, close }) => {
@@ -71,8 +71,8 @@ const FlowBuilderAddTextModal = ({ open, onSave, onUpdate, data, close }) => {
   const [activeModal, setActiveModal] = useState(false);
 
   const [labels, setLabels] = useState({
-    title: "Adicionar mensagem ao fluxo",
-    btn: "Adicionar"
+    title: i18n.t("flowBuilder.addText"),
+    btn: i18n.t("flowBuilder.add")
   });
 
   const [textDig, setTextDig] = useState();
@@ -80,15 +80,15 @@ const FlowBuilderAddTextModal = ({ open, onSave, onUpdate, data, close }) => {
   useEffect(() => {
     if (open === "edit") {
       setLabels({
-        title: "Editar mensagem ao fluxo",
-        btn: "Salvar"
+        title: i18n.t("flowBuilder.editText"),
+        btn: i18n.t("flowBuilder.save")
       });
       setTextDig(data.data.label);
       setActiveModal(true);
     } else if (open === "create") {
       setLabels({
-        title: "Adicionar mensagem ao fluxo",
-        btn: "Adicionar"
+        title: i18n.t("flowBuilder.addText"),
+        btn: i18n.t("flowBuilder.add")
       });
       setTextDig("");
       setActiveModal(true);

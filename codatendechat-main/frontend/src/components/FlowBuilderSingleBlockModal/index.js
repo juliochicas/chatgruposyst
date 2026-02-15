@@ -133,8 +133,8 @@ const FlowBuilderSingleBlockModal = ({
   const [variables, setVariables] = useState([]);
 
   const [labels, setLabels] = useState({
-    title: "Adicionar conteúdo ao fluxo",
-    btn: "Adicionar",
+    title: i18n.t("flowBuilder.addContent"),
+    btn: i18n.t("flowBuilder.add"),
   });
 
   const handleElements = (newNameFiles) => {
@@ -156,7 +156,7 @@ const FlowBuilderSingleBlockModal = ({
         .querySelector(`.${newArrMessage[i]}`)
         .querySelector(".MuiInputBase-input").value;
       if (!value) {
-        toast.error("Campos de mensagem vazio!");
+        toast.error(i18n.t("flowBuilder.emptyMessageFields"));
         setLoading(false);
         throw "";
       }
@@ -173,7 +173,7 @@ const FlowBuilderSingleBlockModal = ({
         .querySelector(`.${newArrInterval[i]}`)
         .querySelector(".MuiInputBase-input").value;
       if (parseInt(value) === 0 || parseInt(value) > 120) {
-        toast.error("Intervalo não pode ser 0 ou maior que 120!");
+        toast.error(i18n.t("flowBuilder.intervalCannotBeZero"));
         setLoading(false);
         throw "";
       }
@@ -518,7 +518,7 @@ const FlowBuilderSingleBlockModal = ({
       `.audio${number}`
     ).innerHTML = `<audio controls="controls">
     <source src="${audioBlob}" type="audio/mp3" />
-    seu navegador não suporta HTML5
+    ${i18n.t("flowBuilder.browserNotSupportHtml5")}
   </audio>`;
     document.querySelector(`.btnAudio${number}`).remove();
   };
@@ -549,7 +549,7 @@ const FlowBuilderSingleBlockModal = ({
 
     divConteudo.innerHTML = `<video controls="controls" style="width: 200px;">
     <source src="${videoBlob}" type="video/mp4" />
-    seu navegador não suporta HTML5
+    ${i18n.t("flowBuilder.browserNotSupportHtml5")}
   </video>`;
 
     document.querySelector(`.video${number}`).appendChild(divConteudo);
@@ -571,7 +571,7 @@ const FlowBuilderSingleBlockModal = ({
         <Stack sx={{ position: "absolute", right: 6 }}>
           <Delete onClick={() => deleteElementsTypeOne(number, "img")} />
         </Stack>
-        <Typography textAlign={"center"}>Imagem</Typography>
+        <Typography textAlign={"center"}>{i18n.t("flowBuilder.image")}</Typography>
         <Stack direction={"row"} justifyContent={"center"}>
           <img
             src={
@@ -589,7 +589,7 @@ const FlowBuilderSingleBlockModal = ({
             component="label"
             className={`btnImg${number}`}
           >
-            Enviar imagem
+            {i18n.t("flowBuilder.sendImage")}
             <input
               type="file"
               accept="image/png, image/jpg, image/jpeg"
@@ -632,7 +632,7 @@ const FlowBuilderSingleBlockModal = ({
             onClick={() => deleteElementsTypeOne(number, "audio")}
           />
         </Stack>
-        <Typography textAlign={"center"}>Audio</Typography>
+        <Typography textAlign={"center"}>{i18n.t("flowBuilder.audio")}</Typography>
         <div
           className={`audio${number}`}
           style={{
@@ -649,7 +649,7 @@ const FlowBuilderSingleBlockModal = ({
                 }
                 type="audio/mp3"
               />
-              seu navegador não suporta HTML5
+              {i18n.t("flowBuilder.browserNotSupportHtml5")}
             </audio>
           )}
         </div>
@@ -659,7 +659,7 @@ const FlowBuilderSingleBlockModal = ({
             component="label"
             className={`btnAudio${number}`}
           >
-            Enviar audio
+            {i18n.t("flowBuilder.sendAudio")}
             <input
               type="file"
               accept="audio/ogg, audio/mp3, audio/opus"
@@ -674,7 +674,7 @@ const FlowBuilderSingleBlockModal = ({
             defaultChecked={valueRecordDefault === "ok" ? false : true}
           />
           <Stack justifyContent={"center"}>
-            <Typography>Enviar como audio gravado na hora</Typography>
+            <Typography>{i18n.t("flowBuilder.sendAsRecordedAudio")}</Typography>
           </Stack>
         </Stack>
       </Stack>
@@ -696,7 +696,7 @@ const FlowBuilderSingleBlockModal = ({
         <Stack sx={{ position: "absolute", right: 6 }}>
           <Delete onClick={() => deleteElementsTypeOne(number, "video")} />
         </Stack>
-        <Typography textAlign={"center"}>Video</Typography>
+        <Typography textAlign={"center"}>{i18n.t("flowBuilder.video")}</Typography>
         <div
           className={`video${number}`}
           style={{
@@ -713,7 +713,7 @@ const FlowBuilderSingleBlockModal = ({
                 }
                 type="video/mp4"
               />
-              seu navegador não suporta HTML5
+              {i18n.t("flowBuilder.browserNotSupportHtml5")}
             </video>
           )}
         </div>
@@ -723,7 +723,7 @@ const FlowBuilderSingleBlockModal = ({
             component="label"
             className={`btnVideo${number}`}
           >
-            Enviar video
+            {i18n.t("flowBuilder.sendVideo")}
             <input
               type="file"
               accept="video/mp4"
@@ -751,9 +751,9 @@ const FlowBuilderSingleBlockModal = ({
         <Stack sx={{ position: "absolute", right: 6 }}>
           <Delete onClick={() => deleteElementsTypeOne(number, "message")} />
         </Stack>
-        <Typography textAlign={"center"}>Texto</Typography>
+        <Typography textAlign={"center"}>{i18n.t("flowBuilder.text")}</Typography>
         <TextField
-          label={"Mensagem"}
+          label={i18n.t("flowBuilder.message")}
           defaultValue={valueDefault}
           multiline
           rows={7}
@@ -782,9 +782,9 @@ const FlowBuilderSingleBlockModal = ({
         <Stack sx={{ position: "absolute", right: 6 }}>
           <Delete onClick={() => deleteElementsTypeOne(number, "interval")} />
         </Stack>
-        <Typography textAlign={"center"}>Intervalo</Typography>
+        <Typography textAlign={"center"}>{i18n.t("flowBuilder.interval")}</Typography>
         <TextField
-          label={"Tempo em segundos"}
+          label={i18n.t("flowBuilder.timeInSeconds")}
           className={`interval${number}`}
           defaultValue={valueDefault}
           type="number"
@@ -805,8 +805,8 @@ const FlowBuilderSingleBlockModal = ({
 
     if (open === "edit") {
       setLabels({
-        title: "Editar conteúdo",
-        btn: "Salvar",
+        title: i18n.t("flowBuilder.editContent"),
+        btn: i18n.t("flowBuilder.save"),
       });
 
       setElementsSeq(data.data.seq);
@@ -910,8 +910,8 @@ const FlowBuilderSingleBlockModal = ({
     }
     if (open === "create") {
       setLabels({
-        title: "Adicionar menu ao fluxo",
-        btn: "Adicionar",
+        title: i18n.t("flowBuilder.addMenu"),
+        btn: i18n.t("flowBuilder.add"),
       });
       setTextDig();
       setArrayOption([]);
@@ -1028,7 +1028,7 @@ const FlowBuilderSingleBlockModal = ({
               ...data,
               data: mountData,
             });
-            toast.success("Conteúdo adicionada com sucesso!");
+            toast.success(i18n.t("flowBuilder.contentAddedSuccess"));
             handleClose();
             setLoading(false);
 
@@ -1042,7 +1042,7 @@ const FlowBuilderSingleBlockModal = ({
         const verify = verifyButtonsUpload();
         if (verify) {
           setLoading(false);
-          return toast.error("Delete os cards vazios(Imagem, Audio e Video)");
+          return toast.error(i18n.t("flowBuilder.deleteEmptyCards"));
         }
         await api
           .post("/flowbuilder/content", formData)
@@ -1055,7 +1055,7 @@ const FlowBuilderSingleBlockModal = ({
               ...data,
               data: mountData,
             });
-            toast.success("Conteúdo adicionada com sucesso!");
+            toast.success(i18n.t("flowBuilder.contentAddedSuccess"));
             await handleClose();
             setLoading(false);
           })
@@ -1103,7 +1103,7 @@ const FlowBuilderSingleBlockModal = ({
             onSave({
               ...mountData,
             });
-            toast.success("Conteúdo adicionada com sucesso!");
+            toast.success(i18n.t("flowBuilder.contentAddedSuccess"));
             handleClose();
             setLoading(false);
 
@@ -1115,7 +1115,7 @@ const FlowBuilderSingleBlockModal = ({
         const verify = verifyButtonsUpload();
         if (verify) {
           setLoading(false);
-          return toast.error("Delete os cards vazios(Imagem, Audio e Video)");
+          return toast.error(i18n.t("flowBuilder.deleteEmptyCards"));
         }
         await api
           .post("/flowbuilder/content", formData)
@@ -1127,7 +1127,7 @@ const FlowBuilderSingleBlockModal = ({
             onSave({
               ...mountData,
             });
-            toast.success("Conteúdo adicionada com sucesso!");
+            toast.success(i18n.t("flowBuilder.contentAddedSuccess"));
             handleClose();
             setLoading(false);
           })
@@ -1151,7 +1151,7 @@ const FlowBuilderSingleBlockModal = ({
       <Dialog open={activeModal} fullWidth="md" scroll="paper">
         {!loading && (
           <DialogTitle id="form-dialog-title">
-            Adicionar conteúdo ao fluxo
+            {i18n.t("flowBuilder.addContent")}
           </DialogTitle>
         )}
         <Stack>
@@ -1198,7 +1198,7 @@ const FlowBuilderSingleBlockModal = ({
                     marginRight: "4px",
                   }}
                 />
-                Texto
+                {i18n.t("flowBuilder.text")}
               </Button>
               <Button
                 variant="contained"
@@ -1228,7 +1228,7 @@ const FlowBuilderSingleBlockModal = ({
                     marginRight: "4px",
                   }}
                 />
-                Intervalo
+                {i18n.t("flowBuilder.interval")}
               </Button>
               <Button
                 variant="contained"
@@ -1255,7 +1255,7 @@ const FlowBuilderSingleBlockModal = ({
                     marginRight: "4px",
                   }}
                 />
-                Imagem
+                {i18n.t("flowBuilder.image")}
               </Button>
               <Button
                 variant="contained"
@@ -1282,7 +1282,7 @@ const FlowBuilderSingleBlockModal = ({
                     marginRight: "4px",
                   }}
                 />
-                Audio
+                {i18n.t("flowBuilder.audio")}
               </Button>
               <Button
                 variant="contained"
@@ -1309,12 +1309,12 @@ const FlowBuilderSingleBlockModal = ({
                     marginRight: "4px",
                   }}
                 />
-                Video
+                {i18n.t("flowBuilder.video")}
               </Button>
             </Stack>
             <Divider />
             <Box style={{ width: "100%", textAlign: "center" }}>
-              <Typography>Variáveis</Typography>
+              <Typography>{i18n.t("flowBuilder.variables")}</Typography>
               {variables && (
                 <>
                   {variables.map((item) => (
@@ -1359,7 +1359,7 @@ const FlowBuilderSingleBlockModal = ({
           >
             <Stack>
               <Typography>
-                Subindo os arquivos e criando o conteúdo...
+                {i18n.t("flowBuilder.uploadingFiles")}
               </Typography>
               <Stack style={{ alignSelf: "center", marginTop: "12px" }}>
                 <CircularProgress />

@@ -141,7 +141,7 @@ export default function ContactNotesDialog ({ modalOpen, onClose, ticket }) {
     return (
         <>
             <ConfirmationModal
-                title="Excluir Registro"
+                title={i18n.t("contactNotes.deleteRecord")}
                 open={showOnDeleteDialog}
                 onClose={setShowOnDeleteDialog}
                 onConfirm={handleDelete}
@@ -191,10 +191,10 @@ export default function ContactNotesDialog ({ modalOpen, onClose, ticket }) {
                             </DialogContent>
                             <DialogActions>
                                 <Button onClick={handleClose} color="primary">
-                                    Fechar
+                                    {i18n.t("contactNotes.close")}
                                 </Button>
                                 <ButtonWithSpinner loading={loading} color="primary" type="submit" variant="contained" autoFocus>
-                                    Salvar
+                                    {i18n.t("contactNotes.save")}
                                 </ButtonWithSpinner>
                             </DialogActions>
                         </Form>

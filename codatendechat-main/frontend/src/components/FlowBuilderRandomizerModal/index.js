@@ -91,10 +91,10 @@ const FlowBuilderRandomizerModal = ({
 
   const handleSaveContact = async values => {
     if (!percent || parseInt(percent) <= 0) {
-      return toast.error("Adicione o valor de intervalo");
+      return toast.error(i18n.t("flowBuilder.addIntervalValue"));
     }
     if (parseInt(percent) > 120) {
-      return toast.error("Máximo de tempo atingido 120 segundos");
+      return toast.error(i18n.t("flowBuilder.maxTimeReached"));
     }
     if (open === "edit") {
       onUpdate({
@@ -119,8 +119,8 @@ const FlowBuilderRandomizerModal = ({
       >
         <DialogTitle id="form-dialog-title">
           {open === "create"
-            ? `Adicionar um randomizador ao fluxo`
-            : `Editar randomizador`}
+            ? i18n.t("flowBuilder.addRandomizer")
+            : i18n.t("flowBuilder.editRandomizer")}
         </DialogTitle>
         <Stack>
           <DialogContent dividers>
@@ -150,7 +150,7 @@ const FlowBuilderRandomizerModal = ({
               className={classes.btnWrapper}
               onClick={() => handleSaveContact()}
             >
-              {open === "create" ? `Adicionar` : "Editar"}
+              {open === "create" ? i18n.t("flowBuilder.add") : i18n.t("flowBuilder.edit")}
             </Button>
           </DialogActions>
         </Stack>
