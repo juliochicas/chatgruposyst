@@ -500,6 +500,9 @@ const messages = {
 					temperature: "Temperature",
 					apikey: "API Key",
 					max_messages: "Maximum messages in History",
+					voice: "Voice",
+					voiceKey: "Voice Key",
+					voiceRegion: "Voice Region",
 				},
 				formErrors: {
 					name: {
@@ -541,6 +544,12 @@ const messages = {
 					okEdit: "Save",
 					cancel: "Cancel",
 				},
+			},
+			webhookModal: {
+				toasts: {
+					update: "Webhook updated successfully!",
+				},
+				saveSuccess: "Webhook saved successfully!",
 			},
 			prompts: {
 				title: "Prompts",
@@ -1632,6 +1641,10 @@ const messages = {
 				contentAddedSuccess: "Content added successfully!",
 				deleteEmptyCards: "Delete empty cards (Image, Audio and Video)",
 				uploadingFiles: "Uploading files and creating content...",
+				optionTitle: "Option title",
+				optionText: "Enter the option text",
+				titleNotDefined: "Title not defined",
+				options: "Options",
 			},
 			contactNotes: {
 				deleteRecord: "Delete Record",

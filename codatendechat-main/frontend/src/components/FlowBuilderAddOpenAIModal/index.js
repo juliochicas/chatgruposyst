@@ -226,7 +226,7 @@ const FlowBuilderOpenAIModal = ({ open, onSave, data, onUpdate, close }) => {
                       multiple={false}
                     >
                       <MenuItem key={"texto"} value={"texto"}>
-                        Texto
+                        {i18n.t("flowBuilder.text")}
                       </MenuItem>
                       <MenuItem
                         key={"pt-BR-FranciscaNeural"}

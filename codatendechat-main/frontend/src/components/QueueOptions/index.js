@@ -132,7 +132,7 @@ export function QueueOptionStepper({ queueId, options, updateOptions }) {
             onChange={(event) => handleOptionChangeTitle(event, index)}
             size="small"
             className={classes.input}
-            placeholder="Título da opção"
+            placeholder={i18n.t("flowBuilder.optionTitle")}
           />
           {option.edition && (
             <>
@@ -162,7 +162,7 @@ export function QueueOptionStepper({ queueId, options, updateOptions }) {
     return (
       <>
         <Typography>
-          {option.title !== "" ? option.title : "Título não definido"}
+          {option.title !== "" ? option.title : i18n.t("flowBuilder.titleNotDefined")}
           <IconButton
             variant="outlined"
             size="small"
@@ -188,7 +188,7 @@ export function QueueOptionStepper({ queueId, options, updateOptions }) {
             onChange={(event) => handleOptionChangeMessage(event, index)}
             size="small"
             className={classes.input}
-            placeholder="Digite o texto da opção"
+            placeholder={i18n.t("flowBuilder.optionText")}
           />
         </>
       );
@@ -328,7 +328,7 @@ export function QueueOptions({ queueId }) {
     <div className={classes.root}>
       <br />
       <Typography>
-        Opções
+        {i18n.t("flowBuilder.options")}
         <Button
           color="primary"
           size="small"

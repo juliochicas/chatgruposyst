@@ -136,6 +136,20 @@ REDIS_OPT_LIMITER_DURATION=3000
 USER_LIMIT=10000
 CONNECTIONS_LIMIT=100000
 CLOSED_SEND_BY_ME=true
+
+# ─── Email (optional, configure later) ───
+#MAIL_HOST="smtp.gmail.com"
+#MAIL_USER="your@email.com"
+#MAIL_PASS="YourPassword"
+#MAIL_FROM="your@email.com"
+#MAIL_PORT="465"
+
+# ─── Payment (optional, configure later) ───
+#GERENCIANET_SANDBOX=false
+#GERENCIANET_CLIENT_ID=Client_Id
+#GERENCIANET_CLIENT_SECRET=Client_Secret
+#GERENCIANET_PIX_CERT=certificate
+#GERENCIANET_PIX_KEY=pix_key
 EOF
 
   # Frontend .env
