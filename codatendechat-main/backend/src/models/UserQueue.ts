@@ -4,8 +4,7 @@ import {
   CreatedAt,
   UpdatedAt,
   Model,
-  ForeignKey,
-  DataType
+  ForeignKey
 } from "sequelize-typescript";
 import Queue from "./Queue";
 import User from "./User";
@@ -13,11 +12,11 @@ import User from "./User";
 @Table
 class UserQueue extends Model<UserQueue> {
   @ForeignKey(() => User)
-  @Column(DataType.INTEGER)
+  @Column
   userId: number;
 
   @ForeignKey(() => Queue)
-  @Column(DataType.INTEGER)
+  @Column
   queueId: number;
 
   @CreatedAt

@@ -15,19 +15,19 @@ import {
 export class FlowBuilderModel extends Model<FlowBuilderModel> {
   @PrimaryKey
   @AutoIncrement
-  @Column(DataType.INTEGER)
+  @Column
   id: number;
 
-  @Column(DataType.INTEGER)
+  @Column
   user_id: number;
 
-  @Column(DataType.STRING)
+  @Column
   name: string;
 
-  @Column(DataType.INTEGER)
+  @Column
   company_id: number;
 
-  @Column(DataType.BOOLEAN)
+  @Column
   active: boolean;
 
   @Column(DataType.JSON)

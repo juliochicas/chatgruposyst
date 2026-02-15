@@ -1,4 +1,5 @@
-import "./bootstrap"; // bootstrap.ts ya importa reflect-metadata
+import "./bootstrap";
+import "reflect-metadata";
 import "express-async-errors";
 import express, { Request, Response, NextFunction } from "express";
 import cors from "cors";

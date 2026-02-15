@@ -27,36 +27,36 @@ import Whatsapp from "./Whatsapp";
 class User extends Model<User> {
   @PrimaryKey
   @AutoIncrement
-  @Column(DataType.INTEGER)
+  @Column
   id: number;
 
-  @Column(DataType.STRING)
+  @Column
   name: string;
 
-  @Column(DataType.STRING)
+  @Column
   email: string;
   
-  @Column(DataType.STRING)
+  @Column
   allTicket: string;
 
   @Column(DataType.VIRTUAL)
   password: string;
 
-  @Column(DataType.STRING)
+  @Column
   passwordHash: string;
 
   @Default(0)
-  @Column(DataType.INTEGER)
+  @Column
   tokenVersion: number;
 
   @Default("admin")
-  @Column(DataType.STRING)
+  @Column
   profile: string;
 
-  @Column(DataType.BOOLEAN)
+  @Column
   super: boolean;
 
-  @Column(DataType.BOOLEAN)
+  @Column
   online: boolean;
 
   @CreatedAt
@@ -66,7 +66,7 @@ class User extends Model<User> {
   updatedAt: Date;
 
   @ForeignKey(() => Company)
-  @Column(DataType.INTEGER)
+  @Column
   companyId: number;
 
   @BelongsTo(() => Company)
@@ -86,7 +86,7 @@ class User extends Model<User> {
   quickMessages: QuickMessage[];
 
   @ForeignKey(() => Whatsapp)
-  @Column(DataType.INTEGER)
+  @Column
   whatsappId: number;
 
   @BelongsTo(() => Whatsapp)

@@ -27,28 +27,28 @@ import Whatsapp from "./Whatsapp";
 class Company extends Model<Company> {
   @PrimaryKey
   @AutoIncrement
-  @Column(DataType.INTEGER)
+  @Column
   id: number;
 
-  @Column(DataType.STRING)
+  @Column
   name: string;
 
-  @Column(DataType.STRING)
+  @Column
   phone: string;
 
-  @Column(DataType.STRING)
+  @Column
   email: string;
 
-  @Column(DataType.BOOLEAN)
+  @Column
   status: boolean;
 
-  @Column(DataType.STRING)
+  @Column
   dueDate: string;
 
-  @Column(DataType.STRING)
+  @Column
   recurrence: string;
 
-  @Column(DataType.STRING)
+  @Column
   language: string;
 
   @Column({
@@ -57,7 +57,7 @@ class Company extends Model<Company> {
   schedules: [];
 
   @ForeignKey(() => Plan)
-  @Column(DataType.INTEGER)
+  @Column
   planId: number;
 
   @BelongsTo(() => Plan)

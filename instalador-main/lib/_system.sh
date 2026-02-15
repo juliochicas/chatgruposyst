@@ -9,7 +9,7 @@
 #######################################
 system_create_user() {
   print_banner
-  printf "${WHITE} 💻 Ahora, vamos a crear el usuario para la instancia...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Agora, vamos criar o usuário para a instancia...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -32,25 +32,16 @@ EOF
 #######################################
 system_git_clone() {
   print_banner
-  printf "${WHITE} 💻 Descargando el código de Atendechat...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Fazendo download do código Atendechat...${GRAY_LIGHT}"
   printf "\n\n"
 
 
   sleep 2
 
   sudo su - deploy <<EOF
-  # Clonar el repositorio completo
-  GIT_URL="${github_url:-https://github.com/juliochicas/chatgruposyst.git}"
-  git clone \${GIT_URL} /tmp/chatgruposyst-${instancia_add}
-  
-  # Copiar la carpeta codatendechat-main a la ubicación final
-  cp -r /tmp/chatgruposyst-${instancia_add}/codatendechat-main /home/deploy/${instancia_add}
-  
-  # Limpiar el directorio temporal
-  rm -rf /tmp/chatgruposyst-${instancia_add}
+  git clone https://atendechat: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@github.com/atendechat-org/codatendechat.git /home/deploy/${instancia_add}/
 
   sleep 2
-EOF
 }
 
 #######################################
@@ -60,7 +51,7 @@ EOF
 #######################################
 system_update() {
   print_banner
-  printf "${WHITE} 💻 Vamos a actualizar el sistema de Atendechat...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Vamos atualizar o sistema do Atendechat...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -82,7 +73,7 @@ EOF
 #######################################
 deletar_tudo() {
   print_banner
-  printf "${WHITE} 💻 Vamos a eliminar el Atendechat...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Vamos deletar o Atendechat...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -113,7 +104,7 @@ EOF
   sleep 2
 
   print_banner
-  printf "${WHITE} 💻 Eliminación de la Instancia/Empresa ${empresa_delete} realizada con éxito...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Remoção da Instancia/Empresa ${empresa_delete} realizado com sucesso ...${GRAY_LIGHT}"
   printf "\n\n"
 
 
@@ -128,7 +119,7 @@ EOF
 #######################################
 configurar_bloqueio() {
   print_banner
-  printf "${WHITE} 💻 Vamos a bloquear el Atendechat...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Vamos bloquear o Atendechat...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -141,7 +132,7 @@ EOF
   sleep 2
 
   print_banner
-  printf "${WHITE} 💻 Bloqueo de la Instancia/Empresa ${empresa_bloquear} realizado con éxito...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Bloqueio da Instancia/Empresa ${empresa_bloquear} realizado com sucesso ...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -155,7 +146,7 @@ EOF
 #######################################
 configurar_desbloqueio() {
   print_banner
-  printf "${WHITE} 💻 Vamos a Desbloquear el Atendechat...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Vamos Desbloquear o Atendechat...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -168,7 +159,7 @@ EOF
   sleep 2
 
   print_banner
-  printf "${WHITE} 💻 Desbloqueo de la Instancia/Empresa ${empresa_desbloquear} realizado con éxito...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Desbloqueio da Instancia/Empresa ${empresa_desbloquear} realizado com sucesso ...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -181,7 +172,7 @@ EOF
 #######################################
 configurar_dominio() {
   print_banner
-  printf "${WHITE} 💻 Vamos a Alterar los Dominios del Atendechat...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Vamos Alterar os Dominios do Atendechat...${GRAY_LIGHT}"
   printf "\n\n"
 
 sleep 2
@@ -273,7 +264,7 @@ EOF
   sleep 2
 
   print_banner
-  printf "${WHITE} 💻 Alteración de dominio de la Instancia/Empresa ${empresa_dominio} realizada con éxito...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Alteração de dominio da Instancia/Empresa ${empresa_dominio} realizado com sucesso ...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -489,7 +480,7 @@ EOF
 #######################################
 system_nginx_restart() {
   print_banner
-  printf "${WHITE} 💻 Reiniciando nginx...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 reiniciando nginx...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -508,7 +499,7 @@ EOF
 #######################################
 system_nginx_conf() {
   print_banner
-  printf "${WHITE} 💻 Configurando nginx...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 configurando nginx...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2

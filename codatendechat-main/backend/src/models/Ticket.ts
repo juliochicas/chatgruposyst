@@ -32,20 +32,20 @@ import Prompt from "./Prompt";
 class Ticket extends Model<Ticket> {
   @PrimaryKey
   @AutoIncrement
-  @Column(DataType.INTEGER)
+  @Column
   id: number;
 
-  @Column({ defaultValue: "pending", type: DataType.STRING })
+  @Column({ defaultValue: "pending" })
   status: string;
 
-  @Column(DataType.INTEGER)
+  @Column
   unreadMessages: number;
 
-  @Column(DataType.STRING)
+  @Column
   lastMessage: string;
 
   @Default(false)
-  @Column(DataType.BOOLEAN)
+  @Column
   isGroup: boolean;
 
   @CreatedAt
@@ -55,38 +55,38 @@ class Ticket extends Model<Ticket> {
   updatedAt: Date;
 
   @ForeignKey(() => User)
-  @Column(DataType.INTEGER)
+  @Column
   userId: number;
 
   @BelongsTo(() => User)
   user: User;
 
   @ForeignKey(() => Contact)
-  @Column(DataType.INTEGER)
+  @Column
   contactId: number;
 
   @BelongsTo(() => Contact)
   contact: Contact;
 
   @ForeignKey(() => Whatsapp)
-  @Column(DataType.INTEGER)
+  @Column
   whatsappId: number;
 
   @BelongsTo(() => Whatsapp)
   whatsapp: Whatsapp;
 
   @ForeignKey(() => Queue)
-  @Column(DataType.INTEGER)
+  @Column
   queueId: number;
 
   @BelongsTo(() => Queue)
   queue: Queue;
 
-  @Column(DataType.BOOLEAN)
+  @Column
   chatbot: boolean;
 
   @ForeignKey(() => QueueOption)
-  @Column(DataType.INTEGER)
+  @Column
   queueOptionId: number;
 
   @BelongsTo(() => QueueOption)
@@ -102,14 +102,14 @@ class Ticket extends Model<Ticket> {
   tags: Tag[];
 
   @ForeignKey(() => Company)
-  @Column(DataType.INTEGER)
+  @Column
   companyId: number;
 
   @BelongsTo(() => Company)
   company: Company;
 
   @Default(uuidv4())
-  @Column(DataType.STRING)
+  @Column
   uuid: string;
 
   @BeforeCreate
@@ -118,48 +118,48 @@ class Ticket extends Model<Ticket> {
   }
 
   @Default(false)
-  @Column(DataType.BOOLEAN)
+  @Column
   useIntegration: boolean;
 
   @ForeignKey(() => QueueIntegrations)
-  @Column(DataType.INTEGER)
+  @Column
   integrationId: number;
 
   @BelongsTo(() => QueueIntegrations)
   queueIntegration: QueueIntegrations;
 
-  @Column(DataType.STRING)
+  @Column
   typebotSessionId: string;
 
   @Default(false)
-  @Column(DataType.BOOLEAN)
-  typebotStatus: boolean;
+  @Column
+  typebotStatus: boolean
 
   @ForeignKey(() => Prompt)
-  @Column(DataType.INTEGER)
+  @Column
   promptId: number;
 
   @BelongsTo(() => Prompt)
   prompt: Prompt;
 
-  @Column(DataType.BOOLEAN)
+  @Column
   fromMe: boolean;
 
   @AllowNull(false)
   @Default(0)
-  @Column(DataType.INTEGER)
+  @Column
   amountUsedBotQueues: number;
 
-  @Column(DataType.BOOLEAN)
+  @Column
   flowWebhook: boolean;
 
-  @Column(DataType.STRING)
+  @Column
   lastFlowId: string;
 
-  @Column(DataType.STRING)
+  @Column
   hashFlowId: string;
 
-  @Column(DataType.STRING)
+  @Column
   flowStopped: string;
 
   @Column(DataType.JSON)

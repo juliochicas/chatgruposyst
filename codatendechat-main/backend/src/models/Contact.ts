@@ -11,8 +11,7 @@ import {
   Default,
   HasMany,
   ForeignKey,
-  BelongsTo,
-  DataType
+  BelongsTo
 } from "sequelize-typescript";
 import ContactCustomField from "./ContactCustomField";
 import Ticket from "./Ticket";
@@ -24,32 +23,32 @@ import Whatsapp from "./Whatsapp";
 class Contact extends Model<Contact> {
   @PrimaryKey
   @AutoIncrement
-  @Column(DataType.INTEGER)
+  @Column
   id: number;
 
-  @Column(DataType.STRING)
+  @Column
   name: string;
 
   @AllowNull(false)
   @Unique
-  @Column(DataType.STRING)
+  @Column
   number: string;
 
   @AllowNull(false)
   @Default("")
-  @Column(DataType.STRING)
+  @Column
   email: string;
 
   @Default("")
-  @Column(DataType.STRING)
+  @Column
   profilePicUrl: string;
 
   @Default(false)
-  @Column(DataType.BOOLEAN)
+  @Column
   isGroup: boolean;
 
   @Default(false)
-  @Column(DataType.BOOLEAN)
+  @Column
   disableBot: boolean;
 
   @CreatedAt
@@ -65,7 +64,7 @@ class Contact extends Model<Contact> {
   extraInfo: ContactCustomField[];
 
   @ForeignKey(() => Company)
-  @Column(DataType.INTEGER)
+  @Column
   companyId: number;
 
   @BelongsTo(() => Company)
@@ -79,7 +78,7 @@ class Contact extends Model<Contact> {
   schedules: Schedule[];
 
   @ForeignKey(() => Whatsapp)
-  @Column(DataType.INTEGER)
+  @Column
   whatsappId: number;
 
   @BelongsTo(() => Whatsapp)

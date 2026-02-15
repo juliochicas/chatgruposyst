@@ -9,7 +9,7 @@
 #######################################
 frontend_node_dependencies() {
   print_banner
-  printf "${WHITE} 💻 Instalando dependencias del frontend...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Instalando dependências do frontend...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -29,7 +29,7 @@ EOF
 #######################################
 frontend_node_build() {
   print_banner
-  printf "${WHITE} 💻 Compilando el código del frontend...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Compilando o código do frontend...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -49,7 +49,7 @@ EOF
 #######################################
 frontend_update() {
   print_banner
-  printf "${WHITE} 💻 Actualizando el frontend...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Atualizando o frontend...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -57,15 +57,7 @@ frontend_update() {
   sudo su - deploy <<EOF
   cd /home/deploy/${empresa_atualizar}
   pm2 stop ${empresa_atualizar}-frontend
-  
-  # Actualizar desde el repositorio
-  cd /tmp
-  rm -rf chatgruposyst-update-${empresa_atualizar}
-  GIT_URL="${github_url:-https://github.com/juliochicas/chatgruposyst.git}"
-  git clone \${GIT_URL} chatgruposyst-update-${empresa_atualizar}
-  cp -r chatgruposyst-update-${empresa_atualizar}/codatendechat-main/* /home/deploy/${empresa_atualizar}/
-  rm -rf chatgruposyst-update-${empresa_atualizar}
-  
+  git pull
   cd /home/deploy/${empresa_atualizar}/frontend
   npm install
   rm -rf build
@@ -85,7 +77,7 @@ EOF
 #######################################
 frontend_set_env() {
   print_banner
-  printf "${WHITE} 💻 Configurando variables de entorno (frontend)...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Configurando variáveis de ambiente (frontend)...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -164,8 +156,6 @@ frontend_nginx_setup() {
   frontend_hostname=$(echo "${frontend_url/https:\/\/}")
 
 sudo su - root << EOF
-# Eliminar enlace simbólico existente si existe
-rm -f /etc/nginx/sites-enabled/${instancia_add}-frontend
 
 cat > /etc/nginx/sites-available/${instancia_add}-frontend << 'END'
 server {

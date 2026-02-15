@@ -29,25 +29,25 @@ import QueueIntegrations from "./QueueIntegrations";
 class Queue extends Model<Queue> {
   @PrimaryKey
   @AutoIncrement
-  @Column(DataType.INTEGER)
+  @Column
   id: number;
 
   @AllowNull(false)
   @Unique
-  @Column(DataType.STRING)
+  @Column
   name: string;
 
   @AllowNull(false)
   @Unique
-  @Column(DataType.STRING)
+  @Column
   color: string;
 
   @Default("")
-  @Column(DataType.STRING)
+  @Column
   greetingMessage: string;
 
   @Default("")
-  @Column(DataType.STRING)
+  @Column
   outOfHoursMessage: string;
 
   @Column({
@@ -62,7 +62,7 @@ class Queue extends Model<Queue> {
   updatedAt: Date;
 
   @ForeignKey(() => Company)
-  @Column(DataType.INTEGER)
+  @Column
   companyId: number;
 
   @BelongsTo(() => Company)
@@ -81,19 +81,19 @@ class Queue extends Model<Queue> {
   })
   options: QueueOption[];
 
-  @Column(DataType.INTEGER)
+  @Column
   orderQueue: number;
 
   
   @ForeignKey(() => QueueIntegrations)
-  @Column(DataType.INTEGER)
+  @Column
   integrationId: number;
 
   @BelongsTo(() => QueueIntegrations)
   queueIntegrations: QueueIntegrations;
 
   @ForeignKey(() => Prompt)
-  @Column(DataType.INTEGER)
+  @Column
   promptId: number;
 
   @BelongsTo(() => Prompt)

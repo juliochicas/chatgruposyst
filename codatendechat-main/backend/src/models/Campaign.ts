@@ -8,8 +8,7 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
-  HasMany,
-  DataType
+  HasMany
 } from "sequelize-typescript";
 import CampaignShipping from "./CampaignShipping";
 import Company from "./Company";
@@ -22,40 +21,40 @@ import Tag from "./Tag";
 class Campaign extends Model<Campaign> {
   @PrimaryKey
   @AutoIncrement
-  @Column(DataType.INTEGER)
+  @Column
   id: number;
 
-  @Column(DataType.STRING)
+  @Column
   name: string;
 
-  @Column({ defaultValue: "", type: DataType.STRING })
+  @Column({ defaultValue: "" })
   message1: string;
 
-  @Column({ defaultValue: "", type: DataType.STRING })
+  @Column({ defaultValue: "" })
   message2: string;
 
-  @Column({ defaultValue: "", type: DataType.STRING })
+  @Column({ defaultValue: "" })
   message3: string;
 
-  @Column({ defaultValue: "", type: DataType.STRING })
+  @Column({ defaultValue: "" })
   message4: string;
 
-  @Column({ defaultValue: "", type: DataType.STRING })
+  @Column({ defaultValue: "" })
   message5: string;
 
-  @Column({ defaultValue: "INATIVA", type: DataType.STRING })
+  @Column({ defaultValue: "INATIVA" })
   status: string; // INATIVA, PROGRAMADA, EM_ANDAMENTO, CANCELADA, FINALIZADA
 
-  @Column(DataType.STRING)
+  @Column
   mediaPath: string;
 
-  @Column(DataType.STRING)
+  @Column
   mediaName: string;
 
-  @Column(DataType.DATE)
+  @Column
   scheduledAt: Date;
 
-  @Column(DataType.DATE)
+  @Column
   completedAt: Date;
 
   @CreatedAt
@@ -65,35 +64,35 @@ class Campaign extends Model<Campaign> {
   updatedAt: Date;
 
   @ForeignKey(() => Tag)
-  @Column(DataType.INTEGER)
+  @Column
   tagId: number;
 
   @BelongsTo(() => Tag)
   tag: Tag;
 
   @ForeignKey(() => Company)
-  @Column(DataType.INTEGER)
+  @Column
   companyId: number;
 
   @BelongsTo(() => Company)
   company: Company;
 
   @ForeignKey(() => ContactList)
-  @Column(DataType.INTEGER)
+  @Column
   contactListId: number;
 
   @BelongsTo(() => ContactList)
   contactList: ContactList;
 
   @ForeignKey(() => Whatsapp)
-  @Column(DataType.INTEGER)
+  @Column
   whatsappId: number;
 
   @BelongsTo(() => Whatsapp)
   whatsapp: Whatsapp;
 
   @ForeignKey(() => Files)
-  @Column(DataType.INTEGER)
+  @Column
   fileListId: number;
 
   @BelongsTo(() => Files)

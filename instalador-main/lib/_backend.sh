@@ -8,7 +8,7 @@
 #######################################
 backend_redis_create() {
   print_banner
-  printf "${WHITE} 💻 Creando Redis & Base de Datos Postgres...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Criando Redis & Banco Postgres...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -38,7 +38,7 @@ sleep 2
 #######################################
 backend_set_env() {
   print_banner
-  printf "${WHITE} 💻 Configurando variables de entorno (backend)...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Configurando variáveis de ambiente (backend)...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -94,7 +94,7 @@ EOF
 #######################################
 backend_node_dependencies() {
   print_banner
-  printf "${WHITE} 💻 Instalando dependencias del backend...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Instalando dependências do backend...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -114,7 +114,7 @@ EOF
 #######################################
 backend_node_build() {
   print_banner
-  printf "${WHITE} 💻 Compilando el código del backend...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Compilando o código do backend...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -134,7 +134,7 @@ EOF
 #######################################
 backend_update() {
   print_banner
-  printf "${WHITE} 💻 Actualizando el backend...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Atualizando o backend...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -142,15 +142,7 @@ backend_update() {
   sudo su - deploy <<EOF
   cd /home/deploy/${empresa_atualizar}
   pm2 stop ${empresa_atualizar}-backend
-  
-  # Actualizar desde el repositorio
-  cd /tmp
-  rm -rf chatgruposyst-update-${empresa_atualizar}
-  GIT_URL="${github_url:-https://github.com/juliochicas/chatgruposyst.git}"
-  git clone \${GIT_URL} chatgruposyst-update-${empresa_atualizar}
-  cp -r chatgruposyst-update-${empresa_atualizar}/codatendechat-main/* /home/deploy/${empresa_atualizar}/
-  rm -rf chatgruposyst-update-${empresa_atualizar}
-  
+  git pull
   cd /home/deploy/${empresa_atualizar}/backend
   npm install
   npm update -f
@@ -174,7 +166,7 @@ EOF
 #######################################
 backend_db_migrate() {
   print_banner
-  printf "${WHITE} 💻 Ejecutando db:migrate...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Executando db:migrate...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -194,7 +186,7 @@ EOF
 #######################################
 backend_db_seed() {
   print_banner
-  printf "${WHITE} 💻 Ejecutando db:seed...${GRAY_LIGHT}"
+  printf "${WHITE} 💻 Executando db:seed...${GRAY_LIGHT}"
   printf "\n\n"
 
   sleep 2
@@ -243,9 +235,6 @@ backend_nginx_setup() {
   backend_hostname=$(echo "${backend_url/https:\/\/}")
 
 sudo su - root << EOF
-# Eliminar enlace simbólico existente si existe
-rm -f /etc/nginx/sites-enabled/${instancia_add}-backend
-
 cat > /etc/nginx/sites-available/${instancia_add}-backend << 'END'
 server {
   server_name $backend_hostname;

@@ -16,29 +16,29 @@ import Company from "./Company";
 class Announcement extends Model<Announcement> {
   @PrimaryKey
   @AutoIncrement
-  @Column(DataType.INTEGER)
+  @Column
   id: number;
 
-  @Column(DataType.INTEGER)
+  @Column
   priority: number; //1 - alta, 2 - média, 3 - baixa
 
-  @Column(DataType.STRING)
+  @Column
   title: string;
 
   @Column(DataType.TEXT)
   text: string;
 
-  @Column(DataType.STRING)
+  @Column
   mediaPath: string;
 
-  @Column(DataType.STRING)
+  @Column
   mediaName: string;
 
   @ForeignKey(() => Company)
-  @Column(DataType.INTEGER)
+  @Column
   companyId: number;
 
-  @Column(DataType.BOOLEAN)
+  @Column
   status: boolean;
 
   @CreatedAt
