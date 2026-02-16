@@ -18,7 +18,7 @@ function PaymentDetails(props) {
       <Typography gutterBottom>{i18n.t('checkoutPage.review.users')}: {users}</Typography>
       <Typography gutterBottom>{i18n.t('checkoutPage.review.whatsapp')}: {connections}</Typography>
       <Typography gutterBottom>{i18n.t('checkoutPage.review.charges')}</Typography>
-      <Typography gutterBottom>{i18n.t('checkoutPage.review.total')}: R${price.toLocaleString('pt-br', {minimumFractionDigits: 2})}</Typography>
+      <Typography gutterBottom>{i18n.t('checkoutPage.review.total')}: ${price.toLocaleString('en-US', {minimumFractionDigits: 2})}</Typography>
     </Grid>
   );
 }

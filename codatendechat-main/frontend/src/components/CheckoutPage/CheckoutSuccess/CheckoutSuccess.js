@@ -46,7 +46,7 @@ function CheckoutSuccess(props) {
     <React.Fragment>
       <Total>
         <span>TOTAL</span>
-        <strong>R${pix.valor.original.toLocaleString('pt-br', { minimumFractionDigits: 2 })}</strong>
+        <strong>${pix.valor.original.toLocaleString('en-US', { minimumFractionDigits: 2 })}</strong>
       </Total>
       <SuccessContent>
         <QRCode value={pixString} />

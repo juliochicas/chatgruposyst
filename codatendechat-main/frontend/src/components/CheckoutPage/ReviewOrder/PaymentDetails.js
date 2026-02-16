@@ -2,6 +2,7 @@ import React, {useContext} from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import useStyles from './styles';
 import { AuthContext } from "../../../context/Auth/AuthContext";
+import { i18n } from "../../../translate/i18n";
 
 function PaymentDetails(props) {
   const { formValues } = props;
@@ -16,7 +17,7 @@ function PaymentDetails(props) {
   return (
     <Grid item container direction="column" xs={12} sm={6}>
       <Typography variant="h6" gutterBottom className={classes.title}>
-        Informação de pagamento
+        {i18n.t('checkoutPage.review.details')}
       </Typography>
       <Grid container>
         <React.Fragment>
@@ -29,7 +30,7 @@ function PaymentDetails(props) {
         </React.Fragment>
         <React.Fragment>
           <Grid item xs={6}>
-            <Typography gutterBottom>Nome:</Typography>
+            <Typography gutterBottom>{i18n.t('checkoutPage.form.firstName')}:</Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography gutterBottom>{firstName}</Typography>
@@ -37,7 +38,7 @@ function PaymentDetails(props) {
         </React.Fragment>
         <React.Fragment>
           <Grid item xs={6}>
-            <Typography gutterBottom>Endereço:</Typography>
+            <Typography gutterBottom>{i18n.t('checkoutPage.form.address')}:</Typography>
           </Grid>
           <Grid item xs={6}>
             <Typography gutterBottom>
@@ -50,7 +51,7 @@ function PaymentDetails(props) {
             <Typography gutterBottom>Total:</Typography>
           </Grid>
           <Grid item xs={6}>
-            <Typography gutterBottom>R${price.toLocaleString('pt-br', {minimumFractionDigits: 2})}</Typography>
+            <Typography gutterBottom>${price.toLocaleString('en-US', {minimumFractionDigits: 2})}</Typography>
           </Grid>
         </React.Fragment>
       </Grid>

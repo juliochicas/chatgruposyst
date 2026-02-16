@@ -220,7 +220,7 @@ const SignUp = () => {
 									>
 										{plans.map((plan, key) => (
 											<MenuItem key={key} value={plan.id}>
-												{plan.name} - {i18n.t("signup.plan.attendant")}: {plan.users} - {i18n.t("signup.plan.whatsapp")}: {plan.connections} - {i18n.t("signup.plan.queues")}: {plan.queues} - R$ {plan.value}
+												{plan.name} - {i18n.t("signup.plan.attendant")}: {plan.users} - {i18n.t("signup.plan.whatsapp")}: {plan.connections} - {i18n.t("signup.plan.queues")}: {plan.queues} - $ {plan.value}
 											</MenuItem>
 										))}
 									</Field>
