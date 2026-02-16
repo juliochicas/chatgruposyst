@@ -75,6 +75,14 @@ const useStyles = makeStyles((theme) => ({
       borderColor: "#dc2743",
     },
   },
+  channelThreads: {
+    backgroundColor: "#000",
+    color: "#fff",
+    "&.selected": {
+      borderColor: "#000",
+      boxShadow: "0 0 0 1px #000",
+    },
+  },
 }));
 
 const MetaSchema = Yup.object().shape({
@@ -198,7 +206,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
         <DialogTitle>
           {metaConnectionId
             ? "Editar Conexion Meta"
-            : "Agregar Conexion Facebook / Instagram"}
+            : "Agregar Conexion Facebook / Instagram / Threads"}
         </DialogTitle>
         <Formik
           initialValues={metaConnection}
@@ -231,6 +239,12 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                       onClick={() => setSelectedChannel("instagram")}
                     >
                       Instagram
+                    </span>
+                    <span
+                      className={`${classes.channelChip} ${classes.channelThreads} ${selectedChannel === "threads" ? "selected" : ""}`}
+                      onClick={() => setSelectedChannel("threads")}
+                    >
+                      Threads
                     </span>
                   </div>
                 )}

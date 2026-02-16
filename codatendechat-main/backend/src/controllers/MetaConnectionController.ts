@@ -24,6 +24,13 @@ import {
   handleFeedWebhook
 } from "../services/MetaServices/MetaMessageListener";
 
+import { handleThreadsWebhook } from "../services/MetaServices/ThreadsWebhookListener";
+import {
+  exchangeThreadsCode,
+  getThreadsUserProfile
+} from "../services/MetaServices/ThreadsGraphAPI";
+import SendThreadsReplyService from "../services/MetaServices/SendThreadsReplyService";
+
 // ==========================================
 // CRUD endpoints for Meta Connections
 // ==========================================
@@ -163,9 +170,32 @@ export const getOAuthUrl = async (
   );
 
   const appId = process.env.META_APP_ID;
-  const redirectUri = `${process.env.BACKEND_URL}/meta/callback`;
   const state = `${metaConnectionId}_${companyId}`;
 
+  // Threads has its own OAuth flow
+  if (metaConnection.channel === "threads") {
+    const redirectUri = `${process.env.BACKEND_URL}/meta/threads-callback`;
+    const scopes = [
+      "threads_basic",
+      "threads_content_publish",
+      "threads_manage_replies",
+      "threads_read_replies",
+      "threads_manage_insights"
+    ].join(",");
+
+    const oauthUrl =
+      `https://threads.net/oauth/authorize?` +
+      `client_id=${appId}` +
+      `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+      `&scope=${scopes}` +
+      `&state=${state}` +
+      `&response_type=code`;
+
+    return res.status(200).json({ url: oauthUrl });
+  }
+
+  // Facebook/Instagram OAuth
+  const redirectUri = `${process.env.BACKEND_URL}/meta/callback`;
   const scopes = [
     "pages_show_list",
     "pages_messaging",
@@ -320,6 +350,69 @@ export const oauthCallback = async (
   }
 };
 
+// Step 2b: Threads OAuth Callback
+export const threadsOAuthCallback = async (
+  req: Request,
+  res: Response
+): Promise<Response | void> => {
+  const { code, state } = req.query as { code: string; state: string };
+
+  if (!code || !state) {
+    return res.status(400).json({ error: "Missing code or state" });
+  }
+
+  const [metaConnectionId, companyIdStr] = state.split("_");
+  const companyId = parseInt(companyIdStr, 10);
+
+  try {
+    const appId = process.env.META_APP_ID;
+    const appSecret = process.env.META_APP_SECRET;
+    const redirectUri = `${process.env.BACKEND_URL}/meta/threads-callback`;
+
+    // Exchange code for Threads tokens
+    const { accessToken, userId } = await exchangeThreadsCode(
+      code,
+      appId,
+      appSecret,
+      redirectUri
+    );
+
+    // Get Threads user profile
+    const profile = await getThreadsUserProfile(userId, accessToken);
+
+    const tokenExpiresAt = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000); // ~60 days
+
+    // Update MetaConnection with Threads data
+    await UpdateMetaConnectionService({
+      metaConnectionId,
+      companyId,
+      metaConnectionData: {
+        status: "CONNECTED",
+        threadsUserId: userId,
+        threadsUsername: profile.username,
+        threadsAccessToken: accessToken,
+        accessToken,
+        tokenExpiresAt
+      }
+    });
+
+    const io = getIO();
+    io.to(`company-${companyId}-mainchannel`).emit(
+      `company-${companyId}-metaConnection`,
+      { action: "update" }
+    );
+
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/connections?meta=success&threads=${encodeURIComponent(profile.username || userId)}`
+    );
+  } catch (err: any) {
+    logger.error(`Threads OAuth error: ${err.message}`);
+    return res.redirect(
+      `${process.env.FRONTEND_URL}/connections?error=threads_oauth_failed`
+    );
+  }
+};
+
 // Step 3: Get available pages for selection (after OAuth)
 export const getPages = async (
   req: Request,
@@ -407,6 +500,11 @@ export const webhookReceive = async (
           await handleInstagramWebhook(entry);
         }
       }
+    } else if (body.object === "threads") {
+      // Threads events (replies, mentions)
+      for (const entry of body.entry || []) {
+        await handleThreadsWebhook(entry);
+      }
     }
   } catch (err) {
     logger.error(`Error processing Meta webhook: ${err}`);
@@ -448,13 +546,23 @@ export const sendMessage = async (
     return res.status(404).json({ error: "Meta connection not found" });
   }
 
-  await SendMetaMessageService({
-    body: messageBody,
-    ticket,
-    metaConnection,
-    mediaUrl,
-    mediaType
-  });
+  // Route to correct service based on channel
+  if (metaConnection.channel === "threads") {
+    await SendThreadsReplyService({
+      body: messageBody,
+      ticket,
+      metaConnection,
+      replyToId: req.body.replyToId
+    });
+  } else {
+    await SendMetaMessageService({
+      body: messageBody,
+      ticket,
+      metaConnection,
+      mediaUrl,
+      mediaType
+    });
+  }
 
   return res.status(200).json({ message: "Message sent" });
 };

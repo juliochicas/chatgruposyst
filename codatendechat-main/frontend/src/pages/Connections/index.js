@@ -158,8 +158,9 @@ const Connections = () => {
 		if (params.get("meta") === "success") {
 			const pageName = params.get("page") || "";
 			const instagram = params.get("instagram") || "";
+			const threads = params.get("threads") || "";
 			toast.success(
-				`Conectado con exito a Facebook${pageName ? ` (${pageName})` : ""}${instagram ? ` e Instagram (@${instagram})` : ""}`
+				`Conectado con exito${pageName ? ` a Facebook (${pageName})` : ""}${instagram ? ` e Instagram (@${instagram})` : ""}${threads ? ` a Threads (@${threads})` : ""}`
 			);
 			fetchMetaConnections();
 			// Clean URL
@@ -439,8 +440,9 @@ const Connections = () => {
 	};
 
 	const getChannelIcon = (channel) => {
-		if (channel === "facebook") return <span style={{ color: "#1877F2", fontWeight: "bold", fontSize: 18 }}>f</span>;
-		if (channel === "instagram") return <span style={{ color: "#E4405F", fontWeight: "bold", fontSize: 18 }}>IG</span>;
+		if (channel === "facebook") return <span style={{ color: "#1877F2", fontWeight: "bold", fontSize: 16 }}>FB</span>;
+		if (channel === "instagram") return <span style={{ color: "#E4405F", fontWeight: "bold", fontSize: 16 }}>IG</span>;
+		if (channel === "threads") return <span style={{ color: "#000", fontWeight: "bold", fontSize: 16 }}>TH</span>;
 		return null;
 	};
 
@@ -493,7 +495,7 @@ const Connections = () => {
 									}}
 									onClick={handleOpenMetaModal}
 								>
-									+ Facebook / Instagram
+									+ Facebook / Instagram / Threads
 								</Button>
 							</>
 						)}
@@ -602,11 +604,12 @@ const Connections = () => {
 					</TableBody>
 				</Table>
 
-				{/* Meta Connections Table (Facebook + Instagram) */}
+				{/* Meta Connections Table (Facebook + Instagram + Threads) */}
 				<div className={classes.sectionTitle}>
-					<span style={{ color: "#1877F2", fontWeight: "bold", fontSize: 18 }}>f</span>
+					<span style={{ color: "#1877F2", fontWeight: "bold", fontSize: 18 }}>FB</span>
 					<span style={{ color: "#E4405F", fontWeight: "bold", fontSize: 18 }}>IG</span>
-					Facebook / Instagram
+					<span style={{ color: "#000", fontWeight: "bold", fontSize: 18 }}>TH</span>
+					Facebook / Instagram / Threads
 				</div>
 				<Table size="small">
 					<TableHead>
@@ -654,7 +657,11 @@ const Connections = () => {
 													? metaConn.instagramUsername
 														? `@${metaConn.instagramUsername}`
 														: "-"
-													: metaConn.pageName || "-"}
+													: metaConn.channel === "threads"
+														? metaConn.threadsUsername
+															? `@${metaConn.threadsUsername}`
+															: "-"
+														: metaConn.pageName || "-"}
 											</TableCell>
 											<Can
 												role={user.profile}
@@ -695,7 +702,7 @@ const Connections = () => {
 								) : (
 									<TableRow>
 										<TableCell colSpan={7} align="center" style={{ color: "#999", padding: 20 }}>
-											No hay conexiones de Facebook/Instagram. Haga clic en "+ Facebook / Instagram" para agregar una.
+											No hay conexiones de Facebook/Instagram/Threads. Haga clic en "+ Facebook / Instagram / Threads" para agregar una.
 										</TableCell>
 									</TableRow>
 								)}

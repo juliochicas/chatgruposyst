@@ -34,7 +34,7 @@ class MetaConnection extends Model<MetaConnection> {
 
   @Default("facebook")
   @Column(DataType.STRING)
-  channel: string; // "facebook" | "instagram"
+  channel: string; // "facebook" | "instagram" | "threads"
 
   @Default("DISCONNECTED")
   @Column
@@ -84,6 +84,19 @@ class MetaConnection extends Model<MetaConnection> {
   @AllowNull
   @Column(DataType.STRING)
   webhookVerifyToken: string;
+
+  // Threads Account info
+  @AllowNull
+  @Column(DataType.STRING)
+  threadsUserId: string;
+
+  @AllowNull
+  @Column(DataType.STRING)
+  threadsUsername: string;
+
+  @AllowNull
+  @Column(DataType.TEXT)
+  threadsAccessToken: string;
 
   // Bot messages (same pattern as WhatsApp)
   @Default("")

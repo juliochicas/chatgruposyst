@@ -35,10 +35,12 @@ metaRoutes.get(
   MetaConnectionController.getPages
 );
 
-// OAuth callback (no auth - Meta redirects here)
+// OAuth callbacks (no auth - Meta/Threads redirect here)
 metaRoutes.get("/meta/callback", MetaConnectionController.oauthCallback);
+metaRoutes.get("/meta/threads-callback", MetaConnectionController.threadsOAuthCallback);
 
 // Webhook endpoints (no auth - Meta calls these)
+// Same endpoint handles FB, IG, and Threads webhooks
 metaRoutes.get("/meta/webhook", MetaConnectionController.webhookVerify);
 metaRoutes.post("/meta/webhook", MetaConnectionController.webhookReceive);
 

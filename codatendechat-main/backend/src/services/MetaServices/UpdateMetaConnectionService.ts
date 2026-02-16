@@ -28,6 +28,10 @@ interface MetaConnectionData {
   pageAccessToken?: string;
   instagramAccountId?: string;
   instagramUsername?: string;
+  // Threads fields
+  threadsUserId?: string;
+  threadsUsername?: string;
+  threadsAccessToken?: string;
 }
 
 interface Request {
