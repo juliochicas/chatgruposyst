@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useContext } from "react";
+import React, { useState, useCallback, useContext, useEffect } from "react";
 import { toast } from "react-toastify";
 import { format, parseISO } from "date-fns";
 
@@ -16,6 +16,7 @@ import {
 	Tooltip,
 	Typography,
 	CircularProgress,
+	Chip,
 } from "@material-ui/core";
 import {
 	Edit,
@@ -25,6 +26,7 @@ import {
 	SignalCellular4Bar,
 	CropFree,
 	DeleteOutline,
+	Link as LinkIcon,
 } from "@material-ui/icons";
 
 import MainContainer from "../../components/MainContainer";
@@ -35,6 +37,7 @@ import TableRowSkeleton from "../../components/TableRowSkeleton";
 
 import api from "../../services/api";
 import WhatsAppModal from "../../components/WhatsAppModal";
+import MetaConnectionModal from "../../components/MetaConnectionModal";
 import ConfirmationModal from "../../components/ConfirmationModal";
 import QrcodeModal from "../../components/QrcodeModal";
 import { i18n } from "../../translate/i18n";
@@ -69,6 +72,21 @@ const useStyles = makeStyles(theme => ({
 	buttonProgress: {
 		color: green[500],
 	},
+	sectionTitle: {
+		padding: theme.spacing(2, 1, 1),
+		fontWeight: 600,
+		fontSize: 16,
+		display: "flex",
+		alignItems: "center",
+		gap: 8,
+	},
+	channelChip: {
+		fontWeight: 500,
+		fontSize: 11,
+	},
+	metaConnectBtn: {
+		fontSize: 12,
+	},
 }));
 
 const CustomToolTip = ({ title, content, children }) => {
@@ -101,8 +119,12 @@ const Connections = () => {
 	const { user } = useContext(AuthContext);
 	const { whatsApps, loading } = useContext(WhatsAppsContext);
 	const [whatsAppModalOpen, setWhatsAppModalOpen] = useState(false);
+	const [metaModalOpen, setMetaModalOpen] = useState(false);
 	const [qrModalOpen, setQrModalOpen] = useState(false);
 	const [selectedWhatsApp, setSelectedWhatsApp] = useState(null);
+	const [selectedMetaConnection, setSelectedMetaConnection] = useState(null);
+	const [metaConnections, setMetaConnections] = useState([]);
+	const [metaLoading, setMetaLoading] = useState(true);
 	const [confirmModalOpen, setConfirmModalOpen] = useState(false);
 	const confirmationModalInitialState = {
 		action: "",
@@ -114,6 +136,40 @@ const Connections = () => {
 	const [confirmModalInfo, setConfirmModalInfo] = useState(
 		confirmationModalInitialState
 	);
+
+	// Fetch Meta connections
+	const fetchMetaConnections = useCallback(async () => {
+		try {
+			const { data } = await api.get("/meta-connections/");
+			setMetaConnections(data);
+			setMetaLoading(false);
+		} catch (err) {
+			setMetaLoading(false);
+		}
+	}, []);
+
+	useEffect(() => {
+		fetchMetaConnections();
+	}, [fetchMetaConnections]);
+
+	// Check for OAuth callback params
+	useEffect(() => {
+		const params = new URLSearchParams(window.location.search);
+		if (params.get("meta") === "success") {
+			const pageName = params.get("page") || "";
+			const instagram = params.get("instagram") || "";
+			toast.success(
+				`Conectado con exito a Facebook${pageName ? ` (${pageName})` : ""}${instagram ? ` e Instagram (@${instagram})` : ""}`
+			);
+			fetchMetaConnections();
+			// Clean URL
+			window.history.replaceState({}, document.title, "/connections");
+		}
+		if (params.get("error")) {
+			toast.error("Error al conectar con Meta. Intente nuevamente.");
+			window.history.replaceState({}, document.title, "/connections");
+		}
+	}, [fetchMetaConnections]);
 
 	const handleStartWhatsAppSession = async whatsAppId => {
 		try {
@@ -141,6 +197,17 @@ const Connections = () => {
 		setSelectedWhatsApp(null);
 	}, [setSelectedWhatsApp, setWhatsAppModalOpen]);
 
+	const handleOpenMetaModal = () => {
+		setSelectedMetaConnection(null);
+		setMetaModalOpen(true);
+	};
+
+	const handleCloseMetaModal = useCallback(() => {
+		setMetaModalOpen(false);
+		setSelectedMetaConnection(null);
+		fetchMetaConnections();
+	}, [fetchMetaConnections]);
+
 	const handleOpenQrModal = whatsApp => {
 		setSelectedWhatsApp(whatsApp);
 		setQrModalOpen(true);
@@ -154,6 +221,30 @@ const Connections = () => {
 	const handleEditWhatsApp = whatsApp => {
 		setSelectedWhatsApp(whatsApp);
 		setWhatsAppModalOpen(true);
+	};
+
+	const handleEditMetaConnection = metaConn => {
+		setSelectedMetaConnection(metaConn);
+		setMetaModalOpen(true);
+	};
+
+	const handleConnectMeta = async (metaConnectionId) => {
+		try {
+			const { data } = await api.get(`/meta-connections/${metaConnectionId}/oauth-url`);
+			window.location.href = data.url;
+		} catch (err) {
+			toastError(err);
+		}
+	};
+
+	const handleDeleteMetaConnection = async (metaConnectionId) => {
+		try {
+			await api.delete(`/meta-connections/${metaConnectionId}`);
+			toast.success("Conexion Meta eliminada con exito.");
+			fetchMetaConnections();
+		} catch (err) {
+			toastError(err);
+		}
 	};
 
 	const handleOpenConfirmationModal = (action, whatsAppId) => {
@@ -174,6 +265,16 @@ const Connections = () => {
 				whatsAppId: whatsAppId,
 			});
 		}
+
+		if (action === "deleteMeta") {
+			setConfirmModalInfo({
+				action: action,
+				title: "Eliminar",
+				message: "Esta seguro? Esta accion no puede ser revertida.",
+				whatsAppId: whatsAppId, // reusing field for metaConnectionId
+			});
+		}
+
 		setConfirmModalOpen(true);
 	};
 
@@ -193,6 +294,10 @@ const Connections = () => {
 			} catch (err) {
 				toastError(err);
 			}
+		}
+
+		if (confirmModalInfo.action === "deleteMeta") {
+			await handleDeleteMetaConnection(confirmModalInfo.whatsAppId);
 		}
 
 		setConfirmModalInfo(confirmationModalInitialState);
@@ -254,6 +359,33 @@ const Connections = () => {
 		);
 	};
 
+	const renderMetaActionButtons = metaConn => {
+		if (metaConn.status === "CONNECTED") {
+			return (
+				<Chip
+					size="small"
+					label="Conectado"
+					style={{ backgroundColor: green[500], color: "#fff" }}
+				/>
+			);
+		}
+		return (
+			<Button
+				size="small"
+				variant="contained"
+				className={classes.metaConnectBtn}
+				style={{
+					backgroundColor: metaConn.channel === "instagram" ? "#E4405F" : "#1877F2",
+					color: "#fff",
+				}}
+				startIcon={<LinkIcon />}
+				onClick={() => handleConnectMeta(metaConn.id)}
+			>
+				Conectar con Meta
+			</Button>
+		);
+	};
+
 	const renderStatusToolTips = whatsApp => {
 		return (
 			<div className={classes.customTableCell}>
@@ -293,6 +425,25 @@ const Connections = () => {
 		);
 	};
 
+	const renderMetaStatus = metaConn => {
+		return (
+			<div className={classes.customTableCell}>
+				{metaConn.status === "CONNECTED" && (
+					<SignalCellular4Bar style={{ color: green[500] }} />
+				)}
+				{metaConn.status === "DISCONNECTED" && (
+					<SignalCellularConnectedNoInternet0Bar color="secondary" />
+				)}
+			</div>
+		);
+	};
+
+	const getChannelIcon = (channel) => {
+		if (channel === "facebook") return <span style={{ color: "#1877F2", fontWeight: "bold", fontSize: 18 }}>f</span>;
+		if (channel === "instagram") return <span style={{ color: "#E4405F", fontWeight: "bold", fontSize: 18 }}>IG</span>;
+		return null;
+	};
+
 	return (
 		<MainContainer>
 			<ConfirmationModal
@@ -313,6 +464,11 @@ const Connections = () => {
 				onClose={handleCloseWhatsAppModal}
 				whatsAppId={!qrModalOpen && selectedWhatsApp?.id}
 			/>
+			<MetaConnectionModal
+				open={metaModalOpen}
+				onClose={handleCloseMetaModal}
+				metaConnectionId={selectedMetaConnection?.id}
+			/>
 			<MainHeader>
 				<Title>{i18n.t("connections.title")}</Title>
 				<MainHeaderButtonsWrapper>
@@ -320,18 +476,36 @@ const Connections = () => {
 						role={user.profile}
 						perform="connections-page:addConnection"
 						yes={() => (
-							<Button
-								variant="contained"
-								color="primary"
-								onClick={handleOpenWhatsAppModal}
-							>
-								{i18n.t("connections.buttons.add")}
-							</Button>
+							<>
+								<Button
+									variant="contained"
+									color="primary"
+									onClick={handleOpenWhatsAppModal}
+								>
+									{i18n.t("connections.buttons.add")}
+								</Button>
+								<Button
+									variant="contained"
+									style={{
+										backgroundColor: "#1877F2",
+										color: "#fff",
+										marginLeft: 8,
+									}}
+									onClick={handleOpenMetaModal}
+								>
+									+ Facebook / Instagram
+								</Button>
+							</>
 						)}
 					/>
 				</MainHeaderButtonsWrapper>
 			</MainHeader>
+
+			{/* WhatsApp Connections Table */}
 			<Paper className={classes.mainPaper} variant="outlined">
+				<div className={classes.sectionTitle}>
+					WhatsApp
+				</div>
 				<Table size="small">
 					<TableHead>
 						<TableRow>
@@ -423,6 +597,108 @@ const Connections = () => {
 											/>
 										</TableRow>
 									))}
+							</>
+						)}
+					</TableBody>
+				</Table>
+
+				{/* Meta Connections Table (Facebook + Instagram) */}
+				<div className={classes.sectionTitle}>
+					<span style={{ color: "#1877F2", fontWeight: "bold", fontSize: 18 }}>f</span>
+					<span style={{ color: "#E4405F", fontWeight: "bold", fontSize: 18 }}>IG</span>
+					Facebook / Instagram
+				</div>
+				<Table size="small">
+					<TableHead>
+						<TableRow>
+							<TableCell align="center">Canal</TableCell>
+							<TableCell align="center">Nombre</TableCell>
+							<TableCell align="center">Estado</TableCell>
+							<TableCell align="center">Cuenta</TableCell>
+							<Can
+								role={user.profile}
+								perform="connections-page:actionButtons"
+								yes={() => (
+									<TableCell align="center">Sesion</TableCell>
+								)}
+							/>
+							<TableCell align="center">Ultima actualizacion</TableCell>
+							<Can
+								role={user.profile}
+								perform="connections-page:editOrDeleteConnection"
+								yes={() => (
+									<TableCell align="center">Acciones</TableCell>
+								)}
+							/>
+						</TableRow>
+					</TableHead>
+					<TableBody>
+						{metaLoading ? (
+							<TableRowSkeleton />
+						) : (
+							<>
+								{metaConnections?.length > 0 ? (
+									metaConnections.map(metaConn => (
+										<TableRow key={`meta-${metaConn.id}`}>
+											<TableCell align="center">
+												{getChannelIcon(metaConn.channel)}
+											</TableCell>
+											<TableCell align="center">
+												{metaConn.name}
+											</TableCell>
+											<TableCell align="center">
+												{renderMetaStatus(metaConn)}
+											</TableCell>
+											<TableCell align="center">
+												{metaConn.channel === "instagram"
+													? metaConn.instagramUsername
+														? `@${metaConn.instagramUsername}`
+														: "-"
+													: metaConn.pageName || "-"}
+											</TableCell>
+											<Can
+												role={user.profile}
+												perform="connections-page:actionButtons"
+												yes={() => (
+													<TableCell align="center">
+														{renderMetaActionButtons(metaConn)}
+													</TableCell>
+												)}
+											/>
+											<TableCell align="center">
+												{format(parseISO(metaConn.updatedAt), "dd/MM/yy HH:mm")}
+											</TableCell>
+											<Can
+												role={user.profile}
+												perform="connections-page:editOrDeleteConnection"
+												yes={() => (
+													<TableCell align="center">
+														<IconButton
+															size="small"
+															onClick={() => handleEditMetaConnection(metaConn)}
+														>
+															<Edit />
+														</IconButton>
+														<IconButton
+															size="small"
+															onClick={() =>
+																handleOpenConfirmationModal("deleteMeta", metaConn.id)
+															}
+														>
+															<DeleteOutline />
+														</IconButton>
+													</TableCell>
+												)}
+											/>
+										</TableRow>
+									))
+								) : (
+									<TableRow>
+										<TableCell colSpan={7} align="center" style={{ color: "#999", padding: 20 }}>
+											No hay conexiones de Facebook/Instagram. Haga clic en "+ Facebook / Instagram" para agregar una.
+										</TableCell>
+									</TableRow>
+								)}
 							</>
 						)}
 					</TableBody>

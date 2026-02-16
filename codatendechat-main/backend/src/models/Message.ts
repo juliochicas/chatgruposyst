@@ -108,6 +108,10 @@ class Message extends Model<Message> {
   @Default(false)
   @Column
   isEdited: boolean;
+
+  @Default("whatsapp")
+  @Column
+  channel: string;
 }
 
 export default Message;

@@ -27,6 +27,7 @@ import Tag from "./Tag";
 import TicketTag from "./TicketTag";
 import QueueIntegrations from "./QueueIntegrations";
 import Prompt from "./Prompt";
+import MetaConnection from "./MetaConnection";
 
 @Table
 class Ticket extends Model<Ticket> {
@@ -164,6 +165,17 @@ class Ticket extends Model<Ticket> {
 
   @Column(DataType.JSON)
   dataWebhook: {} | null;
+
+  @Default("whatsapp")
+  @Column
+  channel: string;
+
+  @ForeignKey(() => MetaConnection)
+  @Column
+  metaConnectionId: number;
+
+  @BelongsTo(() => MetaConnection)
+  metaConnection: MetaConnection;
 }
 
 export default Ticket;
