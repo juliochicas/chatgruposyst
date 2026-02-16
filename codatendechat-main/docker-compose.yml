@@ -68,7 +68,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        REACT_APP_BACKEND_URL: ${BACKEND_URL:-http://localhost:8080}
+        REACT_APP_BACKEND_URL: http://62.72.7.2:8080
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-3000}:80"
