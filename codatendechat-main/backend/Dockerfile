@@ -5,6 +5,7 @@ RUN apk add --no-cache \
     make \
     g++ \
     git \
+    wget \
     chromium \
     nss \
     freetype \
