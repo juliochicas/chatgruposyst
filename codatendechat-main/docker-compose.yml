@@ -69,7 +69,6 @@ services:
       dockerfile: Dockerfile
       args:
         REACT_APP_BACKEND_URL: ${BACKEND_URL:-http://localhost:8080}
-        REACT_APP_HOURS_CLOSE_TICKETS_AUTO: ${HOURS_CLOSE_TICKETS_AUTO:-24}
     restart: unless-stopped
     ports:
       - "${FRONTEND_PORT:-3000}:80"

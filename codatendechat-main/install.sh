@@ -88,6 +88,7 @@ collect_config() {
   REDIS_PASS=$(gen_password)
   JWT_SECRET=$(gen_secret)
   JWT_REFRESH_SECRET=$(gen_secret)
+  ENV_TOKEN=$(gen_secret)
 
   log_ok "Secure passwords generated automatically"
 }
@@ -108,7 +109,6 @@ DB_NAME=${DB_NAME}
 DB_PORT=5432
 REDIS_PASS=${REDIS_PASS}
 REDIS_PORT=6379
-HOURS_CLOSE_TICKETS_AUTO=24
 EOF
 
   # Backend .env
@@ -116,7 +116,6 @@ EOF
 NODE_ENV=production
 BACKEND_URL=${BACKEND_URL}
 FRONTEND_URL=${FRONTEND_URL}
-PROXY_PORT=${BACKEND_PORT}
 PORT=${BACKEND_PORT}
 
 DB_DIALECT=postgres
@@ -133,9 +132,7 @@ REDIS_URI=redis://:${REDIS_PASS}@redis:6379
 REDIS_OPT_LIMITER_MAX=1
 REDIS_OPT_LIMITER_DURATION=3000
 
-USER_LIMIT=10000
-CONNECTIONS_LIMIT=100000
-CLOSED_SEND_BY_ME=true
+ENV_TOKEN=${ENV_TOKEN}
 
 # ─── Email (optional, configure later) ───
 #MAIL_HOST="smtp.gmail.com"
@@ -155,7 +152,6 @@ EOF
   # Frontend .env
   cat > frontend/.env << EOF
 REACT_APP_BACKEND_URL=${BACKEND_URL}
-REACT_APP_HOURS_CLOSE_TICKETS_AUTO=24
 EOF
 
   log_ok "Configuration files created"
@@ -200,6 +196,8 @@ print_result() {
   echo -e "  ${BLUE}Default login:${NC}"
   echo -e "    Email:    admin@admin.com"
   echo -e "    Password: 123456"
+  echo ""
+  echo -e "  ${BLUE}API Token:${NC}   ${ENV_TOKEN}"
   echo ""
   echo -e "  ${YELLOW}Commands:${NC}"
   echo -e "    docker compose ps       # Check status"

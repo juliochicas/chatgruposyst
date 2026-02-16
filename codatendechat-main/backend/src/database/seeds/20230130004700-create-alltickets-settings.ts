@@ -8,6 +8,7 @@ module.exports = {
         {
           key: "allTicket",
           value: "disabled",
+          companyId: 1,
           createdAt: new Date(),
           updatedAt: new Date()
         }
