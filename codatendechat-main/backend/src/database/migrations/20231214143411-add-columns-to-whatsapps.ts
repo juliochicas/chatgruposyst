@@ -1,30 +1,33 @@
 import { QueryInterface, DataTypes } from "sequelize";
 
 module.exports = {
-  up: (queryInterface: QueryInterface) => {
-    return queryInterface.addColumn("Whatsapps", "maxUseBotQueues", {
+  up: async (queryInterface: QueryInterface) => {
+    await queryInterface.addColumn("Whatsapps", "maxUseBotQueues", {
       type: DataTypes.INTEGER,
       defaultValue: 3,
       allowNull: true
-    }),
-    queryInterface.addColumn("Whatsapps", "expiresTicket", {
+    });
+    await queryInterface.addColumn("Whatsapps", "expiresTicket", {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: true
-    }),
-    queryInterface.addColumn("Whatsapps", "expiresInactiveMessage", {
+    });
+    await queryInterface.addColumn("Whatsapps", "expiresInactiveMessage", {
       type: DataTypes.STRING,
       defaultValue: "",
       allowNull: true
-    }),
-    queryInterface.addColumn("Whatsapps", "timeUseBotQueues", {
+    });
+    await queryInterface.addColumn("Whatsapps", "timeUseBotQueues", {
       type: DataTypes.INTEGER,
       defaultValue: 0,
       allowNull: true
     });
   },
 
-  down: (queryInterface: QueryInterface) => {
-    return queryInterface.removeColumn("Whatsapps", "companyId");
+  down: async (queryInterface: QueryInterface) => {
+    await queryInterface.removeColumn("Whatsapps", "maxUseBotQueues");
+    await queryInterface.removeColumn("Whatsapps", "expiresTicket");
+    await queryInterface.removeColumn("Whatsapps", "expiresInactiveMessage");
+    await queryInterface.removeColumn("Whatsapps", "timeUseBotQueues");
   }
 };

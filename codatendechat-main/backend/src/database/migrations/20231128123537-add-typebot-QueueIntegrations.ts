@@ -1,33 +1,33 @@
 import { QueryInterface, DataTypes } from "sequelize";
 
 module.exports = {
-  up: (queryInterface: QueryInterface) => {
-    return queryInterface.addColumn("QueueIntegrations", "typebotSlug", {
+  up: async (queryInterface: QueryInterface) => {
+    await queryInterface.addColumn("QueueIntegrations", "typebotSlug", {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: ""
-    }),
-    queryInterface.addColumn("QueueIntegrations", "typebotExpires", {
+    });
+    await queryInterface.addColumn("QueueIntegrations", "typebotExpires", {
       type: DataTypes.INTEGER,
       allowNull: false,
       defaultValue: 0
-    }),
-    queryInterface.addColumn("QueueIntegrations", "typebotKeywordFinish", {
+    });
+    await queryInterface.addColumn("QueueIntegrations", "typebotKeywordFinish", {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: ""
-    }),
-    queryInterface.addColumn("QueueIntegrations", "typebotUnknownMessage", {
+    });
+    await queryInterface.addColumn("QueueIntegrations", "typebotUnknownMessage", {
       type: DataTypes.STRING,
       allowNull: false,
       defaultValue: ""
     });
   },
 
-  down: (queryInterface: QueryInterface) => {
-    return queryInterface.removeColumn("QueueIntegrations", "typebotSlug"),
-    queryInterface.removeColumn("QueueIntegrations", "typebotExpires"),
-    queryInterface.removeColumn("QueueIntegrations", "typebotKeywordFinish"),
-    queryInterface.removeColumn("QueueIntegrations", "typebotUnknownMessage");
+  down: async (queryInterface: QueryInterface) => {
+    await queryInterface.removeColumn("QueueIntegrations", "typebotSlug");
+    await queryInterface.removeColumn("QueueIntegrations", "typebotExpires");
+    await queryInterface.removeColumn("QueueIntegrations", "typebotKeywordFinish");
+    await queryInterface.removeColumn("QueueIntegrations", "typebotUnknownMessage");
   }
 };
