@@ -2,15 +2,24 @@ import React, { useContext, useEffect, useState } from "react";
 import { Grid, Typography } from "@material-ui/core";
 import { InputField, SelectField } from "../../FormFields";
 import { AuthContext } from "../../../context/Auth/AuthContext";
+import { i18n } from "../../../translate/i18n";
 
 const countries = [
   {
-    value: "BR",
-    label: "Brasil",
+    value: "US",
+    label: "United States",
   },
   {
-    value: "usa",
-    label: "United States",
+    value: "GT",
+    label: "Guatemala",
+  },
+  {
+    value: "MX",
+    label: "México",
+  },
+  {
+    value: "BR",
+    label: "Brasil",
   },
 ];
 
@@ -48,7 +57,7 @@ export default function AddressForm(props) {
   return (
     <React.Fragment>
       <Typography variant="h6" gutterBottom>
-        Vamos precisar de algumas informações
+        {i18n.t("checkoutPage.steps.data")}
       </Typography>
       <Grid container spacing={3}>
 

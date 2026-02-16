@@ -70,17 +70,6 @@ function _renderStepContent(step, setFieldValue, setActiveStep, values ) {
       const plan = JSON.parse(values.plan);
       const newValues = {
         firstName: values.firstName,
-        lastName: values.lastName,
-        address2: values.address2,
-        city: values.city,
-        state: values.state,
-        zipcode: values.zipcode,
-        country: values.country,
-        useAddressForPaymentDetails: values.useAddressForPaymentDetails,
-        nameOnCard: values.nameOnCard,
-        cardNumber: values.cardNumber,
-        cvv: values.cvv,
-        plan: values.plan,
         price: plan.price,
         users: plan.users,
         connections: plan.connections,
@@ -88,10 +77,13 @@ function _renderStepContent(step, setFieldValue, setActiveStep, values ) {
       }
 
       const { data } = await api.post("/subscription", newValues);
-      setDatePayment(data)
+
+      if (data.url) {
+        window.open(data.url, "_blank");
+        toast.success(i18n.t("checkoutPage.success"));
+      }
+
       actions.setSubmitting(false);
-      setActiveStep(activeStep + 1);
-      toast.success(i18n.t("checkoutPage.success"));
     } catch (err) {
       toastError(err);
     }

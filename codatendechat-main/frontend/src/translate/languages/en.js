@@ -286,6 +286,8 @@ const messages = {
 					SELECT: "SELECT",
 					month: "month",
 				},
+				stripeRedirect: "Stripe Payment",
+				stripeRedirectDesc: "A new window has been opened with the Stripe payment form. Complete the payment there and the invoice will be updated automatically.",
 			},
 			companies: {
 				title: "Register Company",
@@ -1580,6 +1582,7 @@ const messages = {
 				},
 			},
 			flowBuilder: {
+				message: "Message",
 				add: "Add",
 				save: "Save",
 				edit: "Edit",

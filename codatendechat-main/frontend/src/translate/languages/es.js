@@ -287,6 +287,8 @@ const messages = {
           SELECT: "SELECCIONAR",
           month: "mes",
         },
+        stripeRedirect: "Pago con Stripe",
+        stripeRedirectDesc: "Se ha abierto una nueva ventana con el formulario de pago de Stripe. Complete el pago allí y la factura se actualizará automáticamente.",
       },
       companies: {
         title: "Registrar Empresa",
@@ -1588,6 +1590,7 @@ const messages = {
         },
       },
       flowBuilder: {
+        message: "Mensaje",
         add: "Agregar",
         save: "Guardar",
         edit: "Editar",
