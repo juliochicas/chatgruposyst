@@ -107,7 +107,7 @@ const handleSendEmail = async (values) => {
   const email = values.email;
   try {
     const response = await api.post(
-      `${process.env.REACT_APP_BACKEND_URL}/forgetpassword/${email}`
+      `/forgetpassword/${email}`
     );
     console.log("API Response:", response.data);
 
@@ -131,7 +131,7 @@ const handleSendEmail = async (values) => {
     if (newPassword === confirmPassword) {
       try {
         await api.post(
-          `${process.env.REACT_APP_BACKEND_URL}/resetpasswords/${email}/${token}/${newPassword}`
+          `/resetpasswords/${email}/${token}/${newPassword}`
         );
         setError(""); // Limpe o erro se não houver erro
         toast.success(i18n.t("resetPassword.toasts.passwordUpdated"));
