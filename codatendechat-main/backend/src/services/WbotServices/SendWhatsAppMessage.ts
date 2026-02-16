@@ -1,5 +1,4 @@
 import { WAMessage } from "@whiskeysockets/baileys";
-import WALegacySocket from "@whiskeysockets/baileys"
 import * as Sentry from "@sentry/node";
 import AppError from "../../errors/AppError";
 import GetTicketWbot from "../../helpers/GetTicketWbot";
@@ -48,12 +47,12 @@ const SendWhatsAppMessage = async ({
   }
 
   try {
-    const sentMessage = await wbot.sendMessage(number,{
+    const sentMessage = await wbot.sendMessage(
+      number,
+      {
         text: formatBody(body, ticket.contact)
       },
-      {
-        ...options
-      }
+      options
     );
 
     await ticket.update({ lastMessage: formatBody(body, ticket.contact) });
