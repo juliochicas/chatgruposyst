@@ -863,6 +863,11 @@ const messages = {
           files: "Lista de arquivos",
           prompts: "Open.Ai",
           queueIntegration: "Integrações",
+          campaignsList: "Listagem",
+          contactLists: "Listas de Contatos",
+          campaignsConfig: "Configurações",
+          flowCampaign: "Campanha",
+          flowConversation: "Conversa",
         },
         appBar: {
           refresh: "Recarregar página",
@@ -1678,6 +1683,13 @@ const messages = {
         optionText: "Digite o texto da opção",
         titleNotDefined: "Título não definido",
         options: "Opções",
+        toasts: {
+          audioSuccess: "Audio adicionado com sucesso!",
+          imageSuccess: "Imagem adicionada com sucesso!",
+          videoSuccess: "Video adicionado com sucesso!",
+          fileTooLarge: "Arquivo é muito grande!",
+          selectQueue: "Adicione uma fila",
+        },
       },
       contactNotes: {
         deleteRecord: "Excluir Registro",

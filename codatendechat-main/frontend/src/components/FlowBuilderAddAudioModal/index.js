@@ -155,7 +155,7 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
             url: res.data.name,
             record: record
           });
-          toast.success("Audio adicionada com sucesso!");
+          toast.success(i18n.t("flowBuilder.toasts.audioSuccess"));
           setLoading(false);
           setMedias([]);
           setPreview();
@@ -170,7 +170,7 @@ const FlowBuilderAddAudioModal = ({ open, onSave, onUpdate, data, close }) => {
     }
 
     if(e.target.files[0].size > 5000000){
-      toast.error("Arquivo é muito grande! 5MB máximo")
+      toast.error(i18n.t("flowBuilder.toasts.fileTooLarge") + " 5MB max")
       return
     }
 

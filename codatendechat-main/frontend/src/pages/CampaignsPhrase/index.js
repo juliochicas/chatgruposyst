@@ -106,7 +106,7 @@ const CampaignsPhrase = () => {
   const handleDeleteCampaign = async (campaignId) => {
     try {
       await api.delete(`/flowcampaign/${campaignId}`);
-      toast.success("Frase deletada");
+      toast.success(i18n.t("campaigns.toasts.deleted"));
       getCampaigns();
     } catch (err) {
       toastError(err);

@@ -151,7 +151,7 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
           onSave({
             url: res.data.name
           });
-          toast.success("Imagem adicionada com sucesso!");
+          toast.success(i18n.t("flowBuilder.toasts.imageSuccess"));
           setLoading(false);
           setMedias([]);
           setPreview();
@@ -166,7 +166,7 @@ const FlowBuilderAddImgModal = ({ open, onSave, onUpdate, data, close }) => {
     }
 
     if(e.target.files[0].size > 2000000){
-      toast.error("Arquivo é muito grande! 2MB máximo")
+      toast.error(i18n.t("flowBuilder.toasts.fileTooLarge") + " 2MB max")
       return
     }
 

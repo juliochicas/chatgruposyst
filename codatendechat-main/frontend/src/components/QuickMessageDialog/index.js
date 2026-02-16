@@ -70,8 +70,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const QuickeMessageSchema = Yup.object().shape({
-    shortcode: Yup.string().required("Obrigatório"),
-    //   message: Yup.string().required("Obrigatório"),
+    shortcode: Yup.string().required(i18n.t("contactModal.formErrors.name.required")),
+    //   message: Yup.string().required(i18n.t("contactModal.formErrors.name.required")),
 });
 
 const QuickMessageDialog = ({ open, onClose, quickemessageId, reload }) => {

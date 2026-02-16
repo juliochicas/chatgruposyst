@@ -397,7 +397,7 @@ const MainListItems = (props) => {
                       <ListItemIcon>
                         <ListIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Listagem" />
+                      <ListItemText primary={i18n.t("mainDrawer.listItems.campaignsList")} />
                     </ListItem>
                     <ListItem
                       onClick={() => history.push("/contact-lists")}
@@ -406,7 +406,7 @@ const MainListItems = (props) => {
                       <ListItemIcon>
                         <PeopleIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Listas de Contatos" />
+                      <ListItemText primary={i18n.t("mainDrawer.listItems.contactLists")} />
                     </ListItem>
                     <ListItem
                       onClick={() => history.push("/campaigns-config")}
@@ -415,7 +415,7 @@ const MainListItems = (props) => {
                       <ListItemIcon>
                         <SettingsOutlinedIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Configurações" />
+                      <ListItemText primary={i18n.t("mainDrawer.listItems.campaignsConfig")} />
                     </ListItem>
                   </List>
                 </Collapse>
@@ -451,7 +451,7 @@ const MainListItems = (props) => {
                       <ListItemIcon>
                         <EventAvailableIcon />
                       </ListItemIcon>
-                      <ListItemText primary="Campanha" />
+                      <ListItemText primary={i18n.t("mainDrawer.listItems.flowCampaign")} />
                     </ListItem>
 
                     <ListItem
@@ -461,7 +461,7 @@ const MainListItems = (props) => {
                       <ListItemIcon>
                         <ShapeLine />
                       </ListItemIcon>
-                      <ListItemText primary="Conversa" />
+                      <ListItemText primary={i18n.t("mainDrawer.listItems.flowConversation")} />
                     </ListItem>
                   </List>
                 </Collapse>

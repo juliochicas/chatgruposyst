@@ -80,7 +80,7 @@ export function ContactNotes ({ ticket }) {
             })
             await loadNotes()
             setNewNote({ note: '' })
-            toast.success('Observação adicionada com sucesso!')
+            toast.success(i18n.t("contactNotes.save") + ' - OK!')
         } catch (e) {
             toast.error(e)
         }
@@ -98,7 +98,7 @@ export function ContactNotes ({ ticket }) {
             await deleteNote(selectedNote.id)
             await loadNotes()
             setSelectedNote({})
-            toast.success('Observação excluída com sucesso!')
+            toast.success(i18n.t("contactNotes.deleteRecord") + ' - OK!')
         } catch (e) {
             toast.error(e)
         }

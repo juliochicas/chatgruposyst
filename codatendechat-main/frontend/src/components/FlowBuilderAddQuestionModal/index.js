@@ -171,7 +171,7 @@ const FlowBuilderAddQuestionModal = ({
             <Form style={{ width: "100%" }}>
               <DialogContent dividers>
                 <TextField
-                  label={"Mensagem"}
+                  label={i18n.t("flowBuilder.message")}
                   multiline
                   rows={7}
                   name="message"

@@ -136,7 +136,7 @@ const FlowBuilderAddTextModal = ({ open, onSave, onUpdate, data, close }) => {
         <Stack>
           <DialogContent dividers>
             <TextField
-              label={"Mensagem"}
+              label={i18n.t("flowBuilder.message")}
               multiline
               rows={7}
               name="text"

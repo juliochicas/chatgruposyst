@@ -107,7 +107,7 @@ const FlowBuilderTicketModal = ({
 
     const handleSaveContact = () => {
         if (!selectedQueue) {
-            return toast.error('Adicione uma fila')
+            return toast.error(i18n.t("newTicketModal.selectQueue"))
         }
         if (open === 'edit') {
             const queue = queues.find(item => item.id === selectedQueue)
@@ -153,7 +153,7 @@ const FlowBuilderTicketModal = ({
                             }}
                             renderValue={() => {
                                 if (selectedQueue === "") {
-                                    return "Selecione uma Conexão"
+                                    return i18n.t("newTicketModal.selectConection")
                                 }
                                 const queue = queues.find(w => w.id === selectedQueue)
                                 return queue.name

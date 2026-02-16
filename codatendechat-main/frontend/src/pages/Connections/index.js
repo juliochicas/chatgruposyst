@@ -241,7 +241,7 @@ const Connections = () => {
 	const handleDeleteMetaConnection = async (metaConnectionId) => {
 		try {
 			await api.delete(`/meta-connections/${metaConnectionId}`);
-			toast.success("Conexion Meta eliminada con exito.");
+			toast.success(i18n.t("connections.toasts.deleted"));
 			fetchMetaConnections();
 		} catch (err) {
 			toastError(err);

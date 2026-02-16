@@ -18,6 +18,7 @@ import { ReplyMessageProvider } from "../../context/ReplyingMessage/ReplyingMess
 import TicketHeader from "../TicketHeader";
 import TicketInfo from "../TicketInfo";
 import { SocketContext } from "../../context/Socket/SocketContext";
+import { i18n } from "../../translate/i18n";
 
 const drawerWidth = 320;
 
@@ -82,7 +83,7 @@ export default function TicketMessagesDialog({ open, handleClose, ticketId }) {
 
             const queueAllowed = queues.find((q) => q.id === queueId);
             if (queueAllowed === undefined && profile !== "admin") {
-              toast.error("Acesso não permitido");
+              toast.error(i18n.t("tickets.toasts.unauthorized"));
               history.push("/tickets");
               return;
             }

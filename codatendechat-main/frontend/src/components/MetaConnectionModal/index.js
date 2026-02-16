@@ -165,7 +165,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
       } else {
         await api.post("/meta-connections", connectionData);
       }
-      toast.success("Conexion Meta guardada con exito.");
+      toast.success(i18n.t("whatsappModal.success"));
       handleClose();
     } catch (err) {
       toastError(err);

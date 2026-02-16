@@ -7,6 +7,7 @@ import { FaCopy, FaCheckCircle } from 'react-icons/fa';
 import { SocketContext } from "../../../context/Socket/SocketContext";
 import { useDate } from "../../../hooks/useDate";
 import { toast } from "react-toastify";
+import { i18n } from "../../../translate/i18n";
 
 function CheckoutSuccess(props) {
 
@@ -26,7 +27,7 @@ function CheckoutSuccess(props) {
     socket.on(`company-${companyId}-payment`, (data) => {
 
       if (data.action === "CONCLUIDA") {
-        toast.success(`Sua licença foi renovada até ${dateToClient(data.company.dueDate)}!`);
+        toast.success(`${i18n.t("subscription.remainingTest")} ${dateToClient(data.company.dueDate)}!`);
         setTimeout(() => {
           history.push("/");
         }, 4000);

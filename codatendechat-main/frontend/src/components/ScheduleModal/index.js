@@ -62,10 +62,10 @@ const useStyles = makeStyles(theme => ({
 
 const ScheduleSchema = Yup.object().shape({
 	body: Yup.string()
-		.min(5, "Mensagem muito curta")
-		.required("Obrigatório"),
-	contactId: Yup.number().required("Obrigatório"),
-	sendAt: Yup.string().required("Obrigatório")
+		.min(5, i18n.t("promptModal.formErrors.prompt.short"))
+		.required(i18n.t("contactModal.formErrors.name.required")),
+	contactId: Yup.number().required(i18n.t("contactModal.formErrors.name.required")),
+	sendAt: Yup.string().required(i18n.t("contactModal.formErrors.name.required"))
 });
 
 const ScheduleModal = ({ open, onClose, scheduleId, contactId, cleanContact, reload }) => {
@@ -276,7 +276,7 @@ const ScheduleModal = ({ open, onClose, scheduleId, contactId, cleanContact, rel
 											getOptionSelected={(option, value) => {
 												return value.id === option.id
 											}}
-											renderInput={(params) => <TextField {...params} variant="outlined" placeholder="Contato" />}
+											renderInput={(params) => <TextField {...params} variant="outlined" placeholder={i18n.t("scheduleModal.form.contact")} />}
 										/>
 									</FormControl>
 								</div>

@@ -15,6 +15,7 @@ import {
 } from "@material-ui/icons";
 
 import TableRowSkeleton from "../../components/TableRowSkeleton";
+import { i18n } from "../../translate/i18n";
 
 function ContactListsTable(props) {
   const {
@@ -77,9 +78,9 @@ function ContactListsTable(props) {
     <Table size="small">
       <TableHead>
         <TableRow>
-          <TableCell align="left">Nome</TableCell>
-          <TableCell align="center">Contatos</TableCell>
-          {!readOnly ? <TableCell align="center">Ações</TableCell> : null}
+          <TableCell align="left">{i18n.t("contactLists.table.name")}</TableCell>
+          <TableCell align="center">{i18n.t("contactLists.table.contacts")}</TableCell>
+          {!readOnly ? <TableCell align="center">{i18n.t("contactLists.table.actions")}</TableCell> : null}
         </TableRow>
       </TableHead>
       <TableBody>

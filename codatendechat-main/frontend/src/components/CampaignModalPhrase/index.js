@@ -195,7 +195,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
       });
       onClose();
       onSave("ok");
-      toast.success("Frase alterada com sucesso!");
+      toast.success(i18n.t("campaigns.toasts.success"));
       clearData();
     } else {
       api.post("/flowcampaign", {
@@ -206,7 +206,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
       });
       onClose();
       onSave("ok");
-      toast.success("Frase criada com sucesso!");
+      toast.success(i18n.t("campaigns.toasts.success"));
       clearData();
     }
   };
@@ -238,7 +238,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
           <Stack sx={{ padding: "52px" }}>
             <Stack sx={{ gap: "14px" }}>
               <Stack gap={1}>
-                <Typography>Nome do disparo por frase</Typography>
+                <Typography>{i18n.t("campaignPhrase.triggerPhrase")}</Typography>
                 <TextField
                   label={""}
                   name="text"
@@ -314,7 +314,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
                   }}
                   renderValue={() => {
                     if (selectedWhatsapp === "" || selectedWhatsapp === null) {
-                      return "Selecione uma Conexão";
+                      return i18n.t("newTicketModal.selectConection");
                     }
                     const whatsapp = whatsApps.find(
                       (w) => w.id === selectedWhatsapp
