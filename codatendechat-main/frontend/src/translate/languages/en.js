@@ -1422,6 +1422,7 @@ const messages = {
 						title: "Title",
 						description: "Description",
 						video: "Video",
+						videoCode: "Video Code",
 					},
 					confirmModal: {
 						title: "Delete Record",
@@ -1641,6 +1642,9 @@ const messages = {
 				contentAddedSuccess: "Content added successfully!",
 				deleteEmptyCards: "Delete empty cards (Image, Audio and Video)",
 				uploadingFiles: "Uploading files and creating content...",
+				editName: "Edit name",
+				duplicate: "Duplicate",
+				delete: "Delete",
 				optionTitle: "Option title",
 				optionText: "Enter the option text",
 				titleNotDefined: "Title not defined",

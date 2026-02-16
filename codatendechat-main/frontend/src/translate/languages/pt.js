@@ -1448,6 +1448,7 @@ const messages = {
             title: "Título",
             description: "Descrição",
             video: "Vídeo",
+            videoCode: "Código do Vídeo",
           },
           confirmModal: {
             title: "Exclusão de Registro",
@@ -1670,6 +1671,9 @@ const messages = {
         contentAddedSuccess: "Conteúdo adicionado com sucesso!",
         deleteEmptyCards: "Delete os cards vazios (Imagem, Áudio e Vídeo)",
         uploadingFiles: "Subindo os arquivos e criando o conteúdo...",
+        editName: "Editar nome",
+        duplicate: "Duplicar",
+        delete: "Excluir",
         optionTitle: "Título da opção",
         optionText: "Digite o texto da opção",
         titleNotDefined: "Título não definido",

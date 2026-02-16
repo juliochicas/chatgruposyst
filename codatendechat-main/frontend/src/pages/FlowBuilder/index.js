@@ -312,7 +312,7 @@ const FlowBuilder = () => {
           >
             <Stack direction={"row"} gap={1}>
               <AddCircle />
-              {"Adicionar Fluxo"}
+              {i18n.t("flowBuilder.addFlow")}
             </Stack>
           </Button>
         </MainHeaderButtonsWrapper>
@@ -447,7 +447,7 @@ const FlowBuilder = () => {
                   hadleEditContact();
                 }}
               >
-                Editar nome
+                {i18n.t("flowBuilder.editName")}
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -455,7 +455,7 @@ const FlowBuilder = () => {
                   exportLink();
                 }}
               >
-                Editar fluxo
+                {i18n.t("flowBuilder.editFlow")}
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -463,7 +463,7 @@ const FlowBuilder = () => {
                   setConfirmDuplicateOpen(true);
                 }}
               >
-                Duplicar
+                {i18n.t("flowBuilder.duplicate")}
               </MenuItem>
               <MenuItem
                 onClick={() => {
@@ -471,7 +471,7 @@ const FlowBuilder = () => {
                   setConfirmOpen(true);
                 }}
               >
-                Excluir
+                {i18n.t("flowBuilder.delete")}
               </MenuItem>
             </Menu>
             {loading && (
