@@ -1,4 +1,4 @@
-FROM node:20-alpine as builder
+FROM node:20-alpine AS builder
 
 ARG REACT_APP_BACKEND_URL=http://localhost:8080
 ARG REACT_APP_HOURS_CLOSE_TICKETS_AUTO=24
