@@ -21,7 +21,8 @@ const EXEMPT_PATTERNS = [
   /^\/plans/,
   /^\/settings/,
   /^\/users\/me/,          // so frontend can load user profile
-  /^\/users\/\d+$/         // so frontend can fetch user details
+  /^\/users\/\d+$/,        // so frontend can fetch user details
+  /^\/embed/               // embed routes handle their own validation
 ];
 
 const isCompanyActive = async (

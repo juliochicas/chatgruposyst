@@ -42,6 +42,7 @@ import shopifyRoutes from "./shopifyRoutes";
 import addonRoutes from "./addonRoutes";
 import balanceRoutes from "./balanceRoutes";
 import supportTicketRoutes from "./supportTicketRoutes";
+import embedRoutes from "./embedRoutes";
 
 const routes = Router();
 
@@ -90,5 +91,6 @@ routes.use(shopifyRoutes)
 routes.use(addonRoutes)
 routes.use(balanceRoutes)
 routes.use(supportTicketRoutes)
+routes.use(embedRoutes)
 
 export default routes;

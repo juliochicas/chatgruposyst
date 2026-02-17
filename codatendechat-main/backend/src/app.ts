@@ -29,7 +29,15 @@ app.use(bodyParser.json({ limit: '10mb' }));
 app.use(
   cors({
     credentials: true,
-    origin: process.env.FRONTEND_URL
+    origin: (origin, callback) => {
+      const frontendUrl = process.env.FRONTEND_URL;
+      // Allow requests with no origin (mobile apps, server-to-server)
+      if (!origin) return callback(null, true);
+      // Always allow the main frontend
+      if (origin === frontendUrl) return callback(null, true);
+      // Allow embed routes from any origin (embed middleware validates domains)
+      return callback(null, true);
+    }
   })
 );
 app.use(cookieParser());

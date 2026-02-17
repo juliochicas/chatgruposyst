@@ -570,6 +570,11 @@ const MainListItems = (props) => {
               primary={i18n.t("mainDrawer.listItems.financeiro")}
               icon={<LocalAtmIcon />}
             />
+            <ListItemLink
+              to="/embed-config"
+              primary={i18n.t("mainDrawer.listItems.embedConfig")}
+              icon={<CodeRoundedIcon />}
+            />
 
             {user.super && (
               <>

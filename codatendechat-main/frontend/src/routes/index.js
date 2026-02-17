@@ -47,6 +47,8 @@ import ShopifyConfig from "../pages/ShopifyConfig";
 import SupportTickets from "../pages/SupportTickets";
 import TicketDetail from "../pages/SupportTickets/TicketDetail";
 import SupportAdminDashboard from "../pages/SupportTickets/AdminDashboard";
+import EmbedPage from "../pages/Embed";
+import EmbedConfigPage from "../pages/EmbedConfig";
 
 const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
@@ -66,6 +68,7 @@ const Routes = () => {
             <Route exact path="/login" component={Login} />
             <Route exact path="/signup" component={Signup} />
             <Route exact path="/forgetpsw" component={ForgetPassword} />
+            <Route exact path="/embed" component={EmbedPage} />
             {/* <Route exact path="/create-company" component={Companies} /> */}
             <WhatsAppsProvider>
               <LoggedInLayout>
@@ -140,6 +143,7 @@ const Routes = () => {
                   component={Subscription}
                   isPrivate
                 />
+                <Route exact path="/embed-config" component={EmbedConfigPage} isPrivate />
                 <Route exact path="/support-tickets" component={SupportTickets} isPrivate />
                 <Route exact path="/support-tickets/admin" component={SupportAdminDashboard} isPrivate />
                 <Route exact path="/support-tickets/:id" component={TicketDetail} isPrivate />

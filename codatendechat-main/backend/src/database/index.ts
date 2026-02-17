@@ -57,6 +57,7 @@ import CompanyAddon from "../models/CompanyAddon";
 import BalanceTransaction from "../models/BalanceTransaction";
 import SupportTicket from "../models/SupportTicket";
 import SupportMessage from "../models/SupportMessage";
+import EmbedConfig from "../models/EmbedConfig";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -123,6 +124,7 @@ const models = [
   BalanceTransaction,
   SupportTicket,
   SupportMessage,
+  EmbedConfig,
 ];
 
 sequelize.addModels(models);
