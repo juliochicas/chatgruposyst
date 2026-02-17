@@ -1713,6 +1713,7 @@ const messages = {
         triggerPhrase: "¿Qué frase activa el flujo?",
         cancel: "Cancelar",
         saveCampaign: "Guardar campaña",
+        createCampaign: "Crear campaña",
       },
       ultraMsgConfig: {
         title: "Configuración UltraMsg - WhatsApp API",

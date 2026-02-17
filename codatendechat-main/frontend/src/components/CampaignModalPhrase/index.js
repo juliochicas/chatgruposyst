@@ -415,7 +415,7 @@ const CampaignModalPhrase = ({ open, onClose, FlowCampaignId, onSave }) => {
                   color="primary"
                   onClick={() => applicationSaveAndEdit()}
                 >
-                  Criar campanha
+                  {i18n.t("campaignPhrase.createCampaign")}
                 </Button>
               )}
             </Stack>
