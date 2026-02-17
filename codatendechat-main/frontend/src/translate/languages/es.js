@@ -191,6 +191,10 @@ const messages = {
         },
         open: "Abierto",
         seeTicket: "Ver Ticket",
+        empty: {
+          title: "Kanban vacío",
+          description: "No hay tickets ni etiquetas kanban configuradas. Crea etiquetas con la opción Kanban activada en Etiquetas para comenzar.",
+        },
       },
       invoices: {
         title: "Facturas",
@@ -416,19 +420,24 @@ const messages = {
       },
       contacts: {
         title: "Contactos",
+        selected: "seleccionados",
         toasts: {
           deleted: "¡Contacto eliminado con éxito!",
           deletedAll: "¡Todos los contactos eliminados con éxito!",
+          deletedMultiple: "¡{{count}} contactos eliminados con éxito!",
         },
         searchPlaceholder: "Buscar...",
         confirmationModal: {
           deleteTitle: "Eliminar ",
           deleteAllTitle: "Eliminar Todos",
           importTitle: "Importar contactos",
+          importTitlte: "Importar contactos",
+          bulkDeleteTitle: "Eliminar contactos seleccionados",
           deleteMessage:
               "¿Está seguro que desea eliminar este contacto? Todos los tickets relacionados se perderán.",
           deleteAllMessage:
               "¿Está seguro que desea eliminar todos los contactos? Todos los tickets relacionados se perderán.",
+          bulkDeleteMessage: "¿Está seguro que desea eliminar {{count}} contactos seleccionados? Todos los tickets relacionados se perderán.",
           importMessage: "¿Desea importar todos los contactos del teléfono?",
         },
         buttons: {
@@ -436,11 +445,13 @@ const messages = {
           add: "Agregar Contacto",
           export: "Exportar Contactos",
           delete: "Eliminar Todos los Contactos",
+          deleteBulk: "Eliminar",
         },
         table: {
           name: "Nombre",
           whatsapp: "WhatsApp",
           email: "Email",
+          company: "Empresa",
           actions: "Acciones",
         },
       },
@@ -586,6 +597,7 @@ const messages = {
           name: "Nombre",
           number: "Número de WhatsApp",
           email: "Email",
+          companyName: "Empresa",
           extraName: "Nombre del campo",
           extraValue: "Valor",
           whatsapp: "Conexión Origen: ",
@@ -1015,6 +1027,9 @@ const messages = {
           protocolNumber: "Protocolo",
           date: "Fecha",
           hour: "Hora",
+          phoneNumber: "Teléfono",
+          email: "Email",
+          companyName: "Empresa",
         },
       },
       contactLists: {
@@ -1309,6 +1324,10 @@ const messages = {
       },
       helps: {
         title: "Centro de Ayuda",
+        empty: {
+          title: "No hay contenido de ayuda",
+          description: "Aún no se han agregado videos o recursos de ayuda. Un administrador puede agregar contenido desde la configuración.",
+        },
       },
       schedules: {
         title: "Programaciones",

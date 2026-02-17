@@ -81,6 +81,7 @@ const ContactModal = ({ open, onClose, contactId, initialValues, onSave }) => {
 		name: "",
 		number: "",
 		email: "",
+		companyName: "",
 	};
 
 	const [contact, setContact] = useState(initialState);
@@ -196,6 +197,17 @@ const ContactModal = ({ open, onClose, contactId, initialValues, onSave }) => {
 										error={touched.email && Boolean(errors.email)}
 										helperText={touched.email && errors.email}
 										placeholder="Correo electrónico"
+										fullWidth
+										margin="dense"
+										variant="outlined"
+									/>
+								</div>
+								<div>
+									<Field
+										as={TextField}
+										label={i18n.t("contactModal.form.companyName")}
+										name="companyName"
+										placeholder="Empresa del contacto"
 										fullWidth
 										margin="dense"
 										variant="outlined"

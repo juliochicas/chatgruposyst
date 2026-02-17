@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useContext } from "react";
 
 import { useHistory } from "react-router-dom";
 import { format } from "date-fns";
+import { toast } from "react-toastify";
 import { SocketContext } from "../../context/Socket/SocketContext";
 
 import useSound from "use-sound";
@@ -105,6 +106,16 @@ const NotificationsPopOver = (volume) => {
 		processNotifications();
 	}, [tickets]);
 
+	// Update browser tab title with notification count
+	useEffect(() => {
+		const baseTitle = "ChateaYA";
+		if (notifications.length > 0) {
+			document.title = `(${notifications.length}) ${baseTitle}`;
+		} else {
+			document.title = baseTitle;
+		}
+	}, [notifications]);
+
 	useEffect(() => {
 		ticketIdRef.current = ticketIdUrl;
 	}, [ticketIdUrl]);
@@ -141,10 +152,8 @@ const NotificationsPopOver = (volume) => {
 
 		socket.on(`company-${user.companyId}-appMessage`, data => {
 			if (
-				data.action === "create" && !data.message.fromMe && 
-				(data.ticket.status !== "pending" ) &&
-				(!data.message.read || data.ticket.status === "pending") &&
-				(data.ticket.userId === user?.id || !data.ticket.userId) &&
+				data.action === "create" && !data.message.fromMe &&
+				!data.message.read &&
 				(user?.queues?.some(queue => (queue.id === data.ticket.queueId)) || !data.ticket.queueId)
 			) {
 				setNotifications(prevState => {
@@ -159,7 +168,6 @@ const NotificationsPopOver = (volume) => {
 				const shouldNotNotificate =
 					(data.message.ticketId === ticketIdRef.current &&
 						document.visibilityState === "visible") ||
-					(data.ticket.userId && data.ticket.userId !== user?.id) ||
 					data.ticket.isGroup;
 
 				if (shouldNotNotificate) return;
@@ -192,7 +200,6 @@ const NotificationsPopOver = (volume) => {
 			e.preventDefault();
 			window.focus();
 			historyRef.current.push(`/tickets/${ticket.uuid}`);
-			// handleChangeTab(null, ticket.isGroup? "group" : "open");
 		};
 
 		setDesktopNotifications(prevState => {
@@ -205,6 +212,19 @@ const NotificationsPopOver = (volume) => {
 			}
 			return [notification, ...prevState];
 		});
+
+		// In-app toast notification
+		const truncatedMsg = message.body.length > 50
+			? message.body.substring(0, 50) + "..."
+			: message.body;
+		toast.info(
+			`${contact.name}: ${truncatedMsg}`,
+			{
+				toastId: `msg-${ticket.id}`,
+				onClick: () => historyRef.current.push(`/tickets/${ticket.uuid}`),
+				autoClose: 5000,
+			}
+		);
 
 		soundAlertRef.current();
 	};

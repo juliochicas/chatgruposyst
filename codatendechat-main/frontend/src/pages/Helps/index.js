@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { makeStyles, Paper, Typography, Modal, IconButton } from "@material-ui/core";
+import { makeStyles, Paper, Typography, Modal, IconButton, CircularProgress } from "@material-ui/core";
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
 import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
@@ -75,13 +75,19 @@ const useStyles = makeStyles(theme => ({
 const Helps = () => {
   const classes = useStyles();
   const [records, setRecords] = useState([]);
+  const [loadingHelps, setLoadingHelps] = useState(true);
   const { list } = useHelps();
   const [selectedVideo, setSelectedVideo] = useState(null);
 
   useEffect(() => {
     async function fetchData() {
-      const helps = await list();
-      setRecords(helps);
+      try {
+        const helps = await list();
+        setRecords(helps);
+      } catch (err) {
+        console.log(err);
+      }
+      setLoadingHelps(false);
     }
     fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -132,10 +138,31 @@ const Helps = () => {
   };
 
   const renderHelps = () => {
+    if (loadingHelps) {
+      return (
+        <div style={{ display: "flex", justifyContent: "center", padding: 40 }}>
+          <CircularProgress />
+        </div>
+      );
+    }
+
+    if (!records.length) {
+      return (
+        <div style={{ textAlign: "center", padding: 40 }}>
+          <Typography variant="h6" color="textSecondary" gutterBottom>
+            {i18n.t("helps.empty.title")}
+          </Typography>
+          <Typography variant="body2" color="textSecondary">
+            {i18n.t("helps.empty.description")}
+          </Typography>
+        </div>
+      );
+    }
+
     return (
       <>
         <div className={`${classes.mainPaper} ${classes.mainPaperContainer}`}>
-          {records.length ? records.map((record, key) => (
+          {records.map((record, key) => (
             <Paper key={key} className={`${classes.helpPaper} ${classes.paperHover}`} onClick={() => openVideoModal(record.video)}>
               <img
                 src={`https://img.youtube.com/vi/${record.video}/mqdefault.jpg`}
@@ -149,7 +176,7 @@ const Helps = () => {
                 {record.description}
               </Typography>
             </Paper>
-          )) : null}
+          ))}
         </div>
       </>
     );

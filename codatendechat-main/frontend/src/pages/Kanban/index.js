@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
+import { Typography, CircularProgress } from "@material-ui/core";
 import api from "../../services/api";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import Board from "react-trello";
@@ -12,6 +13,8 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(1),
+    flex: 1,
+    width: "100%",
   },
   button: {
     background: "#10a110",
@@ -21,6 +24,15 @@ const useStyles = makeStyles((theme) => ({
     fontWeight: "bold",
     borderRadius: "5px",
   },
+  emptyState: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+    padding: theme.spacing(4),
+    color: theme.palette.text.secondary,
+  },
 }));
 
 const Kanban = () => {
@@ -28,6 +40,7 @@ const Kanban = () => {
   const history = useHistory();
 
   const [tags, setTags] = useState([]);
+  const [loadingKanban, setLoadingKanban] = useState(true);
 
   const fetchTags = async () => {
     try {
@@ -41,6 +54,7 @@ const Kanban = () => {
     } catch (error) {
       console.log(error);
     }
+    setLoadingKanban(false);
   };
 
   useEffect(() => {
@@ -168,6 +182,31 @@ const Kanban = () => {
       console.log(err);
     }
   };
+
+  if (loadingKanban) {
+    return (
+      <div className={classes.root}>
+        <div className={classes.emptyState}>
+          <CircularProgress />
+        </div>
+      </div>
+    );
+  }
+
+  if (tickets.length === 0 && tags.length === 0) {
+    return (
+      <div className={classes.root}>
+        <div className={classes.emptyState}>
+          <Typography variant="h6" gutterBottom>
+            {i18n.t("kanban.empty.title")}
+          </Typography>
+          <Typography variant="body2">
+            {i18n.t("kanban.empty.description")}
+          </Typography>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={classes.root}>

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer, useContext } from "react";
 
 import { toast } from "react-toastify";
 import { useHistory } from "react-router-dom";
-import { Tooltip } from "@material-ui/core";
+import { Tooltip, Checkbox } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -110,6 +110,8 @@ const Contacts = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [hasMore, setHasMore] = useState(false);
   const [openModalImport, setOpenModalImport] = useState(false);
+  const [selectedContacts, setSelectedContacts] = useState([]);
+  const [bulkDeleteConfirmOpen, setBulkDeleteConfirmOpen] = useState(false);
 
   const socketManager = useContext(SocketContext);
 
@@ -220,6 +222,40 @@ const Contacts = () => {
     }
   };
 
+  const handleSelectContact = (contactId) => {
+    setSelectedContacts((prev) => {
+      if (prev.includes(contactId)) {
+        return prev.filter((id) => id !== contactId);
+      }
+      return [...prev, contactId];
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (selectedContacts.length === contacts.length) {
+      setSelectedContacts([]);
+    } else {
+      setSelectedContacts(contacts.map((c) => c.id));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    try {
+      for (const contactId of selectedContacts) {
+        await api.delete(`/contacts/${contactId}`);
+      }
+      toast.success(
+        i18n.t("contacts.toasts.deletedMultiple", { count: selectedContacts.length })
+      );
+      setSelectedContacts([]);
+      setBulkDeleteConfirmOpen(false);
+      dispatch({ type: "RESET" });
+      setPageNumber(1);
+    } catch (err) {
+      toastError(err);
+    }
+  };
+
   const handleOpenImportModal = (  ) => {
     setOpenModalImport(true);
   }
@@ -279,9 +315,38 @@ const Contacts = () => {
           ? `${i18n.t("contacts.confirmationModal.deleteMessage")}`
           : `${i18n.t("contacts.confirmationModal.importMessage")}`}
       </ConfirmationModal>
+      <ConfirmationModal
+        title={i18n.t("contacts.confirmationModal.bulkDeleteTitle")}
+        open={bulkDeleteConfirmOpen}
+        onClose={setBulkDeleteConfirmOpen}
+        onConfirm={handleBulkDelete}
+      >
+        {i18n.t("contacts.confirmationModal.bulkDeleteMessage", {
+          count: selectedContacts.length,
+        })}
+      </ConfirmationModal>
       <MainHeader>
-        <Title>{i18n.t("contacts.title")}</Title>
+        <Title>
+          {i18n.t("contacts.title")}
+          {selectedContacts.length > 0 && ` (${selectedContacts.length} ${i18n.t("contacts.selected")})`}
+        </Title>
         <MainHeaderButtonsWrapper>
+          <Can
+            role={user.profile}
+            perform="contacts-page:deleteContact"
+            yes={() =>
+              selectedContacts.length > 0 && (
+                <Button
+                  variant="contained"
+                  style={{ backgroundColor: "#f44336", color: "#fff" }}
+                  onClick={() => setBulkDeleteConfirmOpen(true)}
+                  startIcon={<DeleteOutlineIcon />}
+                >
+                  {i18n.t("contacts.buttons.deleteBulk")} ({selectedContacts.length})
+                </Button>
+              )
+            }
+          />
           <TextField
             placeholder={i18n.t("contacts.searchPlaceholder")}
             type="search"
@@ -316,7 +381,7 @@ const Contacts = () => {
           >
             {i18n.t("contacts.buttons.add")}
           </Button>
-         <CSVLink style={{ textDecoration:'none'}} separator=";" filename={'contatos.csv'} data={contacts.map((contact) => ({ name: contact.name, number: contact.number, email: contact.email }))}>
+         <CSVLink style={{ textDecoration:'none'}} separator=";" filename={'contactos.csv'} data={contacts.map((contact) => ({ name: contact.name, number: contact.number, email: contact.email, companyName: contact.companyName || "" }))}>
           <Button	variant="contained" color="primary"> 
             {i18n.t("contacts.buttons.export")}
           </Button>
@@ -332,13 +397,30 @@ const Contacts = () => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell padding="checkbox" />
+              <Can
+                role={user.profile}
+                perform="contacts-page:deleteContact"
+                yes={() => (
+                  <TableCell padding="checkbox">
+                    <Checkbox
+                      indeterminate={selectedContacts.length > 0 && selectedContacts.length < contacts.length}
+                      checked={contacts.length > 0 && selectedContacts.length === contacts.length}
+                      onChange={handleSelectAll}
+                      color="primary"
+                    />
+                  </TableCell>
+                )}
+                no={() => <TableCell padding="checkbox" />}
+              />
               <TableCell>{i18n.t("contacts.table.name")}</TableCell>
               <TableCell align="center">
                 {i18n.t("contacts.table.whatsapp")}
               </TableCell>
               <TableCell align="center">
                 {i18n.t("contacts.table.email")}
+              </TableCell>
+              <TableCell align="center">
+                {i18n.t("contacts.table.company")}
               </TableCell>
               <TableCell align="center">
                 {i18n.t("contacts.table.actions")}
@@ -348,13 +430,32 @@ const Contacts = () => {
           <TableBody>
             <>
               {contacts.map((contact) => (
-                <TableRow key={contact.id}>
-                  <TableCell style={{ paddingRight: 0 }}>
-                    {<Avatar src={contact.profilePicUrl} />}
-                  </TableCell>
+                <TableRow
+                  key={contact.id}
+                  selected={selectedContacts.includes(contact.id)}
+                >
+                  <Can
+                    role={user.profile}
+                    perform="contacts-page:deleteContact"
+                    yes={() => (
+                      <TableCell padding="checkbox">
+                        <Checkbox
+                          checked={selectedContacts.includes(contact.id)}
+                          onChange={() => handleSelectContact(contact.id)}
+                          color="primary"
+                        />
+                      </TableCell>
+                    )}
+                    no={() => (
+                      <TableCell style={{ paddingRight: 0 }}>
+                        <Avatar src={contact.profilePicUrl} />
+                      </TableCell>
+                    )}
+                  />
                   <TableCell>{contact.name}</TableCell>
                   <TableCell align="center">{contact.number}</TableCell>
                   <TableCell align="center">{contact.email}</TableCell>
+                  <TableCell align="center">{contact.companyName || "-"}</TableCell>
                   <TableCell align="center">
                     <IconButton
                       size="small"
@@ -389,7 +490,7 @@ const Contacts = () => {
                   </TableCell>
                 </TableRow>
               ))}
-              {loading && <TableRowSkeleton avatar columns={3} />}
+              {loading && <TableRowSkeleton avatar columns={4} />}
             </>
           </TableBody>
         </Table>

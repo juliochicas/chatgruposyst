@@ -51,6 +51,9 @@ class Contact extends Model<Contact> {
   @Column
   disableBot: boolean;
 
+  @Column
+  companyName: string;
+
   @CreatedAt
   createdAt: Date;
 
