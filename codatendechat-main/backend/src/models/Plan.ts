@@ -7,7 +7,9 @@ import {
   PrimaryKey,
   AutoIncrement,
   AllowNull,
-  Unique
+  Unique,
+  Default,
+  DataType
 } from "sequelize-typescript";
 
 @Table
@@ -34,6 +36,24 @@ class Plan extends Model<Plan> {
   @Column
   value: number;
 
+  @Column
+  description: string;
+
+  @Default(true)
+  @Column
+  isPublic: boolean;
+
+  @Default(false)
+  @Column
+  isFeatured: boolean;
+
+  @Default(false)
+  @Column
+  isCustom: boolean;
+
+  @Column(DataType.JSONB)
+  features: string[];
+
   @CreatedAt
   createdAt: Date;
 
@@ -41,16 +61,16 @@ class Plan extends Model<Plan> {
   updatedAt: Date;
 
   @Column
-  useSchedules: boolean;   
+  useSchedules: boolean;
 
   @Column
-  useCampaigns: boolean; 
-  
+  useCampaigns: boolean;
+
   @Column
-  useInternalChat: boolean;   
-  
+  useInternalChat: boolean;
+
   @Column
-  useExternalApi: boolean;   
+  useExternalApi: boolean;
 
   @Column
   useKanban: boolean;

@@ -8,6 +8,11 @@ interface PlanData {
   connections: number;
   queues: number;
   value: number;
+  description?: string;
+  isPublic?: boolean;
+  isFeatured?: boolean;
+  isCustom?: boolean;
+  features?: string[];
   useCampaigns?: boolean;
   useSchedules?: boolean;
   useInternalChat?: boolean;
