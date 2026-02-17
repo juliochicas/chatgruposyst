@@ -1722,6 +1722,7 @@ const messages = {
       },
       contactNotes: {
         deleteRecord: "Excluir Registro",
+        deleteConfirm: "Deseja realmente excluir este registro?",
         cancel: "Cancelar",
         save: "Salvar",
         close: "Fechar",

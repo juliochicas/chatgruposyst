@@ -1693,6 +1693,7 @@ const messages = {
 			},
 			contactNotes: {
 				deleteRecord: "Delete Record",
+				deleteConfirm: "Do you really want to delete this record?",
 				cancel: "Cancel",
 				save: "Save",
 				close: "Close",

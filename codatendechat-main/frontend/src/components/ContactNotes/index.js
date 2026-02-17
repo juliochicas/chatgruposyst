@@ -134,7 +134,7 @@ export function ContactNotes ({ ticket }) {
                 onClose={setShowOnDeleteDialog}
                 onConfirm={handleDelete}
             >
-                Deseja realmente excluir este registro?
+                {i18n.t("contactNotes.deleteConfirm")}
             </ConfirmationModal>
             <Formik
                 initialValues={newNote}
