@@ -250,6 +250,7 @@ return (
           <TableHead>
             <TableRow>
               <TableCell align="center">{i18n.t("tags.table.name")}</TableCell>
+              <TableCell align="center">Kanban</TableCell>
               <TableCell align="center">
                 {i18n.t("tags.table.tickets")}
               </TableCell>
@@ -273,6 +274,11 @@ return (
                       label={tag.name}
                       size="small"
                     />
+                  </TableCell>
+                  <TableCell align="center">
+                    {tag.kanban === 1 ? (
+                      <Chip label="Kanban" size="small" color="primary" variant="outlined" />
+                    ) : "-"}
                   </TableCell>
                   <TableCell align="center">{tag.ticketsCount}</TableCell>
                   <TableCell align="center">

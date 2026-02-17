@@ -21,7 +21,7 @@ import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
 import { AuthContext } from "../../context/Auth/AuthContext";
-import { IconButton, InputAdornment } from "@material-ui/core";
+import { IconButton, InputAdornment, FormControl } from "@material-ui/core";
 import { FormControlLabel, Switch } from '@material-ui/core';
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -81,6 +81,22 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
 
 	const [tag, setTag] = useState(initialState);
 	const [ kanban, setKanban] = useState(0);
+	const [parentId, setParentId] = useState("");
+	const [kanbanTags, setKanbanTags] = useState([]);
+
+	useEffect(() => {
+		const fetchKanbanTags = async () => {
+			try {
+				const { data } = await api.get("/tags/kanban");
+				const fetchedTags = data.lista || [];
+				// Only show tags without a parent as potential parents
+				setKanbanTags(fetchedTags.filter(t => !t.parentId && (!tagId || t.id !== tagId)));
+			} catch (err) {
+				console.log(err);
+			}
+		};
+		if (open) fetchKanbanTags();
+	}, [open, tagId]);
 
 	useEffect(() => {
 		try {
@@ -89,6 +105,7 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
 
 				const { data } = await api.get(`/tags/${tagId}`);
 				setKanban(data.kanban);
+				setParentId(data.parentId || "");
 				setTag(prevState => {
 					return { ...prevState, ...data };
 				});
@@ -101,6 +118,8 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
 	const handleClose = () => {
 		setTag(initialState);
 		setColorPickerModalOpen(false);
+		setParentId("");
+		setKanban(0);
 		onClose();
 	};
 
@@ -109,7 +128,7 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
 	};
 
 	const handleSaveTag = async values => {
-		const tagData = { ...values, userId: user.id, kanban };
+		const tagData = { ...values, userId: user.id, kanban, parentId: parentId || null };
 		try {
 			if (tagId) {
 				await api.put(`/tags/${tagId}`, tagData);
@@ -214,6 +233,25 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
           								labelPlacement="start"
         							/>
       							</div>
+								{kanban === 1 && (
+								<FormControl fullWidth margin="dense" variant="outlined">
+									<InputLabel>{i18n.t("tagModal.form.parentTag")}</InputLabel>
+									<Select
+										value={parentId}
+										onChange={(e) => setParentId(e.target.value)}
+										label={i18n.t("tagModal.form.parentTag")}
+									>
+										<MenuItem value="">
+											{i18n.t("tagModal.form.noParent")}
+										</MenuItem>
+										{kanbanTags.map((kt) => (
+											<MenuItem key={kt.id} value={kt.id}>
+												{kt.name}
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+								)}
       							<br />
                                 </>
 								)}

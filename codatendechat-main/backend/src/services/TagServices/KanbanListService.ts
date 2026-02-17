@@ -15,8 +15,20 @@ const KanbanListService = async ({
       kanban: 1,
       companyId: companyId,
     },
-    order: [["id", "ASC"]],
-    raw: true,
+    order: [["parentId", "ASC"], ["id", "ASC"]],
+    include: [
+      {
+        model: Tag,
+        as: "children",
+        where: { kanban: 1 },
+        required: false,
+      },
+      {
+        model: Tag,
+        as: "parent",
+        required: false,
+      },
+    ],
   });
   return tags;
 };

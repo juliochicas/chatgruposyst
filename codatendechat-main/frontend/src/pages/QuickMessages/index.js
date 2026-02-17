@@ -32,6 +32,7 @@ import { Grid } from "@material-ui/core";
 import { isArray } from "lodash";
 import { SocketContext } from "../../context/Socket/SocketContext";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import VariablesManager from "./VariablesManager";
 
 
 const reducer = (state, action) => {
@@ -265,6 +266,7 @@ const Quickemessages = () => {
           </Grid>
         </Grid>
       </MainHeader>
+      <VariablesManager />
       <Paper
         className={classes.mainPaper}
         variant="outlined"

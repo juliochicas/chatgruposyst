@@ -8,13 +8,15 @@ interface Request {
   color: string;
   kanban: number;
   companyId: number;
+  parentId?: number;
 }
 
 const CreateService = async ({
   name,
   color = "#A4CCCC",
   kanban = 0,
-  companyId
+  companyId,
+  parentId
 }: Request): Promise<Tag> => {
   const schema = Yup.object().shape({
     name: Yup.string().required().min(3)
@@ -28,7 +30,7 @@ const CreateService = async ({
 
   const [tag] = await Tag.findOrCreate({
     where: { name, color, companyId, kanban },
-    defaults: { name, color, companyId, kanban }
+    defaults: { name, color, companyId, kanban, parentId: parentId || null }
   });
 
   await tag.reload();

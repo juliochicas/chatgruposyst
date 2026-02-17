@@ -49,6 +49,8 @@ const ListService = async ({
       'id',
       'name',
       'color',
+      'kanban',
+      'parentId',
       [fn('count', col('ticketTags.tagId')), 'ticketsCount']
     ],
     group: ['Tag.id']

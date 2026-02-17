@@ -725,6 +725,8 @@ const messages = {
         form: {
           name: "Nombre",
           color: "Color",
+          parentTag: "Categoría padre (Kanban)",
+          noParent: "Sin categoría padre",
         },
         buttons: {
           okAdd: "Agregar",
@@ -732,6 +734,14 @@ const messages = {
           cancel: "Cancelar",
         },
         success: "Etiqueta guardada con éxito.",
+      },
+      kanbanSelectModal: {
+        title: "Mover al Kanban",
+        description: "Selecciona la categoría del Kanban donde deseas mover este ticket. El ticket será cerrado y asignado a la categoría seleccionada.",
+        noTags: "No hay categorías Kanban configuradas. Crea etiquetas con Kanban activado primero.",
+        general: "General",
+        cancel: "Cancelar",
+        confirm: "Mover al Kanban",
       },
       chat: {
         toasts: {
@@ -1020,6 +1030,7 @@ const messages = {
       },
       messageVariablesPicker: {
         label: "Variables disponibles",
+        customLabel: "Variables personalizadas",
         vars: {
           contactFirstName: "Primer Nombre",
           contactName: "Nombre",
@@ -1030,6 +1041,45 @@ const messages = {
           phoneNumber: "Teléfono",
           email: "Email",
           companyName: "Empresa",
+        },
+      },
+      variablesManager: {
+        title: "Variables Personalizadas",
+        description: "Crea variables personalizadas para usar en tus respuestas rápidas. Usa la sintaxis {{nombreVariable}} en tus mensajes.",
+        empty: "No hay variables personalizadas. Crea una para empezar.",
+        table: {
+          variable: "Variable",
+          label: "Etiqueta",
+          value: "Valor por defecto",
+          actions: "Acciones",
+        },
+        buttons: {
+          add: "Nueva Variable",
+          save: "Guardar",
+          cancel: "Cancelar",
+        },
+        dialog: {
+          addTitle: "Crear Variable",
+          editTitle: "Editar Variable",
+          key: "Nombre de la variable",
+          keyHelp: "Solo letras, números y guiones bajos (ej: nombreProducto)",
+          label: "Etiqueta visible",
+          labelHelp: "Nombre que verán los agentes al seleccionar la variable",
+          value: "Valor por defecto",
+          valueHelp: "Texto que reemplazará la variable en los mensajes",
+          preview: "Vista previa",
+        },
+        toasts: {
+          created: "Variable creada con éxito",
+          updated: "Variable actualizada con éxito",
+          deleted: "Variable eliminada con éxito",
+        },
+        errors: {
+          required: "El nombre y la etiqueta son obligatorios",
+        },
+        confirmDelete: {
+          title: "Eliminar Variable",
+          message: "¿Está seguro que desea eliminar esta variable? Los mensajes que la usen ya no podrán resolverla.",
         },
       },
       contactLists: {
@@ -1587,6 +1637,8 @@ const messages = {
         schedule: "Programación",
         delete: "Eliminar",
         transfer: "Transferir",
+        moveToKanban: "Mover al Kanban",
+        kanbanMoved: "Ticket movido al Kanban con éxito",
         export: "Exportar historial",
         exportSuccess: "Historial de chat exportado con éxito",
         registerAppointment: "Observaciones del Contacto",

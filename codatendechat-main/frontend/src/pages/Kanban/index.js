@@ -86,9 +86,57 @@ const Kanban = () => {
     }
   };
 
-  const popularCards = (jsonString) => {
+  const buildTicketCards = (tagTickets) => {
+    return tagTickets.map((ticket) => ({
+      id: ticket.id.toString(),
+      label: "Ticket nº " + ticket.id.toString(),
+      description: (
+        <div>
+          <p>
+            {ticket.contact.number}
+            <br />
+            {ticket.lastMessage}
+          </p>
+          <button
+            className={classes.button}
+            onClick={() => {
+              handleCardClick(ticket.uuid);
+            }}
+          >
+            {i18n.t("kanban.seeTicket")}
+          </button>
+        </div>
+      ),
+      title: ticket.contact.name,
+      draggable: true,
+      href: "/tickets/" + ticket.uuid,
+    }));
+  };
+
+  const getTicketsForTag = (tagId) => {
+    return tickets.filter((ticket) => {
+      const tagIds = ticket.tags.map((t) => t.id);
+      return tagIds.includes(tagId);
+    });
+  };
+
+  const popularCards = () => {
     const filteredTickets = tickets.filter(
       (ticket) => ticket.tags.length === 0
+    );
+
+    // Separate tags into: parent tags (have children, no parentId), child tags (have parentId), standalone (no parent, no children)
+    const parentTags = tags.filter(
+      (t) => !t.parentId && t.children && t.children.length > 0
+    );
+    const childTagIds = new Set();
+    parentTags.forEach((p) => {
+      if (p.children) {
+        p.children.forEach((c) => childTagIds.add(c.id));
+      }
+    });
+    const standaloneTags = tags.filter(
+      (t) => !t.parentId && (!t.children || t.children.length === 0)
     );
 
     const lanes = [
@@ -96,80 +144,66 @@ const Kanban = () => {
         id: "lane0",
         title: i18n.t("kanban.open"),
         label: filteredTickets.length.toString(),
-        cards: filteredTickets.map((ticket) => ({
-          id: ticket.id.toString(),
-          label: "Ticket nº " + ticket.id.toString(),
-          description: (
-            <div>
-              <p>
-                {ticket.contact.number}
-                <br />
-                {ticket.lastMessage}
-              </p>
-              <button
-                className={classes.button}
-                onClick={() => {
-                  handleCardClick(ticket.uuid);
-                }}
-              >
-                {i18n.t("kanban.seeTicket")}
-              </button>
-            </div>
-          ),
-          title: ticket.contact.name,
-          draggable: true,
-          href: "/tickets/" + ticket.uuid,
-        })),
+        cards: buildTicketCards(filteredTickets),
       },
-      ...tags.map((tag) => {
-        const tagsTickets = tickets.filter((ticket) => {
-          const tagIds = ticket.tags.map((tag) => tag.id);
-          return tagIds.includes(tag.id);
-        });
-
-        return {
-          id: tag.id.toString(),
-          title: tag.name,
-          label: tagsTickets.length.toString(),
-          cards: tagsTickets.map((ticket) => ({
-            id: ticket.id.toString(),
-            label: "Ticket nº " + ticket.id.toString(),
-            description: (
-              <div>
-                <p>
-                  {ticket.contact.number}
-                  <br />
-                  {ticket.lastMessage}
-                </p>
-                <button
-                  className={classes.button}
-                  onClick={() => {
-                    handleCardClick(ticket.uuid);
-                  }}
-                >
-                  {i18n.t("kanban.seeTicket")}
-                </button>
-              </div>
-            ),
-            title: ticket.contact.name,
-            draggable: true,
-            href: "/tickets/" + ticket.uuid,
-          })),
-          style: { backgroundColor: tag.color, color: "white" },
-        };
-      }),
     ];
+
+    // Add standalone tags as regular lanes
+    standaloneTags.forEach((tag) => {
+      const tagTickets = getTicketsForTag(tag.id);
+      lanes.push({
+        id: tag.id.toString(),
+        title: tag.name,
+        label: tagTickets.length.toString(),
+        cards: buildTicketCards(tagTickets),
+        style: { backgroundColor: tag.color, color: "white" },
+      });
+    });
+
+    // Add parent categories with their children
+    parentTags.forEach((parent) => {
+      // Parent category lane (collects tickets directly assigned to parent)
+      const parentTickets = getTicketsForTag(parent.id);
+      lanes.push({
+        id: parent.id.toString(),
+        title: "📁 " + parent.name,
+        label: parentTickets.length.toString(),
+        cards: buildTicketCards(parentTickets),
+        style: {
+          backgroundColor: parent.color,
+          color: "white",
+          borderTop: "3px solid rgba(0,0,0,0.3)",
+        },
+      });
+
+      // Child lanes under this parent
+      if (parent.children) {
+        parent.children.forEach((child) => {
+          const childTickets = getTicketsForTag(child.id);
+          lanes.push({
+            id: child.id.toString(),
+            title: parent.name + " › " + child.name,
+            label: childTickets.length.toString(),
+            cards: buildTicketCards(childTickets),
+            style: {
+              backgroundColor: child.color || parent.color,
+              color: "white",
+              opacity: 0.95,
+            },
+          });
+        });
+      }
+    });
 
     setFile({ lanes });
   };
 
   const handleCardClick = (uuid) => {
-    //console.log("Clicked on card with UUID:", uuid);
     history.push("/tickets/" + uuid);
   };
 
   useEffect(() => {
-    popularCards(jsonString);
+    popularCards();
   }, [tags, tickets]);
 
   const handleCardMove = async (cardId, sourceLaneId, targetLaneId) => {

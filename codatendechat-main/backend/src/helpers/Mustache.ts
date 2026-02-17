@@ -1,5 +1,6 @@
 import Mustache from "mustache";
 import Contact from "../models/Contact";
+import MessageVariable from "../models/MessageVariable";
 
 export const greeting = (): string => {
   const greetings = ["Buenas madrugadas", "Buenos días", "Buenas tardes", "Buenas noches"];
@@ -14,6 +15,32 @@ export const firstName = (contact?: Contact): string => {
     return nameArr[0];
   }
   return '';
+};
+
+// In-memory cache for custom variables per company (refreshes every 60s)
+const customVarCache: Map<number, { vars: Record<string, string>; ts: number }> = new Map();
+const CACHE_TTL = 60000;
+
+const getCustomVars = (companyId: number): Record<string, string> => {
+  const cached = customVarCache.get(companyId);
+  if (cached && Date.now() - cached.ts < CACHE_TTL) {
+    return cached.vars;
+  }
+  // Refresh cache in background
+  MessageVariable.findAll({ where: { companyId } })
+    .then(vars => {
+      const varMap: Record<string, string> = {};
+      for (const v of vars) {
+        varMap[v.key] = v.value || "";
+      }
+      customVarCache.set(companyId, { vars: varMap, ts: Date.now() });
+    })
+    .catch(() => {});
+  return cached ? cached.vars : {};
+};
+
+export const clearCustomVarCache = (companyId: number): void => {
+  customVarCache.delete(companyId);
 };
 
 export default (body: string, contact: Contact): string => {
@@ -46,7 +73,7 @@ export default (body: string, contact: Contact): string => {
   const hora = `${hh}:${min}:${ss}`;
   const fecha = `${dd}/${mm}/${yy}`;
 
-  const view = {
+  const view: Record<string, string> = {
     firstName: firstName(contact),
     name: contact ? contact.name : "",
     gretting: greeting(),
@@ -58,5 +85,12 @@ export default (body: string, contact: Contact): string => {
     email: contact ? contact.email : "",
     companyName: contact ? (contact.companyName || "") : "",
   };
+
+  // Merge custom variables from cache
+  if (contact && contact.companyId) {
+    const customVars = getCustomVars(contact.companyId);
+    Object.assign(view, customVars);
+  }
+
   return Mustache.render(body, view);
 };

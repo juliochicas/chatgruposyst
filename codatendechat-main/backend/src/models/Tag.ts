@@ -41,6 +41,16 @@ class Tag extends Model<Tag> {
   @BelongsTo(() => Company)
   company: Company;
 
+  @ForeignKey(() => Tag)
+  @Column
+  parentId: number;
+
+  @BelongsTo(() => Tag, "parentId")
+  parent: Tag;
+
+  @HasMany(() => Tag, "parentId")
+  children: Tag[];
+
   @CreatedAt
   createdAt: Date;
 

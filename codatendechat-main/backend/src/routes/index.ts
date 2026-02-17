@@ -43,6 +43,7 @@ import addonRoutes from "./addonRoutes";
 import balanceRoutes from "./balanceRoutes";
 import supportTicketRoutes from "./supportTicketRoutes";
 import embedRoutes from "./embedRoutes";
+import messageVariableRoutes from "./messageVariableRoutes";
 
 const routes = Router();
 
@@ -92,5 +93,6 @@ routes.use(addonRoutes)
 routes.use(balanceRoutes)
 routes.use(supportTicketRoutes)
 routes.use(embedRoutes)
+routes.use(messageVariableRoutes)
 
 export default routes;

@@ -13,15 +13,19 @@ import { Can } from "../Can";
 import { AuthContext } from "../../context/Auth/AuthContext";
 
 import ScheduleModal from "../ScheduleModal";
+import KanbanSelectModal from "../KanbanSelectModal";
+import { useHistory } from "react-router-dom";
 
 const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 	const [confirmationOpen, setConfirmationOpen] = useState(false);
 	const [transferTicketModalOpen, setTransferTicketModalOpen] = useState(false);
 	const isMounted = useRef(true);
 	const { user } = useContext(AuthContext);
+	const history = useHistory();
 
 	const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
 	const [contactId, setContactId] = useState(null);
+	const [kanbanModalOpen, setKanbanModalOpen] = useState(false);
 
 	useEffect(() => {
 		return () => {
@@ -63,6 +67,19 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 		setScheduleModalOpen(false);
 		setContactId(null);
 	}
+
+	const handleOpenKanbanModal = () => {
+		handleClose();
+		setKanbanModalOpen(true);
+	};
+
+	const handleCloseKanbanModal = (result) => {
+		setKanbanModalOpen(false);
+		if (result === "moved") {
+			toast.success(i18n.t("ticketOptionsMenu.kanbanMoved"));
+			history.push("/kanban");
+		}
+	};
 
 	const handleExportChat = async () => {
 		handleClose();
@@ -107,6 +124,9 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 				<MenuItem onClick={handleOpenTransferModal}>
 					{i18n.t("ticketOptionsMenu.transfer")}
 				</MenuItem>
+				<MenuItem onClick={handleOpenKanbanModal}>
+					{i18n.t("ticketOptionsMenu.moveToKanban")}
+				</MenuItem>
 				<MenuItem onClick={handleExportChat}>
 					{i18n.t("ticketOptionsMenu.export")}
 				</MenuItem>
@@ -142,6 +162,11 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 				onClose={handleCloseScheduleModal}
 				aria-labelledby="form-dialog-title"
 				contactId={contactId}
+			/>
+			<KanbanSelectModal
+				open={kanbanModalOpen}
+				onClose={handleCloseKanbanModal}
+				ticketId={ticket.id}
 			/>
 		</>
 	);
