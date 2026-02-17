@@ -44,6 +44,7 @@ const sessionsOpenAi: SessionOpenAi[] = [];
 interface IOpenAi {
   name: string;
   prompt: string;
+  model: string;
   voice: string;
   voiceKey: string;
   voiceRegion: string;
@@ -154,7 +155,7 @@ export const handleOpenAi = async (
     console.log(156, "OpenAiService");
 
     const chat = await openai.createChatCompletion({
-      model: "gpt-3.5-turbo-1106",
+      model: openAiSettings.model || "gpt-4o",
       messages: messagesOpenAi,
       max_tokens: openAiSettings.maxTokens,
       temperature: openAiSettings.temperature
@@ -245,7 +246,7 @@ export const handleOpenAi = async (
     }
     messagesOpenAi.push({ role: "user", content: transcription.text });
     const chat = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo-1106",
+      model: openAiSettings.model || "gpt-4o",
       messages: messagesOpenAi,
       max_tokens: openAiSettings.maxTokens,
       temperature: openAiSettings.temperature

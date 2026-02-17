@@ -1,6 +1,7 @@
 export interface IOpenAi {
     name: string;
     prompt: string;
+    model: string;
     voice: string;
     voiceKey: string;
     voiceRegion: string;

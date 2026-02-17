@@ -2571,6 +2571,7 @@ const handleMessage = async (
       let {
         name,
         prompt,
+        model,
         voice,
         voiceKey,
         voiceRegion,
@@ -2584,6 +2585,7 @@ const handleMessage = async (
       let openAiSettings = {
         name,
         prompt,
+        model: model || "gpt-4o",
         voice,
         voiceKey,
         voiceRegion,

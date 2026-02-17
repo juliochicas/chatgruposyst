@@ -69,7 +69,7 @@ const PromptSchema = Yup.object().shape({
 
 const PromptModal = ({ open, onClose, promptId, refreshPrompts }) => {
     const classes = useStyles();
-    const [selectedModel, setSelectedModel] = useState("gpt-3.5-turbo-1106");
+    const [selectedModel, setSelectedModel] = useState("gpt-4o");
     const [showApiKey, setShowApiKey] = useState(false);
 
     const handleToggleApiKey = () => {
@@ -79,7 +79,7 @@ const PromptModal = ({ open, onClose, promptId, refreshPrompts }) => {
     const initialState = {
         name: "",
         prompt: "",
-        model: "gpt-3.5-turbo-1106",
+        model: "gpt-4o",
         maxTokens: 100,
         temperature: 1,
         apiKey: "",
@@ -112,7 +112,7 @@ const PromptModal = ({ open, onClose, promptId, refreshPrompts }) => {
 
     const handleClose = () => {
         setPrompt(initialState);
-        setSelectedModel("gpt-3.5-turbo-1106");
+        setSelectedModel("gpt-4o");
         onClose();
     };
 
@@ -225,11 +225,26 @@ const PromptModal = ({ open, onClose, promptId, refreshPrompts }) => {
                                             onChange={handleChangeModel}
                                             multiple={false}
                                         >
-                                            <MenuItem key={"gpt-3.5"} value={"gpt-3.5-turbo-1106"}>
-                                                GPT 3.5 turbo
+                                            <MenuItem key={"gpt-4o"} value={"gpt-4o"}>
+                                                GPT-4o (Recomendado)
                                             </MenuItem>
-                                            <MenuItem key={"gpt-4"} value={"gpt-4o-mini"}>
-                                                GPT 4.0
+                                            <MenuItem key={"gpt-4o-mini"} value={"gpt-4o-mini"}>
+                                                GPT-4o Mini
+                                            </MenuItem>
+                                            <MenuItem key={"gpt-4-turbo"} value={"gpt-4-turbo"}>
+                                                GPT-4 Turbo
+                                            </MenuItem>
+                                            <MenuItem key={"o3-mini"} value={"o3-mini"}>
+                                                O3 Mini (Razonamiento)
+                                            </MenuItem>
+                                            <MenuItem key={"o1"} value={"o1"}>
+                                                O1 (Razonamiento avanzado)
+                                            </MenuItem>
+                                            <MenuItem key={"o1-mini"} value={"o1-mini"}>
+                                                O1 Mini
+                                            </MenuItem>
+                                            <MenuItem key={"gpt-3.5-turbo"} value={"gpt-3.5-turbo"}>
+                                                GPT-3.5 Turbo (Legacy)
                                             </MenuItem>
                                         </Select>
                                     </FormControl>
