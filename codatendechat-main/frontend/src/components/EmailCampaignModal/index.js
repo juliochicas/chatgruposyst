@@ -104,7 +104,7 @@ const EmailCampaignModal = ({ open, onClose, campaignId, onSave }) => {
   const fetchContactLists = async () => {
     try {
       const { data } = await api.get("/contact-lists");
-      setContactLists(data);
+      setContactLists(data.records || []);
     } catch (err) {
       // ignore
     }
@@ -112,7 +112,7 @@ const EmailCampaignModal = ({ open, onClose, campaignId, onSave }) => {
 
   const fetchPrompts = async () => {
     try {
-      const { data } = await api.get("/prompts");
+      const { data } = await api.get("/prompt");
       setPrompts(data.prompts || []);
     } catch (err) {
       // ignore
