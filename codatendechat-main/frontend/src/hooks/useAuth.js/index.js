@@ -113,7 +113,20 @@ const useAuth = () => {
           setIsAuth(true);
           setUser(data.user);
         } catch (err) {
-          toastError(err);
+          // Session expired is expected when returning with stale token.
+          // Silently clean up instead of showing an error toast.
+          const errorMsg = err?.response?.data?.error;
+          if (
+            errorMsg === "ERR_SESSION_EXPIRED" ||
+            err?.response?.status === 401
+          ) {
+            localStorage.removeItem("token");
+            localStorage.removeItem("companyId");
+            localStorage.removeItem("userId");
+            api.defaults.headers.Authorization = undefined;
+          } else {
+            toastError(err);
+          }
         }
       }
       setLoading(false);
