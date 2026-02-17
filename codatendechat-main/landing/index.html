@@ -195,10 +195,50 @@
                 <h2>Planes simples y transparentes</h2>
                 <p>Elige el plan que mejor se adapte a tu negocio. Todos incluyen 14 dias de prueba gratis.</p>
             </div>
+            <div class="pricing-toggle" data-animate>
+                <div class="toggle-wrap" id="billingToggle">
+                    <span class="toggle-opt active" data-billing="monthly">MENSUAL</span>
+                    <span class="toggle-opt" data-billing="annual">ANUAL</span>
+                </div>
+            </div>
+            <p class="pricing-toggle-note" id="toggleNote" style="text-align:center;margin-bottom:24px;display:none">Con el plan anual, ahorras un 20% en tu compra</p>
             <div class="pricing-grid" id="pricingGrid">
                 <!-- Plans loaded dynamically from API -->
             </div>
             <p class="pricing-note">Conexion WhatsApp adicional: $20 USD/mes &middot; Agente adicional desde: $13 USD/mes</p>
+        </div>
+    </section>
+
+    <!-- CAMPAIGN CREDITS -->
+    <section class="campaigns-credits" id="campaigns">
+        <div class="container">
+            <div class="section-header" data-animate>
+                <span class="section-tag">Campanas</span>
+                <h2>Tus campanas con mensajes masivos</h2>
+                <p>Compra creditos de mensajes para campanas masivas de WhatsApp.</p>
+            </div>
+            <div class="credits-grid">
+                <div class="credit-card" data-animate>
+                    <div class="credit-amount">1,000</div>
+                    <div class="credit-label">mensajes masivos</div>
+                    <div class="credit-price">$25 USD</div>
+                </div>
+                <div class="credit-card" data-animate data-delay="100">
+                    <div class="credit-amount">2,000</div>
+                    <div class="credit-label">mensajes masivos</div>
+                    <div class="credit-price">$38 USD</div>
+                </div>
+                <div class="credit-card" data-animate data-delay="200">
+                    <div class="credit-amount">5,000</div>
+                    <div class="credit-label">mensajes masivos</div>
+                    <div class="credit-price">$75 USD</div>
+                </div>
+                <div class="credit-card" data-animate data-delay="300">
+                    <div class="credit-amount">7,500</div>
+                    <div class="credit-label">mensajes masivos</div>
+                    <div class="credit-price">$105 USD</div>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -258,43 +298,120 @@
     document.querySelectorAll('[data-animate]').forEach(el=>obs.observe(el));
     document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
 
-    // Dynamic pricing: fetch plans from API and render cards
+    // ===== DYNAMIC PRICING =====
     const checkSvg='<svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg>';
+    const integrationBadges='<div class="plan-integrations">'+
+        '<span class="plan-int-badge">WhatsApp</span>'+
+        '<span class="plan-int-badge">Baileys</span>'+
+        '<span class="plan-int-badge meta">Meta + Facebook</span>'+
+        '<span class="plan-int-badge ig">Instagram</span>'+
+        '<span class="plan-int-badge free">GRATIS</span></div>';
+
+    let currentBilling='monthly';
+    let loadedPlans=[];
+    // Custom plan state
+    let customUsers=3;
+    let customConns=1;
+    const pricePerUser=13;
+    const pricePerConn=20;
+
+    function getPrice(baseValue,billing){
+        if(billing==='annual') return (baseValue*0.8).toFixed(2);
+        return baseValue.toFixed(2);
+    }
+
+    function getCustomPrice(){
+        const base=39;
+        const extra=(Math.max(0,customUsers-3)*pricePerUser)+(Math.max(0,customConns-1)*pricePerConn);
+        return base+extra;
+    }
+
     function renderPlanCard(plan,delay){
         const features=(Array.isArray(plan.features)?plan.features:[]).map(f=>'<li>'+checkSvg+' '+f+'</li>').join('');
+        const isAnnual=currentBilling==='annual';
         let priceHtml='';
+
         if(plan.isCustom){
-            priceHtml='<div class="pricing-price"><span class="amount custom-amount">A medida</span></div><span class="period">Contactanos para cotizar</span>';
+            const total=getCustomPrice();
+            const displayPrice=isAnnual?(total*0.8).toFixed(2):total.toFixed(2);
+            const annualTotal=isAnnual?(total*0.8*12).toFixed(2):'';
+            priceHtml='<div class="pricing-price"><span class="currency">US$</span><span class="amount">'+displayPrice+'</span></div><span class="period">/mes</span>';
+            if(isAnnual) priceHtml+='<p class="annual-detail">Un solo pago desde US$ '+annualTotal+'</p>';
         }else{
-            const annual=Math.round(plan.value*12*0.8);
-            priceHtml='<div class="pricing-price"><span class="currency">$</span><span class="amount">'+plan.value+'</span></div><span class="period">USD / mes</span><p class="annual">$'+annual+' USD/ano <span class="save-badge">Ahorra 20%</span></p>';
+            const displayPrice=getPrice(plan.value,currentBilling);
+            const annualTotal=isAnnual?(plan.value*0.8*12).toFixed(2):'';
+            priceHtml='<div class="pricing-price"><span class="currency">US$</span><span class="amount">'+displayPrice+'</span></div><span class="period">/mes</span>';
+            if(isAnnual) priceHtml+='<p class="annual-detail">Un solo pago de US$ '+annualTotal+'</p>';
         }
+
         const btnClass=plan.isFeatured?'btn btn-primary':'btn btn-outline';
         const btnText=plan.isCustom?'Contactar Ventas':'Comenzar Gratis';
         const btnHref=plan.isCustom?'/contacto.html':'https://app.chateaya.app/signup';
         const featured=plan.isFeatured?' featured':'';
-        const badge=plan.isFeatured?'<div class="popular-badge">Mas Popular</div>':'';
+        const badge=plan.isFeatured?'<div class="popular-badge">MAS POPULAR</div>':'';
+
+        // Info row: users & connections
+        let infoHtml='';
+        if(plan.isCustom){
+            infoHtml='<div class="qty-control"><label>Usuarios</label>'+
+                '<button class="qty-btn" onclick="adjustQty(\'users\',-1)">-</button>'+
+                '<span class="qty-val" id="qtyUsers">'+customUsers+'</span>'+
+                '<button class="qty-btn" onclick="adjustQty(\'users\',1)">+</button></div>'+
+                '<div class="qty-control"><label>Conexiones</label>'+
+                '<button class="qty-btn" onclick="adjustQty(\'conns\',-1)">-</button>'+
+                '<span class="qty-val" id="qtyConns">'+customConns+'</span>'+
+                '<button class="qty-btn" onclick="adjustQty(\'conns\',1)">+</button></div>';
+        }else{
+            infoHtml='<div class="plan-info-row"><span class="plan-info-item"><strong>'+plan.users+'</strong> Usuarios</span>'+
+                '<span class="plan-info-item"><strong>'+plan.connections+'</strong> Conexion'+(plan.connections>1?'es':'')+'</span></div>';
+        }
+
         return '<div class="pricing-card'+featured+'" data-animate data-delay="'+delay+'">'+badge+
-            '<div class="pricing-header"><h3 class="pricing-name">'+plan.name+'</h3><p class="pricing-desc">'+(plan.description||'')+'</p></div>'+
+            '<div class="pricing-header"><h3 class="pricing-name">Plan '+plan.name+'</h3><p class="pricing-desc">'+(plan.description||'')+'</p></div>'+
             '<div class="pricing-price-wrap">'+priceHtml+'</div>'+
+            infoHtml+integrationBadges+
             '<hr class="pricing-divider">'+
             '<ul class="pricing-features">'+features+'</ul>'+
             '<a href="'+btnHref+'" class="'+btnClass+'" style="width:100%">'+btnText+'</a></div>';
     }
+
+    function renderAllPlans(){
+        const grid=document.getElementById('pricingGrid');
+        const note=document.getElementById('toggleNote');
+        note.style.display=currentBilling==='annual'?'block':'none';
+        // Sort: highest value first, custom last
+        const sorted=[...loadedPlans].filter(p=>p.isPublic!==false);
+        sorted.sort((a,b)=>{if(a.isCustom&&!b.isCustom)return 1;if(!a.isCustom&&b.isCustom)return -1;return(b.value||0)-(a.value||0)});
+        grid.innerHTML=sorted.map((p,i)=>renderPlanCard(p,i*100)).join('');
+        grid.querySelectorAll('[data-animate]').forEach(el=>obs.observe(el));
+    }
+
+    // Toggle billing
+    document.getElementById('billingToggle').addEventListener('click',function(e){
+        const opt=e.target.closest('.toggle-opt');
+        if(!opt)return;
+        currentBilling=opt.dataset.billing;
+        this.querySelectorAll('.toggle-opt').forEach(o=>o.classList.remove('active'));
+        opt.classList.add('active');
+        renderAllPlans();
+    });
+
+    // Custom plan +/- controls
+    window.adjustQty=function(type,delta){
+        if(type==='users'){customUsers=Math.max(1,customUsers+delta)}
+        if(type==='conns'){customConns=Math.max(1,customConns+delta)}
+        renderAllPlans();
+    };
+
+    // Load plans from API
     (async function loadPlans(){
         const grid=document.getElementById('pricingGrid');
         try{
             const res=await fetch('/plans/list');
-            const plans=await res.json();
-            const publicPlans=plans.filter(p=>p.isPublic!==false);
-            // Sort: non-custom first by value ascending, custom last
-            publicPlans.sort((a,b)=>{if(a.isCustom&&!b.isCustom)return 1;if(!a.isCustom&&b.isCustom)return -1;return(a.value||0)-(b.value||0)});
-            grid.innerHTML=publicPlans.map((p,i)=>renderPlanCard(p,i*150)).join('');
-            // Re-observe new elements for animations
-            grid.querySelectorAll('[data-animate]').forEach(el=>obs.observe(el));
+            loadedPlans=await res.json();
+            renderAllPlans();
         }catch(e){
             console.error('Error loading plans:',e);
-            // Fallback static content if API fails
             grid.innerHTML='<p style="text-align:center;color:#666;padding:2rem">Los planes se estan cargando. <a href="https://app.chateaya.app/signup">Registrate aqui</a>.</p>';
         }
     })();
