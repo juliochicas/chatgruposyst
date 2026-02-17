@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contacto - ChateaYA</title>
+    <meta name="description" content="Contacta al equipo de ChateaYA para ventas, soporte o cualquier consulta.">
+    <link rel="icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .contact-page{padding:120px 0 80px}
+        .contact-page h1{font-size:36px;font-weight:700;margin-bottom:12px;text-align:center}
+        .contact-page .contact-subtitle{font-size:17px;color:var(--text-light);text-align:center;margin-bottom:48px;max-width:560px;margin-left:auto;margin-right:auto}
+        .contact-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:900px;margin:0 auto 60px}
+        .contact-card{background:var(--white);border:1px solid var(--border);border-radius:var(--radius-lg);padding:32px 24px;text-align:center;transition:all .3s}
+        .contact-card:hover{border-color:var(--primary-light);box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+        .contact-card-icon{width:56px;height:56px;border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:24px}
+        .contact-card-icon.purple{background:#F3E8FF;color:#7C3AED}
+        .contact-card-icon.green{background:#DCFCE7;color:#16A34A}
+        .contact-card-icon.blue{background:#DBEAFE;color:#2563EB}
+        .contact-card h3{font-size:17px;font-weight:600;margin-bottom:8px}
+        .contact-card p{font-size:14px;color:var(--text-light);line-height:1.6;margin-bottom:16px}
+        .contact-card a.contact-link{font-size:14px;font-weight:600;color:var(--primary);transition:color .2s}
+        .contact-card a.contact-link:hover{color:var(--primary-dark)}
+        .contact-form-section{max-width:600px;margin:0 auto}
+        .contact-form-section h2{font-size:24px;font-weight:600;text-align:center;margin-bottom:8px}
+        .contact-form-section .form-subtitle{font-size:15px;color:var(--text-light);text-align:center;margin-bottom:32px}
+        .form-group{margin-bottom:20px}
+        .form-group label{display:block;font-family:'Poppins',sans-serif;font-size:14px;font-weight:600;color:var(--dark);margin-bottom:6px}
+        .form-group input,.form-group textarea,.form-group select{width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:10px;font-family:'Inter',sans-serif;font-size:15px;color:var(--text);background:var(--white);transition:border-color .2s;outline:none}
+        .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--primary)}
+        .form-group textarea{resize:vertical;min-height:120px}
+        .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .form-submit{text-align:center;margin-top:28px}
+
+        @media(max-width:768px){
+            .contact-grid{grid-template-columns:1fr}
+            .form-row{grid-template-columns:1fr}
+            .contact-page{padding:100px 0 60px}
+        }
+    </style>
+</head>
+<body>
+    <header class="header scrolled">
+        <div class="container">
+            <a href="/" class="logo"><img src="logo.png" alt="ChateaYA"></a>
+            <nav class="nav">
+                <a href="/#features">Funciones</a>
+                <a href="/#pricing">Precios</a>
+                <a href="/#faq">FAQ</a>
+            </nav>
+            <div class="nav-buttons">
+                <a href="https://app.chateaya.app/login" class="btn btn-ghost">Iniciar Sesion</a>
+                <a href="https://app.chateaya.app/signup" class="btn btn-primary">Prueba Gratis</a>
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+    <div class="mobile-nav" id="mobileNav">
+        <a href="/#features">Funciones</a><a href="/#pricing">Precios</a><a href="/#faq">FAQ</a>
+        <div class="mobile-nav-buttons">
+            <a href="https://app.chateaya.app/login" class="btn btn-ghost" style="width:100%">Iniciar Sesion</a>
+            <a href="https://app.chateaya.app/signup" class="btn btn-primary" style="width:100%">Prueba Gratis</a>
+        </div>
+    </div>
+
+    <section class="contact-page">
+        <div class="container">
+            <h1>Contactanos</h1>
+            <p class="contact-subtitle">Estamos aqui para ayudarte. Elige el canal que prefieras o envíanos un mensaje directamente.</p>
+
+            <div class="contact-grid">
+                <div class="contact-card">
+                    <div class="contact-card-icon green">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a3.8 3.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+                    </div>
+                    <h3>WhatsApp</h3>
+                    <p>Respuesta inmediata en horario laboral de lunes a viernes.</p>
+                    <a href="https://wa.me/50230000000" target="_blank" class="contact-link">Enviar mensaje</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-icon purple">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <h3>Email</h3>
+                    <p>Para consultas detalladas, soporte tecnico o facturacion.</p>
+                    <a href="mailto:soporte@chateaya.app" class="contact-link">soporte@chateaya.app</a>
+                </div>
+                <div class="contact-card">
+                    <div class="contact-card-icon blue">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+                    </div>
+                    <h3>Ventas</h3>
+                    <p>Planes personalizados, demostraciones y cotizaciones empresariales.</p>
+                    <a href="mailto:ventas@chateaya.app" class="contact-link">ventas@chateaya.app</a>
+                </div>
+            </div>
+
+            <div class="contact-form-section">
+                <h2>Enviar un mensaje</h2>
+                <p class="form-subtitle">Completa el formulario y te responderemos lo antes posible.</p>
+                <form id="contactForm" onsubmit="handleSubmit(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="name">Nombre</label>
+                            <input type="text" id="name" name="name" placeholder="Tu nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" placeholder="tu@email.com" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Asunto</label>
+                        <select id="subject" name="subject">
+                            <option value="soporte">Soporte Tecnico</option>
+                            <option value="ventas">Ventas y Planes</option>
+                            <option value="facturacion">Facturacion</option>
+                            <option value="otro">Otro</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Mensaje</label>
+                        <textarea id="message" name="message" placeholder="Describe como podemos ayudarte..." required></textarea>
+                    </div>
+                    <div class="form-submit">
+                        <button type="submit" class="btn btn-primary btn-lg" style="width:100%">Enviar Mensaje</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-bottom" style="border-top:none;padding-top:0">
+                <p>&copy; 2026 ChateaYA. Todos los derechos reservados.</p>
+                <div style="display:flex;gap:16px">
+                    <a href="/terminos.html" style="font-size:13px;color:rgba(255,255,255,.5)">Terminos</a>
+                    <a href="/privacidad.html" style="font-size:13px;color:rgba(255,255,255,.5)">Privacidad</a>
+                    <a href="/contacto.html" style="font-size:13px;color:rgba(255,255,255,.5)">Contacto</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    document.getElementById('menuToggle').addEventListener('click',()=>{document.getElementById('mobileNav').classList.toggle('open');document.getElementById('menuToggle').classList.toggle('open')});
+    function handleSubmit(e){
+        e.preventDefault();
+        const name=document.getElementById('name').value;
+        const email=document.getElementById('email').value;
+        const subject=document.getElementById('subject').value;
+        const message=document.getElementById('message').value;
+        const mailtoLink='mailto:soporte@chateaya.app?subject='+encodeURIComponent('['+subject+'] Contacto de '+name)+'&body='+encodeURIComponent('De: '+name+' ('+email+')\n\n'+message);
+        window.location.href=mailtoLink;
+    }
+    </script>
+</body>
+</html>
