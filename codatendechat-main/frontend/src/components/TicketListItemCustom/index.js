@@ -368,7 +368,6 @@ const useStyles = makeStyles((theme) => ({
       ></TicketMessagesDialog>
       <ListItem dense button
         onClick={(e) => {
-          if (ticket.status === "pending") return;
           handleSelectTicket(ticket);
         }}
         selected={ticketId && +ticketId === ticket.id}
