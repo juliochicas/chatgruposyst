@@ -67,7 +67,7 @@ const Chart = ({ queueTicket }) => {
 
 	return (
 		<React.Fragment>
-			<Title>{`${"Atendimentos Criados: "}${count}`}</Title>
+			<Title>{`${"Atenciones Creadas: "}${count}`}</Title>
 			<ResponsiveContainer>
 				<LineChart
 					data={chartData}

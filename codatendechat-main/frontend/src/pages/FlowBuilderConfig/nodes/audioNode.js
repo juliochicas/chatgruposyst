@@ -66,14 +66,14 @@ export default memo(({ data, isConnectable, id }) => {
       <div style={{ color: "#ededed", fontSize: "12px" }}>
         <div style={{ position: "absolute", right: "50px", top: "12px" }}>
           {data.record && data.record ? (
-            <div>Gravado na hora</div>
+            <div>Grabado en el momento</div>
           ) : (
             <div>Audio enviado</div>
           )}
         </div>
         <audio controls="controls">
           <source src={`${link}/public/${data.url}`} type="audio/mp3" />
-          seu navegador não suporta HTML5
+          su navegador no soporta HTML5
         </audio>
       </div>
       <Handle

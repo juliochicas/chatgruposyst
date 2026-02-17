@@ -405,7 +405,7 @@ export function CompaniesManagerGrid(props) {
   const { dateToClient } = useDate();
 
   const renderStatus = (row) => {
-    return row.status === false ? "Não" : "Sim";
+    return row.status === false ? "No" : "Sí";
   };
 
   const renderPlan = (row) => {

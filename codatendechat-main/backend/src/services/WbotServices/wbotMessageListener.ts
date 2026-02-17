@@ -266,7 +266,7 @@ export const sendMessageImage = async (
       `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
       {
         text: formatBody(
-          "Não consegui enviar a imagem, tente novamente!",
+          "No pude enviar la imagen, intente nuevamente!",
           contact
         )
       }
@@ -299,7 +299,7 @@ export const sendMessageLink = async (
     sentMessage = await wbot.sendMessage(
       `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
       {
-        text: formatBody("Não consegui enviar o PDF, tente novamente!", contact)
+        text: formatBody("No pude enviar el PDF, intente nuevamente!", contact)
       }
     );
   }
@@ -380,7 +380,7 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
         msg.message?.listResponseMessage?.singleSelectReply?.selectedRowId,
       stickerMessage: "sticker",
       contactMessage: msg.message?.contactMessage?.vcard,
-      contactsArrayMessage: "varios contatos",
+      contactsArrayMessage: "varios contactos",
       //locationMessage: `Latitude: ${msg.message.locationMessage?.degreesLatitude} - Longitude: ${msg.message.locationMessage?.degreesLongitude}`,
       locationMessage: msgLocation(
         msg.message?.locationMessage?.jpegThumbnail,
@@ -392,7 +392,7 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
       documentWithCaptionMessage:
         msg.message?.documentWithCaptionMessage?.message?.documentMessage
           ?.caption,
-      audioMessage: "Áudio",
+      audioMessage: "Audio",
       listMessage:
         getBodyButton(msg) || msg.message?.listResponseMessage?.title,
       listResponseMessage:
@@ -403,11 +403,11 @@ export const getBodyMessage = (msg: proto.IWebMessageInfo): string | null => {
     const objKey = Object.keys(types).find(key => key === type);
 
     if (!objKey) {
-      logger.warn(`#### Nao achou o type 152: ${type}
+      logger.warn(`#### No se encontró el type 152: ${type}
 ${JSON.stringify(msg)}`);
-      Sentry.setExtra("Mensagem", { BodyMsg: msg.message, msg, type });
+      Sentry.setExtra("Mensaje", { BodyMsg: msg.message, msg, type });
       Sentry.captureException(
-        new Error("Novo Tipo de Mensagem em getTypeMessage")
+        new Error("Nuevo tipo de mensaje en getTypeMessage")
       );
     }
     return types[type];
@@ -434,7 +434,7 @@ export const getQuotedMessage = (msg: proto.IWebMessageInfo): any => {
     msg.message.listResponseMessage?.contextInfo;
   msg.message.senderKeyDistributionMessage;
 
-  // testar isso
+  // probar esto
 
   return extractMessageContent(body[Object.keys(body).values().next().value]);
 };
@@ -485,9 +485,9 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
   try {
     buffer = await downloadMediaMessage(msg as WAMessage, "buffer", {});
   } catch (err) {
-    console.error("Erro ao baixar mídia:", err);
+    console.error("Error al descargar media:", err);
 
-    // Trate o erro de acordo com as suas necessidades
+    // Trate el error de acuerdo con sus necesidades
   }
 
   let filename = msg.message?.documentMessage?.fileName || "";
@@ -638,7 +638,7 @@ const deleteFileSync = (path: string): void => {
   try {
     fs.unlinkSync(path);
   } catch (error) {
-    console.error("Erro ao deletar o arquivo:", error);
+    console.error("Error al eliminar el archivo:", error);
   }
 };
 
@@ -658,7 +658,7 @@ const handleOpenAi = async (
   openAiSettings = null
 ): Promise<void> => {
 
-  // REGRA PARA DESABILITAR O BOT PARA ALGUM CONTATO
+  // REGLA PARA DESHABILITAR EL BOT PARA ALGÚN CONTACTO
   if (contact.disableBot) {
     return;
   }
@@ -710,11 +710,11 @@ const handleOpenAi = async (
     limit: maxMessages
   });
 
-  const promptSystem = `Nas respostas utilize o nome ${sanitizeName(
+  const promptSystem = `En las respuestas utilice el nombre ${sanitizeName(
     contact.name || "Amigo(a)"
-  )} para identificar o cliente.\nSua resposta deve usar no máximo ${
+  )} para identificar al cliente.\nSu respuesta debe usar como máximo ${
     prompt.maxTokens
-  } tokens e cuide para não truncar o final.\nSempre que possível, mencione o nome dele para ser mais personalizado o atendimento e mais educado. Quando a resposta requer uma transferência para o setor de atendimento, comece sua resposta com 'Ação: Transferir para o setor de atendimento'.\n
+  } tokens y tenga cuidado de no truncar el final.\nSiempre que sea posible, mencione el nombre del cliente para que la atención sea más personalizada y cortés. Cuando la respuesta requiera una transferencia al sector de atención, comience su respuesta con 'Acción: Transferir al sector de atención'.\n
   ${prompt.prompt}\n`;
 
   let messagesOpenAi: ChatCompletionRequestMessage[] = [];
@@ -746,10 +746,10 @@ const handleOpenAi = async (
 
     let response = chat.data.choices[0].message?.content;
 
-    if (response?.includes("Ação: Transferir para o setor de atendimento")) {
+    if (response?.includes("Acción: Transferir al sector de atención")) {
       await transferQueue(prompt.queueId, ticket, contact);
       response = response
-        .replace("Ação: Transferir para o setor de atendimento", "")
+        .replace("Acción: Transferir al sector de atención", "")
         .trim();
     }
 
@@ -784,7 +784,7 @@ const handleOpenAi = async (
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.wav`);
         } catch (error) {
-          console.log(`Erro para responder com audio: ${error}`);
+          console.log(`Error al responder con audio: ${error}`);
         }
       });
     }*/
@@ -817,10 +817,10 @@ const handleOpenAi = async (
     });
     let response = chat.data.choices[0].message?.content;
 
-    if (response?.includes("Ação: Transferir para o setor de atendimento")) {
+    if (response?.includes("Acción: Transferir al sector de atención")) {
       await transferQueue(prompt.queueId, ticket, contact);
       response = response
-        .replace("Ação: Transferir para o setor de atendimento", "")
+        .replace("Acción: Transferir al sector de atención", "")
         .trim();
     }
     /*if (prompt.voice === "texto") {
@@ -848,7 +848,7 @@ const handleOpenAi = async (
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.wav`);
         } catch (error) {
-          console.log(`Erro para responder com audio: ${error}`);
+          console.log(`Error al responder con audio: ${error}`);
         }
       });
     }*/
@@ -923,7 +923,7 @@ export const verifyMediaMessage = async (
   };
 
   await ticket.update({
-    lastMessage: body || "Arquivo de mídia"
+    lastMessage: body || "Archivo de medios"
   });
 
   const newMessage = await CreateMessageService({
@@ -1059,10 +1059,10 @@ const isValidMsg = (msg: proto.IWebMessageInfo): boolean => {
       msgType === "viewOnceMessage";
 
     if (!ifType) {
-      logger.warn(`#### Nao achou o type em isValidMsg: ${msgType}
+      logger.warn(`#### No se encontró el type en isValidMsg: ${msgType}
 ${JSON.stringify(msg?.message)}`);
-      Sentry.setExtra("Mensagem", { BodyMsg: msg.message, msg, msgType });
-      Sentry.captureException(new Error("Novo Tipo de Mensagem em isValidMsg"));
+      Sentry.setExtra("Mensaje", { BodyMsg: msg.message, msg, msgType });
+      Sentry.captureException(new Error("Nuevo tipo de mensaje en isValidMsg"));
     }
 
     return !!ifType;
@@ -1117,7 +1117,7 @@ const verifyQueue = async (
       chatbot = firstQueue.options.length > 0;
     }
 
-    //inicia integração dialogflow/n8n
+    //inicia integración dialogflow/n8n
     if (
       !msg.key.fromMe &&
       !ticket.isGroup &&
@@ -1142,7 +1142,7 @@ const verifyQueue = async (
       });
       // return;
     }
-    //inicia integração openai
+    //inicia integración openai
     if (!msg.key.fromMe && !ticket.isGroup && !isNil(queues[0]?.promptId)) {
       await handleOpenAi(msg, wbot, ticket, contact, mediaSent);
 
@@ -1203,7 +1203,7 @@ const verifyQueue = async (
       companyId: ticket.companyId
     });
 
-    /* Tratamento para envio de mensagem quando a fila está fora do expediente */
+    /* Tratamiento para envío de mensaje cuando la cola está fuera de horario */
     if (choosenQueue.options.length === 0) {
       const queue = await Queue.findByPk(choosenQueue.id);
       const { schedules }: any = queue;
@@ -1231,7 +1231,7 @@ const verifyQueue = async (
 
         if (now.isBefore(startTime) || now.isAfter(endTime)) {
           const body = formatBody(
-            `\u200e ${queue.outOfHoursMessage}\n\n*[ # ]* - Voltar ao Menu Principal`,
+            `\u200e ${queue.outOfHoursMessage}\n\n*[ # ]* - Volver al Menú Principal`,
             ticket.contact
           );
           const sentMessage = await wbot.sendMessage(
@@ -1250,7 +1250,7 @@ const verifyQueue = async (
         }
       }
 
-      //inicia integração dialogflow/n8n
+      //inicia integración dialogflow/n8n
       if (!msg.key.fromMe && !ticket.isGroup && choosenQueue.integrationId) {
         const integrations = await ShowQueueIntegrationService(
           choosenQueue.integrationId,
@@ -1272,7 +1272,7 @@ const verifyQueue = async (
         // return;
       }
 
-      //inicia integração openai
+      //inicia integración openai
       if (
         !msg.key.fromMe &&
         !ticket.isGroup &&
@@ -1315,7 +1315,7 @@ const verifyQueue = async (
       return;
     }
 
-    //Regra para desabilitar o chatbot por x minutos/horas após o primeiro envio
+    //Regla para deshabilitar el chatbot por x minutos/horas después del primer envío
     const ticketTraking = await FindOrCreateATicketTrakingService({
       ticketId: ticket.id,
       companyId
@@ -1446,18 +1446,18 @@ const handleChartbot = async (
   const messageBody = getBodyMessage(msg);
 
   if (messageBody == "#") {
-    // voltar para o menu inicial
+    // volver al menú inicial
     await ticket.update({ queueOptionId: null, chatbot: false, queueId: null });
     await verifyQueue(wbot, msg, ticket, ticket.contact);
     return;
   }
 
-  // voltar para o menu anterior
+  // volver al menú anterior
   if (!isNil(queue) && !isNil(ticket.queueOptionId) && messageBody == "0") {
     const option = await QueueOption.findByPk(ticket.queueOptionId);
     await ticket.update({ queueOptionId: option?.parentId });
 
-    // escolheu uma opção
+    // eligió una opción
   } else if (!isNil(queue) && !isNil(ticket.queueOptionId)) {
     const count = await QueueOption.count({
       where: { parentId: ticket.queueOptionId }
@@ -1479,7 +1479,7 @@ const handleChartbot = async (
       await ticket.update({ queueOptionId: option?.id });
     }
 
-    // não linha a primeira pergunta
+    // no leyó la primera pregunta
   } else if (
     !isNil(queue) &&
     isNil(ticket.queueOptionId) &&
@@ -1529,7 +1529,7 @@ const handleChartbot = async (
 
     //   const listMessage = {
     //     text: formatBody(`\u200e${queue.greetingMessage}`, ticket.contact),
-    //     buttonText: "Escolha uma opção",
+    //     buttonText: "Elija una opción",
     //     sections
     //   };
 
@@ -1552,7 +1552,7 @@ const handleChartbot = async (
       });
       buttons.push({
         buttonId: `#`,
-        buttonText: { displayText: "Menu inicial *[ 0 ]* Menu anterior" },
+        buttonText: { displayText: "Menú inicial *[ 0 ]* Menú anterior" },
         type: 4
       });
 
@@ -1578,8 +1578,8 @@ const handleChartbot = async (
       queueOptions.forEach((option, i) => {
         options += `*[ ${option.option} ]* - ${option.title}\n`;
       });
-      //options += `\n*[ 0 ]* - Menu anterior`;
-      options += `\n*[ # ]* - Menu inicial`;
+      //options += `\n*[ 0 ]* - Menú anterior`;
+      options += `\n*[ # ]* - Menú inicial`;
 
       const textMessage = {
         text: formatBody(
@@ -1642,7 +1642,7 @@ const handleChartbot = async (
           });
         });
         sectionsRows.push({
-          title: "Menu inicial *[ 0 ]* Menu anterior",
+          title: "Menú inicial *[ 0 ]* Menú anterior",
           rowId: `#`
         });
         const sections = [
@@ -1653,7 +1653,7 @@ const handleChartbot = async (
 
         const listMessage = {
           text: formatBody(`\u200e${currentOption.message}`, ticket.contact),
-          buttonText: "Escolha uma opção",
+          buttonText: "Elija una opción",
           sections
         };
 
@@ -1678,7 +1678,7 @@ const handleChartbot = async (
         });
         buttons.push({
           buttonId: `#`,
-          buttonText: { displayText: "Menu inicial *[ 0 ]* Menu anterior" },
+          buttonText: { displayText: "Menú inicial *[ 0 ]* Menú anterior" },
           type: 4
         });
 
@@ -1704,8 +1704,8 @@ const handleChartbot = async (
         queueOptions.forEach((option, i) => {
           options += `*[ ${option.option} ]* - ${option.title}\n`;
         });
-        options += `\n*[ 0 ]* - Menu anterior`;
-        options += `\n*[ # ]* - Menu inicial`;
+        options += `\n*[ 0 ]* - Menú anterior`;
+        options += `\n*[ # ]* - Menú inicial`;
         const textMessage = {
           text: formatBody(
             `\u200e${currentOption.message}\n\n${options}`,
@@ -2342,7 +2342,7 @@ const handleMessage = async (
 
     await provider(ticket, msg, companyId, contact, wbot as WASocket);
 
-    // voltar para o menu inicial
+    // volver al menú inicial
 
     if (bodyMessage == "#") {
       await ticket.update({
@@ -2373,7 +2373,7 @@ const handleMessage = async (
       console.log(e);
     }
 
-    // Atualiza o ticket se a ultima mensagem foi enviada por mim, para que possa ser finalizado.
+    // Actualiza el ticket si el último mensaje fue enviado por mí, para que pueda ser finalizado.
     try {
       await ticket.update({
         fromMe: msg.key.fromMe
@@ -2400,7 +2400,7 @@ const handleMessage = async (
     try {
       if (!msg.key.fromMe && scheduleType) {
         /**
-         * Tratamento para envio de mensagem quando a empresa está fora do expediente
+         * Tratamiento para envío de mensaje cuando la empresa está fuera de horario
          */
         if (
           scheduleType.value === "company" &&
@@ -2429,7 +2429,7 @@ const handleMessage = async (
 
         if (scheduleType.value === "queue" && ticket.queueId !== null) {
           /**
-           * Tratamento para envio de mensagem quando a fila está fora do expediente
+           * Tratamiento para envío de mensaje cuando la cola está fuera de horario
            */
           const queue = await Queue.findByPk(ticket.queueId);
 
@@ -2607,7 +2607,7 @@ const handleMessage = async (
       return;
     }
 
-    //openai na conexao
+    //openai en la conexión
     if (
       !ticket.queue &&
       !isGroup &&
@@ -2618,7 +2618,7 @@ const handleMessage = async (
       await handleOpenAi(msg, wbot, ticket, contact, mediaSent);
     }
 
-    //integraçao na conexao
+    //integración en la conexión
     if (
       !msg.key.fromMe &&
       !ticket.isGroup &&
@@ -2646,7 +2646,7 @@ const handleMessage = async (
       return;
     }
 
-    //openai na fila
+    //openai en la cola
     if (
       !isGroup &&
       !msg.key.fromMe &&
@@ -2720,7 +2720,7 @@ const handleMessage = async (
       order: [["id", "DESC"]]
     });
 
-    // integração flowbuilder
+    // integración flowbuilder
     if (
       !msg.key.fromMe &&
       !ticket.isGroup &&
@@ -2753,10 +2753,10 @@ const handleMessage = async (
     await ticket.reload();
 
     try {
-      //Fluxo fora do expediente
+      //Flujo fuera de horario
       if (!msg.key.fromMe && scheduleType && ticket.queueId !== null) {
         /**
-         * Tratamento para envio de mensagem quando a fila está fora do expediente
+         * Tratamiento para envío de mensaje cuando la cola está fuera de horario
          */
         const queue = await Queue.findByPk(ticket.queueId);
 

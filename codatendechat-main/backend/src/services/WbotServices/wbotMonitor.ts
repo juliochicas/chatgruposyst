@@ -74,14 +74,14 @@ const wbotMonitor = async (
               companyId
             },
           });
-          // se não existir o ticket não faz nada.
+          // si no existe el ticket, no hace nada.
           if (!ticket) return;
 
           const date = new Date();
           const hours = date.getHours();
           const minutes = date.getMinutes();
 
-          const body = `Chamada de voz/vídeo perdida às ${hours}:${minutes}`;
+          const body = `Llamada de voz/video perdida a las ${hours}:${minutes}`;
           const messageData = {
             id: content.attrs["call-id"],
             ticketId: ticket.id,

@@ -1,3 +1,3 @@
 export function socketConnection(params) {
-  throw new Error("Favor usar o SocketContext");
+  throw new Error("Favor usar el SocketContext");
 }

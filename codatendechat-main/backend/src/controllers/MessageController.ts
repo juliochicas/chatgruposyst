@@ -110,7 +110,7 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
     const whatsapp = await Whatsapp.findByPk(whatsappId);
 
     if (!whatsapp) {
-      throw new Error("Não foi possível realizar a operação");
+      throw new Error("No fue posible realizar la operación");
     }
 
     if (messageData.number === undefined) {
@@ -179,11 +179,11 @@ export const send = async (req: Request, res: Response): Promise<Response> => {
 
     SetTicketMessagesAsRead(ticket);
 
-    return res.send({ mensagem: "Mensagem enviada" });
+    return res.send({ mensagem: "Mensaje enviado" });
   } catch (err: any) {
     if (Object.keys(err).length === 0) {
       throw new AppError(
-        "Não foi possível enviar a mensagem, tente novamente em alguns instantes"
+        "No fue posible enviar el mensaje, intente nuevamente en unos instantes"
       );
     } else {
       throw new AppError(err.message);
@@ -204,7 +204,7 @@ export const sendMessageFlow = async (
     const whatsapp = await Whatsapp.findByPk(whatsappId);
 
     if (!whatsapp) {
-      throw new Error("Não foi possível realizar a operação");
+      throw new Error("No fue posible realizar la operación");
     }
 
     if (messageData.number === undefined) {
@@ -251,11 +251,11 @@ export const sendMessageFlow = async (
       );
     }
 
-    return "Mensagem enviada";
+    return "Mensaje enviado";
   } catch (err: any) {
     if (Object.keys(err).length === 0) {
       throw new AppError(
-        "Não foi possível enviar a mensagem, tente novamente em alguns instantes"
+        "No fue posible enviar el mensaje, intente nuevamente en unos instantes"
       );
     } else {
       throw new AppError(err.message);

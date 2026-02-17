@@ -160,7 +160,7 @@ const Connections = () => {
 			const instagram = params.get("instagram") || "";
 			const threads = params.get("threads") || "";
 			toast.success(
-				`Conectado con exito${pageName ? ` a Facebook (${pageName})` : ""}${instagram ? ` e Instagram (@${instagram})` : ""}${threads ? ` a Threads (@${threads})` : ""}`
+				`Conectado con éxito${pageName ? ` a Facebook (${pageName})` : ""}${instagram ? ` e Instagram (@${instagram})` : ""}${threads ? ` y Threads (@${threads})` : ""}`
 			);
 			fetchMetaConnections();
 			// Clean URL

@@ -125,7 +125,7 @@ export const mediaUpload = async (
     schedule.mediaName = file.originalname;
 
     await schedule.save();
-    return res.send({ mensagem: "Arquivo Anexado" });
+    return res.send({ mensagem: "Archivo adjuntado" });
     } catch (err: any) {
       throw new AppError(err.message);
   }
@@ -147,7 +147,7 @@ export const deleteMedia = async (
     schedule.mediaPath = null;
     schedule.mediaName = null;
     await schedule.save();
-    return res.send({ mensagem: "Arquivo Excluído" });
+    return res.send({ mensagem: "Archivo eliminado" });
     } catch (err: any) {
       throw new AppError(err.message);
   }

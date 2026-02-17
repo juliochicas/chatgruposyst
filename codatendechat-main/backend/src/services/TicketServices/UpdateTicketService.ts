@@ -124,7 +124,7 @@ const UpdateTicketService = async ({
           const ratingTxt = ratingMessage || "";
           let bodyRatingMessage = `\u200e${ratingTxt}\n\n`;
           bodyRatingMessage +=
-            "Digite de 1 à 3 para qualificar nosso atendimento:\n*1* - _Insatisfeito_\n*2* - _Satisfeito_\n*3* - _Muito Satisfeito_\n\n";
+            "Escriba del 1 al 3 para calificar nuestra atención:\n*1* - _Insatisfecho_\n*2* - _Satisfecho_\n*3* - _Muy Satisfecho_\n\n";
           await SendWhatsAppMessage({ body: bodyRatingMessage, ticket });
 
           await ticketTraking.update({
@@ -173,7 +173,7 @@ const UpdateTicketService = async ({
     const settingsTransfTicket = await ListSettingsServiceOne({ companyId: companyId, key: "sendMsgTransfTicket" });
 
     if (settingsTransfTicket?.value === "enabled") {
-      // Mensagem de transferencia da FILA
+      // Mensaje de transferencia de la COLA
       if (oldQueueId !== queueId && oldUserId === userId && !isNil(oldQueueId) && !isNil(queueId)) {
 
         const {language} = await Company.findByPk(companyId);
@@ -181,9 +181,9 @@ const UpdateTicketService = async ({
         const wbot = await GetTicketWbot(ticket);
 
         const translatedMessage = {
-          'pt': "*Mensagem automática*:\nVocê foi transferido para o departamento *" + queue?.name + "*\naguarde, já vamos te atender!",
+          'pt': "*Mensaje automático*:\nFue transferido al departamento *" + queue?.name + "*\naguarde, ¡ya lo vamos a atender!",
           'en': "*Automatic message*:\nYou have been transferred to the *" + queue?.name + "* department\nplease wait, we'll assist you soon!",
-          'es': "*Mensaje automático*:\nHas sido transferido al departamento *" + queue?.name + "*\npor favor espera, ¡te atenderemos pronto!"
+          'es': "*Mensaje automático*:\nFue transferido al departamento *" + queue?.name + "*\naguarde, ¡ya lo vamos a atender!"
         }
 
         const queueChangedMessage = await wbot.sendMessage(
@@ -195,7 +195,7 @@ const UpdateTicketService = async ({
         await verifyMessage(queueChangedMessage, ticket, ticket.contact);
       }
       else
-        // Mensagem de transferencia do ATENDENTE
+        // Mensaje de transferencia del AGENTE
         if (oldUserId !== userId && oldQueueId === queueId && !isNil(oldUserId) && !isNil(userId)) {
 
           const {language} = await Company.findByPk(companyId);
@@ -203,9 +203,9 @@ const UpdateTicketService = async ({
           const nome = await ShowUserService(ticketData.userId);
 
           const translatedMessage = {
-              'pt': "*Mensagem automática*:\nFoi transferido para o atendente *" + nome.name + "*\naguarde, já vamos te atender!",
+              'pt': "*Mensaje automático*:\nFue transferido al agente *" + nome.name + "*\naguarde, ¡ya lo vamos a atender!",
               'en': "*Automatic message*:\nYou have been transferred to agent *" + nome.name + "*\nplease wait, we'll assist you soon!",
-              'es': "*Mensaje automático*:\nHas sido transferido al agente *" + nome.name + "*\npor favor espera, ¡te atenderemos pronto!"
+              'es': "*Mensaje automático*:\nFue transferido al agente *" + nome.name + "*\naguarde, ¡ya lo vamos a atender!"
           }
 
           const queueChangedMessage = await wbot.sendMessage(
@@ -217,7 +217,7 @@ const UpdateTicketService = async ({
           await verifyMessage(queueChangedMessage, ticket, ticket.contact);
         }
         else
-          // Mensagem de transferencia do ATENDENTE e da FILA
+          // Mensaje de transferencia del AGENTE y de la COLA
           if (oldUserId !== userId && !isNil(oldUserId) && !isNil(userId) && oldQueueId !== queueId && !isNil(oldQueueId) && !isNil(queueId)) {
 
             const {language} = await Company.findByPk(companyId);
@@ -226,9 +226,9 @@ const UpdateTicketService = async ({
             const nome = await ShowUserService(ticketData.userId);
 
             const translatedMessage = {
-              'pt': "*Mensagem automática*:\nVocê foi transferido para o departamento *" + queue?.name + "* e contará com a presença de *" + nome.name + "*\naguarde, já vamos te atender!",
+              'pt': "*Mensaje automático*:\nFue transferido al departamento *" + queue?.name + "* y contará con la asistencia de *" + nome.name + "*\naguarde, ¡ya lo vamos a atender!",
               'en': "*Automatic message*:\nYou have been transferred to the *" + queue?.name + "* department and will be assisted by *" + nome.name + "*\nplease wait, we'll assist you soon!",
-              'es': "*Mensaje automático*:\nHas sido transferido al departamento *" + queue?.name + "* y serás atendido por *" + nome.name + "*\npor favor espera, ¡te atenderemos pronto!"
+              'es': "*Mensaje automático*:\nFue transferido al departamento *" + queue?.name + "* y contará con la asistencia de *" + nome.name + "*\naguarde, ¡ya lo vamos a atender!"
             }
 
             const queueChangedMessage = await wbot.sendMessage(
@@ -246,9 +246,9 @@ const UpdateTicketService = async ({
               const wbot = await GetTicketWbot(ticket);
 
               const translatedMessage = {
-                'pt': "*Mensagem automática*:\nVocê foi transferido para o departamento *" + queue?.name + "*\naguarde, já vamos te atender!",
+                'pt': "*Mensaje automático*:\nFue transferido al departamento *" + queue?.name + "*\naguarde, ¡ya lo vamos a atender!",
                 'en': "*Automatic message*:\nYou have been transferred to the *" + queue?.name + "* department\nplease wait, we'll assist you soon!",
-                'es': "*Mensaje automático*:\nHas sido transferido al departamento *" + queue?.name + "*\npor favor espera, ¡te atenderemos pronto!"
+                'es': "*Mensaje automático*:\nFue transferido al departamento *" + queue?.name + "*\naguarde, ¡ya lo vamos a atender!"
               }
 
               const queueChangedMessage = await wbot.sendMessage(

@@ -165,7 +165,7 @@ export const mediaUpload = async (
       mediaName: file.originalname
     });
 
-    return res.send({ mensagem: "Arquivo Anexado" });
+    return res.send({ mensagem: "Archivo adjuntado" });
     } catch (err: any) {
       throw new AppError(err.message);
   }
@@ -190,7 +190,7 @@ export const deleteMedia = async (
       mediaName: null
     });
 
-    return res.send({ mensagem: "Arquivo Excluído" });
+    return res.send({ mensagem: "Archivo eliminado" });
     } catch (err: any) {
       throw new AppError(err.message);
   }

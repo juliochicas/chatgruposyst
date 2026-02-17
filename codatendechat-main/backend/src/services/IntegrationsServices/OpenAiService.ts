@@ -58,7 +58,7 @@ const deleteFileSync = (path: string): void => {
   try {
     fs.unlinkSync(path);
   } catch (error) {
-    console.error("Erro ao deletar o arquivo:", error);
+    console.error("Error al eliminar el archivo:", error);
   }
 };
 
@@ -77,7 +77,7 @@ export const handleOpenAi = async (
   mediaSent: Message | undefined,
   ticketTraking: TicketTraking
 ): Promise<void> => {
-  // REGRA PARA DESABILITAR O BOT PARA ALGUM CONTATO
+  // REGLA PARA DESHABILITAR EL BOT PARA ALGÚN CONTACTO
   if (contact.disableBot) {
     return;
   }
@@ -119,11 +119,11 @@ export const handleOpenAi = async (
     limit: openAiSettings.maxMessages
   });
 
-  const promptSystem = `Nas respostas utilize o nome ${sanitizeName(
+  const promptSystem = `En las respuestas utilice el nombre ${sanitizeName(
     contact.name || "Amigo(a)"
-  )} para identificar o cliente.\nSua resposta deve usar no máximo ${
+  )} para identificar al cliente.\nSu respuesta debe usar como máximo ${
     openAiSettings.maxTokens
-  } tokens e cuide para não truncar o final.\nSempre que possível, mencione o nome dele para ser mais personalizado o atendimento e mais educado. Quando a resposta requer uma transferência para o setor de atendimento, comece sua resposta com 'Ação: Transferir para o setor de atendimento'.\n
+  } tokens y tenga cuidado de no truncar el final.\nSiempre que sea posible, mencione el nombre del cliente para que la atención sea más personalizada y cortés. Cuando la respuesta requiera una transferencia al sector de atención, comience su respuesta con 'Acción: Transferir al sector de atención'.\n
                 ${openAiSettings.prompt}\n`;
 
   let messagesOpenAi = [];
@@ -162,11 +162,11 @@ export const handleOpenAi = async (
 
     let response = chat.data.choices[0].message?.content;
 
-    if (response?.includes("Ação: Transferir para o setor de atendimento")) {
+    if (response?.includes("Acción: Transferir al sector de atención")) {
       console.log(166, "OpenAiService");
       await transferQueue(openAiSettings.queueId, ticket, contact);
       response = response
-        .replace("Ação: Transferir para o setor de atendimento", "")
+        .replace("Acción: Transferir al sector de atención", "")
         .trim();
     }
 
@@ -208,7 +208,7 @@ export const handleOpenAi = async (
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.wav`);
         } catch (error) {
-          console.log(`Erro para responder com audio: ${error}`);
+          console.log(`Error al responder con audio: ${error}`);
         }
       });
     }
@@ -252,10 +252,10 @@ export const handleOpenAi = async (
     });
     let response = chat.choices[0].message?.content;
 
-    if (response?.includes("Ação: Transferir para o setor de atendimento")) {
+    if (response?.includes("Acción: Transferir al sector de atención")) {
       await transferQueue(openAiSettings.queueId, ticket, contact);
       response = response
-        .replace("Ação: Transferir para o setor de atendimento", "")
+        .replace("Acción: Transferir al sector de atención", "")
         .trim();
     }
     if (openAiSettings.voice === "texto") {
@@ -291,7 +291,7 @@ export const handleOpenAi = async (
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.wav`);
         } catch (error) {
-          console.log(`Erro para responder com audio: ${error}`);
+          console.log(`Error al responder con audio: ${error}`);
         }
       });
     }
