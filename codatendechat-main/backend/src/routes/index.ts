@@ -35,6 +35,7 @@ import flowDefaultRoutes from "./flowDefaultRoutes";
 import flowBuilder from "./flowBuilderRoutes";
 import flowCampaignRoutes from "./flowCampaignRoutes";
 import metaRoutes from "./metaRoutes";
+import ultraMsgRoutes from "./ultraMsgRoutes";
 
 const routes = Router();
 
@@ -75,5 +76,6 @@ routes.use(flowDefaultRoutes);
 routes.use(flowBuilder)
 routes.use(flowCampaignRoutes)
 routes.use(metaRoutes)
+routes.use(ultraMsgRoutes)
 
 export default routes;

@@ -28,6 +28,10 @@ import FilesOptions from './models/FilesOptions';
 import { addSeconds, differenceInSeconds } from "date-fns";
 import formatBody from "./helpers/Mustache";
 import { ClosedAllOpenTickets } from "./services/WbotServices/wbotClosedTickets";
+import UltraMsgConfig from "./models/UltraMsgConfig";
+import { sendTextMessage, sendImage, sendDocument, sendVideo, sendAudio } from "./services/UltraMsgServices/UltraMsgAPI";
+import { generateMessageVariation } from "./services/CampaignService/AIMessageVariation";
+import Prompt from "./models/Prompt";
 
 
 const nodemailer = require('nodemailer');
@@ -548,10 +552,26 @@ async function handleProcessCampaign(job) {
 
         let baseDelay = campaign.scheduledAt;
 
+        // Anti-ban: pause configuration
+        const pauseAfterMessages = campaign.pauseAfterMessages || 0;
+        const pauseDuration = campaign.pauseDuration || 0;
+
         const queuePromises = [];
         for (let i = 0; i < contactData.length; i++) {
 
-          baseDelay = addSeconds(baseDelay, i > longerIntervalAfter ? greaterInterval : messageInterval);
+          // Add random variation to delay (±30%) for anti-ban
+          const baseInterval = i > longerIntervalAfter ? greaterInterval : messageInterval;
+          const randomVariation = baseInterval * 0.3;
+          const randomizedInterval = baseInterval + (Math.random() * randomVariation * 2 - randomVariation);
+
+          // Add pause after X messages (anti-ban)
+          let pauseExtra = 0;
+          if (pauseAfterMessages > 0 && pauseDuration > 0 && i > 0 && i % pauseAfterMessages === 0) {
+            pauseExtra = pauseDuration;
+            logger.info(`[⏸️] - Pausa anti-ban de ${pauseDuration}s después de ${i} mensajes`);
+          }
+
+          baseDelay = addSeconds(baseDelay, Math.round(randomizedInterval) + pauseExtra);
 
           const { contactId, campaignId, variables } = contactData[i];
           const delay = calculateDelay(i, baseDelay, longerIntervalAfter, greaterInterval, messageInterval);
@@ -591,11 +611,26 @@ async function handlePrepareContact(job) {
     const messages = getCampaignValidMessages(campaign);
     if (messages.length) {
       const radomIndex = randomValue(0, messages.length);
-      const message = getProcessedMessage(
+      let message = getProcessedMessage(
         messages[radomIndex],
         variables,
         contact
       );
+
+      // AI Message Variation (anti-ban)
+      if (campaign.useAIVariation && campaign.aiPromptId) {
+        try {
+          logger.info("[🤖] - Generando variación IA para contacto: " + contact.name);
+          message = await generateMessageVariation({
+            baseMessage: message,
+            contactName: contact.name,
+            promptId: campaign.aiPromptId
+          });
+        } catch (aiError: any) {
+          logger.error("[🤖] - Error en variación IA, usando mensaje original: " + aiError.message);
+        }
+      }
+
       campaignShipping.message = `\u200c ${message}`;
     }
 
@@ -648,26 +683,29 @@ async function handleDispatchCampaign(job) {
     const { data } = job;
     const { campaignShippingId, campaignId }: DispatchCampaignData = data;
     const campaign = await getCampaign(campaignId);
-    const wbot = await GetWhatsappWbot(campaign.whatsapp);
 
     logger.info("[🏁] - Disparando campaña | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
 
-    if (!wbot) {
-      logger.error(`campaignQueue -> DispatchCampaign -> error: wbot not found`);
-      return;
-    }
+    // Check business hours restriction
+    if (campaign.sendOnlyBusinessHours) {
+      const currentHour = moment().hour();
+      if (currentHour < 8 || currentHour >= 20) {
+        // Re-queue for next business hour
+        const nextBusinessHour = currentHour >= 20
+          ? moment().add(1, 'day').hour(8).minute(0).second(0)
+          : moment().hour(8).minute(0).second(0);
+        const rescheduleDelay = nextBusinessHour.diff(moment(), 'milliseconds');
 
-    if (!campaign.whatsapp) {
-      logger.error(`campaignQueue -> DispatchCampaign -> error: whatsapp not found`);
-      return;
-    }
+        logger.info(`[⏰] - Fuera de horario laboral, reprogramando para ${nextBusinessHour.format("HH:mm")}`);
 
-    if (!wbot?.user?.id) {
-      logger.error(`campaignQueue -> DispatchCampaign -> error: wbot user not found`);
-      return;
+        await campaignQueue.add(
+          "DispatchCampaign",
+          { campaignId, campaignShippingId, contactListItemId: data.contactListItemId },
+          { delay: rescheduleDelay }
+        );
+        return;
+      }
     }
-
-    logger.info("[🚩] - Disparando campaña | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
 
     const campaignShipping = await CampaignShipping.findByPk(
       campaignShippingId,
@@ -676,48 +714,162 @@ async function handleDispatchCampaign(job) {
       }
     );
 
-    const chatId = `${campaignShipping.number}@s.whatsapp.net`;
-
     let body = campaignShipping.message;
 
-    if (!isNil(campaign.fileListId)) {
+    // ========== ULTRAMSG DISPATCH ==========
+    if (campaign.sendVia === "ultramsg") {
+      logger.info("[📡] - Enviando vía UltraMsg | CampaignShippingId: " + campaignShippingId);
 
-      logger.info("[🚩] - Recuperando la lista de archivos | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
+      const ultraMsgConfig = await UltraMsgConfig.findOne({
+        where: { companyId: campaign.companyId, isActive: true }
+      });
+
+      if (!ultraMsgConfig) {
+        logger.error(`campaignQueue -> DispatchCampaign -> error: UltraMsg config not found or inactive`);
+        return;
+      }
+
+      const credentials = {
+        instanceId: ultraMsgConfig.instanceId,
+        token: ultraMsgConfig.token
+      };
 
       try {
+        // Send files if fileListId exists
+        if (!isNil(campaign.fileListId)) {
+          try {
+            const files = await ShowFileService(campaign.fileListId, campaign.companyId);
+            const publicFolder = path.resolve(__dirname, "..", "public");
+            const folder = path.resolve(publicFolder, "fileList", String(files.id));
+
+            for (const file of files.options) {
+              const filePath = path.resolve(folder, file.path);
+              const ext = path.extname(file.path).toLowerCase();
+
+              if ([".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(ext)) {
+                await sendImage(credentials, {
+                  to: campaignShipping.number,
+                  caption: file.name,
+                  mediaUrl: `${process.env.BACKEND_URL}/public/fileList/${files.id}/${file.path}`
+                });
+              } else if ([".mp4", ".avi", ".mov"].includes(ext)) {
+                await sendVideo(credentials, {
+                  to: campaignShipping.number,
+                  caption: file.name,
+                  mediaUrl: `${process.env.BACKEND_URL}/public/fileList/${files.id}/${file.path}`
+                });
+              } else {
+                await sendDocument(credentials, {
+                  to: campaignShipping.number,
+                  filename: file.name,
+                  mediaUrl: `${process.env.BACKEND_URL}/public/fileList/${files.id}/${file.path}`
+                });
+              }
+
+              logger.info("[📡] - UltraMsg envió archivo: " + file.name);
+            }
+          } catch (error) {
+            logger.error("[📡] - Error enviando archivos via UltraMsg: " + error);
+          }
+        }
+
+        // Send media if exists
+        if (campaign.mediaPath) {
+          const ext = path.extname(campaign.mediaPath).toLowerCase();
+          const mediaUrl = `${process.env.BACKEND_URL}/public/${campaign.mediaPath}`;
+
+          if ([".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(ext)) {
+            await sendImage(credentials, {
+              to: campaignShipping.number,
+              caption: body,
+              mediaUrl
+            });
+          } else if ([".mp4", ".avi", ".mov"].includes(ext)) {
+            await sendVideo(credentials, {
+              to: campaignShipping.number,
+              caption: body,
+              mediaUrl
+            });
+          } else {
+            await sendDocument(credentials, {
+              to: campaignShipping.number,
+              filename: campaign.mediaName,
+              caption: body,
+              mediaUrl
+            });
+          }
+        } else {
+          // Send text message
+          await sendTextMessage(credentials, {
+            to: campaignShipping.number,
+            body
+          });
+        }
+
+        logger.info("[📡] - UltraMsg mensaje enviado a: " + campaignShipping.number);
+      } catch (ultraError: any) {
+        logger.error(`[📡] - UltraMsg error: ${ultraError.message}`);
+        throw ultraError;
+      }
+
+    // ========== BAILEYS DISPATCH (original) ==========
+    } else {
+      const wbot = await GetWhatsappWbot(campaign.whatsapp);
+
+      if (!wbot) {
+        logger.error(`campaignQueue -> DispatchCampaign -> error: wbot not found`);
+        return;
+      }
+
+      if (!campaign.whatsapp) {
+        logger.error(`campaignQueue -> DispatchCampaign -> error: whatsapp not found`);
+        return;
+      }
+
+      if (!wbot?.user?.id) {
+        logger.error(`campaignQueue -> DispatchCampaign -> error: wbot user not found`);
+        return;
+      }
+
+      logger.info("[🚩] - Disparando campaña vía Baileys | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
+
+      const chatId = `${campaignShipping.number}@s.whatsapp.net`;
+
+      if (!isNil(campaign.fileListId)) {
+        logger.info("[🚩] - Recuperando la lista de archivos | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
+
+        try {
+          const publicFolder = path.resolve(__dirname, "..", "public");
+          const files = await ShowFileService(campaign.fileListId, campaign.companyId)
+          const folder = path.resolve(publicFolder, "fileList", String(files.id))
+          for (const [index, file] of files.options.entries()) {
+            const options = await getMessageOptions(file.path, path.resolve(folder, file.path), file.name);
+            await wbot.sendMessage(chatId, { ...options });
+
+            logger.info("[🚩] - Envió archivo: "+ file.name +" | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
+          };
+        } catch (error) {
+          logger.info(error);
+        }
+      }
+
+      if (campaign.mediaPath) {
+        logger.info("[🚩] - Preparando media de la campaña: "+ campaign.mediaPath +" | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
+
         const publicFolder = path.resolve(__dirname, "..", "public");
-        const files = await ShowFileService(campaign.fileListId, campaign.companyId)
-        const folder = path.resolve(publicFolder, "fileList", String(files.id))
-        for (const [index, file] of files.options.entries()) {
-          const options = await getMessageOptions(file.path, path.resolve(folder, file.path), file.name);
+        const filePath = path.join(publicFolder, campaign.mediaPath);
+
+        const options = await getMessageOptions(campaign.mediaName, filePath, body);
+        if (Object.keys(options).length) {
           await wbot.sendMessage(chatId, { ...options });
+        }
+      } else {
+        logger.info("[🚩] - Enviando mensaje de texto de la campaña | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
 
-          logger.info("[🚩] - Envió archivo: "+ file.name +" | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
-        };
-      } catch (error) {
-        logger.info(error);
+        await wbot.sendMessage(chatId, {
+          text: body
+        });
       }
-    }
-
-    if (campaign.mediaPath) {
-
-      logger.info("[🚩] - Preparando media de la campaña: "+ campaign.mediaPath +" | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
-
-      const publicFolder = path.resolve(__dirname, "..", "public");
-      const filePath = path.join(publicFolder, campaign.mediaPath);
-
-      const options = await getMessageOptions(campaign.mediaName, filePath, body);
-      if (Object.keys(options).length) {
-        await wbot.sendMessage(chatId, { ...options });
-      }
-    }
-    else {
-
-      logger.info("[🚩] - Enviando mensaje de texto de la campaña | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);
-
-      await wbot.sendMessage(chatId, {
-        text: body
-      });
     }
 
     logger.info("[🚩] - Actualizando campaña a enviada... | CampaignShippingId: " + campaignShippingId + " CampañaID: " + campaignId);

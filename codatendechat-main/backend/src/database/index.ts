@@ -45,6 +45,7 @@ import { FlowImgModel } from "../models/FlowImg";
 import { WebhookModel } from "../models/Webhook";
 import MetaConnection from "../models/MetaConnection";
 import MetaConnectionQueue from "../models/MetaConnectionQueue";
+import UltraMsgConfig from "../models/UltraMsgConfig";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -99,6 +100,7 @@ const models = [
   WebhookModel,
   MetaConnection,
   MetaConnectionQueue,
+  UltraMsgConfig,
 ];
 
 sequelize.addModels(models);

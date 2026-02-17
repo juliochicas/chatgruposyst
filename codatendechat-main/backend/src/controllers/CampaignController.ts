@@ -17,6 +17,7 @@ import Campaign from "../models/Campaign";
 import AppError from "../errors/AppError";
 import { CancelService } from "../services/CampaignService/CancelService";
 import { RestartService } from "../services/CampaignService/RestartService";
+import GetActiveContactsService from "../services/CampaignService/GetActiveContactsService";
 import TicketTag from "../models/TicketTag";
 import Ticket from "../models/Ticket";
 import Contact from "../models/Contact";
@@ -37,6 +38,15 @@ type StoreData = {
   contactListId: number;
   tagListId: number | string;
   fileListId: number;
+  sendVia: string;
+  useAIVariation: boolean;
+  aiPromptId: number;
+  contactSource: string;
+  activeDaysFilter: number;
+  dailyLimit: number;
+  sendOnlyBusinessHours: boolean;
+  pauseAfterMessages: number;
+  pauseDuration: number;
 };
 
 type FindParams = {
@@ -68,6 +78,34 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     await schema.validate(data);
   } catch (err: any) {
     throw new AppError(err.message);
+  }
+
+  // Handle "active" contact source - create contact list from active contacts
+  if (data.contactSource === "active") {
+    try {
+      const contactListId = await createContactListFromActiveContacts(
+        companyId,
+        data.activeDaysFilter || 30,
+        data.name
+      );
+
+      const record = await CreateService({
+        ...data,
+        tagId: null,
+        companyId,
+        contactListId
+      });
+
+      const io = getIO();
+      io.to(`company-${companyId}-mainchannel`).emit(`company-${companyId}-campaign`, {
+        action: "create",
+        record
+      });
+      return res.status(200).json(record);
+    } catch (error) {
+      console.error('Error:', error);
+      return res.status(500).json({ error: 'Error creating contact list from active contacts' });
+    }
   }
 
   if (typeof data.tagListId === 'number' && typeof data.contactListId !== 'number') {
@@ -307,6 +345,46 @@ export async function createContactListFromTag(tagId: number, companyId: number,
     return contactListId;
   } catch (error) {
     console.error('Error creating contact list:', error);
+    throw error;
+  }
+}
+
+export async function createContactListFromActiveContacts(companyId: number, daysFilter: number, campanhaNome: string): Promise<number> {
+  const currentDate = new Date();
+  const formattedDate = currentDate.toISOString();
+
+  try {
+    const activeContacts = await GetActiveContactsService({ companyId, daysFilter });
+
+    if (activeContacts.length === 0) {
+      throw new Error("No se encontraron contactos activos en el período seleccionado");
+    }
+
+    const randomName = `${campanhaNome} | ACTIVOS: ${daysFilter}d - ${formattedDate}`;
+    const contactList = await ContactList.create({ name: randomName, companyId });
+
+    const { id: contactListId } = contactList;
+
+    // Deduplicate by phone number
+    const contactMap = new Map<string, { name: string; number: string; email: string }>();
+    activeContacts.forEach(contact => {
+      contactMap.set(contact.number, contact);
+    });
+
+    const contactListItems = Array.from(contactMap.values()).map(contact => ({
+      name: contact.name,
+      number: contact.number,
+      email: contact.email,
+      contactListId,
+      companyId,
+      isWhatsappValid: true
+    }));
+
+    await ContactListItem.bulkCreate(contactListItems);
+
+    return contactListId;
+  } catch (error) {
+    console.error('Error creating contact list from active contacts:', error);
     throw error;
   }
 }

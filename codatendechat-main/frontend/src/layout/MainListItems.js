@@ -41,7 +41,7 @@ import BorderColorIcon from '@material-ui/icons/BorderColor';
 import ToDoList from "../pages/ToDoList/";
 import toastError from "../errors/toastError";
 import { makeStyles } from "@material-ui/core/styles";
-import { AccountTree, AllInclusive, AttachFile, BlurCircular, Chat, DeviceHubOutlined, Schedule } from '@material-ui/icons';
+import { AccountTree, AllInclusive, AttachFile, BlurCircular, Chat, DeviceHubOutlined, Schedule, SendOutlined } from '@material-ui/icons';
 import usePlans from "../hooks/usePlans";
 import Typography from "@material-ui/core/Typography";
 import { ShapeLine } from "@mui/icons-material";
@@ -416,6 +416,15 @@ const MainListItems = (props) => {
                         <SettingsOutlinedIcon />
                       </ListItemIcon>
                       <ListItemText primary={i18n.t("mainDrawer.listItems.campaignsConfig")} />
+                    </ListItem>
+                    <ListItem
+                      onClick={() => history.push("/ultramsg-config")}
+                      button
+                    >
+                      <ListItemIcon>
+                        <SendOutlined />
+                      </ListItemIcon>
+                      <ListItemText primary="UltraMsg API" />
                     </ListItem>
                   </List>
                 </Collapse>

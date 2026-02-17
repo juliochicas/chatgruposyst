@@ -25,13 +25,17 @@ import api from "../../services/api";
 import toastError from "../../errors/toastError";
 import {
   Box,
+  Divider,
   FormControl,
+  FormControlLabel,
   Grid,
   InputLabel,
   MenuItem,
   Select,
+  Switch,
   Tab,
   Tabs,
+  Typography,
 } from "@material-ui/core";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import ConfirmationModal from "../ConfirmationModal";
@@ -100,12 +104,21 @@ const CampaignModal = ({
     message3: "",
     message4: "",
     message5: "",
-    status: "INATIVA", // INATIVA, PROGRAMADA, EM_ANDAMENTO, CANCELADA, FINALIZADA,
+    status: "INATIVA",
     scheduledAt: "",
     whatsappId: "",
     contactListId: "",
     tagListId: "",
     companyId,
+    sendVia: "baileys",
+    useAIVariation: false,
+    aiPromptId: "",
+    contactSource: "list",
+    activeDaysFilter: 30,
+    dailyLimit: 0,
+    sendOnlyBusinessHours: false,
+    pauseAfterMessages: 0,
+    pauseDuration: 0,
   };
 
   const [campaign, setCampaign] = useState(initialState);
@@ -117,6 +130,8 @@ const CampaignModal = ({
   const [campaignEditable, setCampaignEditable] = useState(true);
   const attachmentFile = useRef(null);
   const [tagLists, setTagLists] = useState([]);
+  const [prompts, setPrompts] = useState([]);
+  const [ultraMsgConfigured, setUltraMsgConfigured] = useState(false);
 
   useEffect(() => {
     return () => {
@@ -157,7 +172,6 @@ const CampaignModal = ({
       api.get(`/tags`, { params: { companyId } })
         .then(({ data }) => {
           const fetchedTags = data.tags;
-          // Perform any necessary data transformation here
           const formattedTagLists = fetchedTags.map((tag) => ({
             id: tag.id,
             name: tag.name,
@@ -167,6 +181,22 @@ const CampaignModal = ({
         .catch((error) => {
           console.error("Error retrieving tags:", error);
         });
+
+      // Fetch prompts for AI variation
+      api.get(`/prompts`, { params: { companyId } })
+        .then(({ data }) => {
+          setPrompts(Array.isArray(data.prompts) ? data.prompts : (Array.isArray(data) ? data : []));
+        })
+        .catch((error) => {
+          console.error("Error retrieving prompts:", error);
+        });
+
+      // Check UltraMsg configuration
+      api.get(`/ultramsg-config/status`)
+        .then(({ data }) => {
+          setUltraMsgConfigured(data.configured && data.isActive);
+        })
+        .catch(() => setUltraMsgConfigured(false));
         
       if (!campaignId) return;
 
@@ -510,6 +540,189 @@ const CampaignModal = ({
                       </Field>
                     </FormControl>
                   </Grid>
+                  {/* ===== ENVIO MASIVO - NUEVAS OPCIONES ===== */}
+                  <Grid xs={12} item>
+                    <Divider style={{ margin: "8px 0" }} />
+                    <Typography variant="subtitle2" style={{ marginBottom: 8, fontWeight: "bold" }}>
+                      Opciones de Envio Masivo
+                    </Typography>
+                  </Grid>
+
+                  <Grid xs={12} md={3} item>
+                    <FormControl
+                      variant="outlined"
+                      margin="dense"
+                      fullWidth
+                    >
+                      <InputLabel id="sendVia-label">Canal de Envio</InputLabel>
+                      <Field
+                        as={Select}
+                        label="Canal de Envio"
+                        labelId="sendVia-label"
+                        id="sendVia"
+                        name="sendVia"
+                        disabled={!campaignEditable}
+                      >
+                        <MenuItem value="baileys">Baileys (Conexion actual)</MenuItem>
+                        {ultraMsgConfigured && (
+                          <MenuItem value="ultramsg">UltraMsg API</MenuItem>
+                        )}
+                      </Field>
+                    </FormControl>
+                  </Grid>
+
+                  <Grid xs={12} md={3} item>
+                    <FormControl
+                      variant="outlined"
+                      margin="dense"
+                      fullWidth
+                    >
+                      <InputLabel id="contactSource-label">Fuente de Contactos</InputLabel>
+                      <Field
+                        as={Select}
+                        label="Fuente de Contactos"
+                        labelId="contactSource-label"
+                        id="contactSource"
+                        name="contactSource"
+                        disabled={!campaignEditable}
+                      >
+                        <MenuItem value="list">Lista de Contactos</MenuItem>
+                        <MenuItem value="tag">Por Etiqueta</MenuItem>
+                        <MenuItem value="active">Contactos Activos</MenuItem>
+                      </Field>
+                    </FormControl>
+                  </Grid>
+
+                  {values.contactSource === "active" && (
+                    <Grid xs={12} md={3} item>
+                      <Field
+                        as={TextField}
+                        label="Dias de actividad"
+                        name="activeDaysFilter"
+                        type="number"
+                        variant="outlined"
+                        margin="dense"
+                        fullWidth
+                        helperText="Contactos activos ultimos X dias"
+                        disabled={!campaignEditable}
+                      />
+                    </Grid>
+                  )}
+
+                  <Grid xs={12} md={3} item>
+                    <FormControlLabel
+                      control={
+                        <Field
+                          as={Switch}
+                          name="useAIVariation"
+                          checked={values.useAIVariation}
+                          color="primary"
+                          disabled={!campaignEditable}
+                        />
+                      }
+                      label="Variacion con IA"
+                      style={{ marginTop: 8 }}
+                    />
+                  </Grid>
+
+                  {values.useAIVariation && (
+                    <Grid xs={12} md={4} item>
+                      <FormControl
+                        variant="outlined"
+                        margin="dense"
+                        fullWidth
+                      >
+                        <InputLabel id="aiPromptId-label">Prompt IA</InputLabel>
+                        <Field
+                          as={Select}
+                          label="Prompt IA"
+                          labelId="aiPromptId-label"
+                          id="aiPromptId"
+                          name="aiPromptId"
+                          disabled={!campaignEditable}
+                        >
+                          <MenuItem value="">Seleccionar...</MenuItem>
+                          {prompts.map((prompt) => (
+                            <MenuItem key={prompt.id} value={prompt.id}>
+                              {prompt.name}
+                            </MenuItem>
+                          ))}
+                        </Field>
+                      </FormControl>
+                    </Grid>
+                  )}
+
+                  {/* Anti-Ban Options */}
+                  <Grid xs={12} item>
+                    <Divider style={{ margin: "8px 0" }} />
+                    <Typography variant="subtitle2" style={{ marginBottom: 8, fontWeight: "bold" }}>
+                      Opciones Anti-Ban
+                    </Typography>
+                  </Grid>
+
+                  <Grid xs={12} md={3} item>
+                    <FormControlLabel
+                      control={
+                        <Field
+                          as={Switch}
+                          name="sendOnlyBusinessHours"
+                          checked={values.sendOnlyBusinessHours}
+                          color="primary"
+                          disabled={!campaignEditable}
+                        />
+                      }
+                      label="Solo horario laboral (8-20h)"
+                      style={{ marginTop: 8 }}
+                    />
+                  </Grid>
+
+                  <Grid xs={12} md={3} item>
+                    <Field
+                      as={TextField}
+                      label="Pausar despues de (msgs)"
+                      name="pauseAfterMessages"
+                      type="number"
+                      variant="outlined"
+                      margin="dense"
+                      fullWidth
+                      helperText="0 = sin pausa"
+                      disabled={!campaignEditable}
+                    />
+                  </Grid>
+
+                  <Grid xs={12} md={3} item>
+                    <Field
+                      as={TextField}
+                      label="Duracion pausa (seg)"
+                      name="pauseDuration"
+                      type="number"
+                      variant="outlined"
+                      margin="dense"
+                      fullWidth
+                      helperText="Segundos de pausa"
+                      disabled={!campaignEditable}
+                    />
+                  </Grid>
+
+                  <Grid xs={12} md={3} item>
+                    <Field
+                      as={TextField}
+                      label="Limite diario"
+                      name="dailyLimit"
+                      type="number"
+                      variant="outlined"
+                      margin="dense"
+                      fullWidth
+                      helperText="0 = sin limite"
+                      disabled={!campaignEditable}
+                    />
+                  </Grid>
+
+                  <Grid xs={12} item>
+                    <Divider style={{ margin: "8px 0" }} />
+                  </Grid>
+                  {/* ===== FIN OPCIONES ENVIO MASIVO ===== */}
+
                   <Grid xs={12} item>
                     <Tabs
                       value={messageTab}

@@ -40,6 +40,7 @@ import ForgetPassword from "../pages/ForgetPassWord/"; // Reset PassWd
 import CampaignsPhrase from "../pages/CampaignsPhrase";
 import FlowBuilder from "../pages/FlowBuilder";
 import FlowBuilderConfig from "../pages/FlowBuilderConfig";
+import UltraMsgConfig from "../pages/UltraMsgConfig";
 
 const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
@@ -183,6 +184,12 @@ const Routes = () => {
                       exact
                       path="/flowbuilder/:id?"
                       component={FlowBuilderConfig}
+                      isPrivate
+                    />
+                    <Route
+                      exact
+                      path="/ultramsg-config"
+                      component={UltraMsgConfig}
                       isPrivate
                     />
                   </>

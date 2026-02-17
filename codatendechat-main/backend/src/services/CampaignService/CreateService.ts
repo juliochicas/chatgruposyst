@@ -17,6 +17,15 @@ interface Data {
   message4?: string;
   message5?: string;
   fileListId: number;
+  sendVia?: string;
+  useAIVariation?: boolean;
+  aiPromptId?: number;
+  contactSource?: string;
+  activeDaysFilter?: number;
+  dailyLimit?: number;
+  sendOnlyBusinessHours?: boolean;
+  pauseAfterMessages?: number;
+  pauseDuration?: number;
 }
 
 const CreateService = async (data: Data): Promise<Campaign> => {

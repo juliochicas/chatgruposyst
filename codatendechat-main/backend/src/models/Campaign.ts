@@ -6,6 +6,7 @@ import {
   Model,
   PrimaryKey,
   AutoIncrement,
+  Default,
   ForeignKey,
   BelongsTo,
   HasMany
@@ -16,6 +17,7 @@ import ContactList from "./ContactList";
 import Whatsapp from "./Whatsapp";
 import Files from "./Files";
 import Tag from "./Tag";
+import Prompt from "./Prompt";
 
 @Table({ tableName: "Campaigns" })
 class Campaign extends Model<Campaign> {
@@ -100,6 +102,46 @@ class Campaign extends Model<Campaign> {
 
   @HasMany(() => CampaignShipping)
   shipping: CampaignShipping[];
+
+  // UltraMsg & AI Variation fields
+  @Default("baileys")
+  @Column
+  sendVia: string; // "baileys" | "ultramsg"
+
+  @Default(false)
+  @Column
+  useAIVariation: boolean;
+
+  @ForeignKey(() => Prompt)
+  @Column
+  aiPromptId: number;
+
+  @BelongsTo(() => Prompt)
+  aiPrompt: Prompt;
+
+  @Default("list")
+  @Column
+  contactSource: string; // "list" | "tag" | "active"
+
+  @Default(30)
+  @Column
+  activeDaysFilter: number;
+
+  @Default(0)
+  @Column
+  dailyLimit: number;
+
+  @Default(false)
+  @Column
+  sendOnlyBusinessHours: boolean;
+
+  @Default(0)
+  @Column
+  pauseAfterMessages: number;
+
+  @Default(0)
+  @Column
+  pauseDuration: number;
 }
 
 export default Campaign;
