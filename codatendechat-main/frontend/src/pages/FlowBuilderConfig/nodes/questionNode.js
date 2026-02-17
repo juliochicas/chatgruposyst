@@ -15,7 +15,7 @@ import { Handle } from "react-flow-renderer";
 import { useNodeStorage } from "../../../stores/useNodeStorage";
 import { Typography } from "@mui/material";
 import BallotIcon from '@mui/icons-material/Ballot';
-import { i18n } from "../../../../translate/i18n";
+import { i18n } from "../../../translate/i18n";
 
 
 export default memo(({ data, isConnectable, id }) => {

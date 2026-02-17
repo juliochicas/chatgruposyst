@@ -2,7 +2,7 @@ import { ArrowForwardIos, Message, RocketLaunch } from "@mui/icons-material";
 import React, { memo } from "react";
 
 import { Handle } from "react-flow-renderer";
-import { i18n } from "../../../../translate/i18n";
+import { i18n } from "../../../translate/i18n";
 
 export default memo(({ data, isConnectable }) => {
   return (

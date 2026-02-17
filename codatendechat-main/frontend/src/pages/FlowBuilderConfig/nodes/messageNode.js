@@ -8,7 +8,7 @@ import React, { memo } from "react";
 
 import { Handle } from "react-flow-renderer";
 import { useNodeStorage } from "../../../stores/useNodeStorage";
-import { i18n } from "../../../../translate/i18n";
+import { i18n } from "../../../translate/i18n";
 
 export default memo(({ data, isConnectable, id }) => {
   const storageItems = useNodeStorage();
