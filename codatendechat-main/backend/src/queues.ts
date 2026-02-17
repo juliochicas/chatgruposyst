@@ -37,6 +37,7 @@ import EmailCampaignShipping from "./models/EmailCampaignShipping";
 import EmailConfig from "./models/EmailConfig";
 import { sendEmail } from "./services/EmailServices/ResendAPI";
 import { generateEmailVariation } from "./services/EmailServices/AIEmailVariation";
+import Invoices from "./models/Invoices";
 import {
   sendExpirationWarningEmail,
   sendAccountExpiredEmail
@@ -1196,71 +1197,41 @@ async function handleInvoiceCreate() {
 
 
     const companies = await Company.findAll();
-    companies.map(async c => {
-      var dueDate = c.dueDate;
-      const date = moment(dueDate).format();
-      const timestamp = moment().format();
-      const hoje = moment(moment()).format("DD/MM/yyyy");
-      var vencimento = moment(dueDate).format("DD/MM/yyyy");
+    for (const c of companies) {
+      try {
+        const dueDate = c.dueDate;
+        if (!dueDate) continue;
 
-      var diff = moment(vencimento, "DD/MM/yyyy").diff(moment(hoje, "DD/MM/yyyy"));
-      var dias = moment.duration(diff).asDays();
+        const date = moment(dueDate).format();
+        const today = moment().startOf("day");
+        const due = moment(dueDate).startOf("day");
+        const dias = due.diff(today, "days");
 
-      if (dias < 20) {
-        const plan = await Plan.findByPk(c.planId);
+        if (dias < 20) {
+          const plan = await Plan.findByPk(c.planId);
+          if (!plan) continue;
 
-        const sql = `SELECT COUNT(*) mycount FROM "Invoices" WHERE "companyId" = ${c.id} AND "dueDate"::text LIKE '${moment(dueDate).format("yyyy-MM-DD")}%';`
-        const invoice = await sequelize.query(sql,
-          { type: QueryTypes.SELECT }
-        );
-        if (invoice[0]['mycount'] > 0) {
+          const existingCount = await Invoices.count({
+            where: {
+              companyId: c.id,
+              dueDate: { [Op.like]: `${moment(dueDate).format("YYYY-MM-DD")}%` }
+            }
+          });
 
-        } else {
-          const sql = `INSERT INTO "Invoices" (detail, status, value, "updatedAt", "createdAt", "dueDate", "companyId")
-          VALUES ('${plan.name}', 'open', '${plan.value}', '${timestamp}', '${timestamp}', '${date}', ${c.id});`
-
-          const invoiceInsert = await sequelize.query(sql,
-            { type: QueryTypes.INSERT }
-          );
-
-          /*           let transporter = nodemailer.createTransport({
-                      service: 'gmail',
-                      auth: {
-                        user: 'email@gmail.com',
-                        pass: 'senha'
-                      }
-                    });
-
-                    const mailOptions = {
-                      from: 'heenriquega@gmail.com', // sender address
-                      to: `${c.email}`, // receiver (use array of string for a list)
-                      subject: 'Factura generada - Sistema', // Subject line
-                      html: `Hola ${c.name}, este es un email sobre su factura!<br>
-          <br>
-          Vencimiento: ${vencimento}<br>
-          Valor: ${plan.value}<br>
-          Link: ${process.env.FRONTEND_URL}/financeiro<br>
-          <br>
-          ¡Cualquier duda estamos a su disposición!
-                      `// plain text body
-                    };
-
-                    transporter.sendMail(mailOptions, (err, info) => {
-                      if (err)
-                        console.log(err)
-                      else
-                        console.log(info);
-                    }); */
-
+          if (existingCount === 0) {
+            await Invoices.create({
+              detail: plan.name,
+              status: "open",
+              value: plan.value,
+              dueDate: date,
+              companyId: c.id
+            });
+          }
         }
-
-
-
-
-
+      } catch (err) {
+        logger.error(`handleInvoiceCreate error for company ${c.id}: ${err.message}`);
       }
-
-    });
+    }
   });
   job.start()
 }

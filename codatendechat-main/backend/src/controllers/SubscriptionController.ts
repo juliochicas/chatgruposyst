@@ -7,6 +7,8 @@ import Invoices from "../models/Invoices";
 import Subscriptions from "../models/Subscriptions";
 import { getIO } from "../libs/socket";
 import { logger } from "../utils/logger";
+import Addon from "../models/Addon";
+import CompanyAddon from "../models/CompanyAddon";
 import {
   sendSubscriptionConfirmEmail,
   sendPaymentReceiptEmail,
@@ -242,6 +244,51 @@ export const webhook = async (
       case "checkout.session.completed": {
         const session = event.data.object as Stripe.Checkout.Session;
 
+        // Handle addon checkouts (monthly or one-time)
+        const addonType = session.metadata?.type;
+        if (addonType === "addon_monthly" || addonType === "addon_one_time") {
+          const addonCompanyId = session.metadata?.companyId;
+          const addonId = session.metadata?.addonId;
+
+          if (addonCompanyId && addonId) {
+            const subscriptionId = session.subscription
+              ? (typeof session.subscription === "string"
+                ? session.subscription
+                : session.subscription.id)
+              : null;
+
+            const [companyAddon] = await CompanyAddon.findOrCreate({
+              where: { companyId: Number(addonCompanyId), addonId: Number(addonId) },
+              defaults: {
+                companyId: Number(addonCompanyId),
+                addonId: Number(addonId),
+                status: "active",
+                stripeSubscriptionItemId: subscriptionId,
+                activatedAt: new Date()
+              }
+            });
+
+            await companyAddon.update({
+              status: "active",
+              stripeSubscriptionItemId: subscriptionId || companyAddon.stripeSubscriptionItemId,
+              activatedAt: new Date(),
+              cancelledAt: null
+            });
+
+            const addon = await Addon.findByPk(addonId);
+            logger.info(
+              `Addon checkout completed: ${addon?.name || addonId} for company ${addonCompanyId}`
+            );
+
+            const io = getIO();
+            io.to(`company-${addonCompanyId}-mainchannel`).emit(
+              `company-${addonCompanyId}-payment`,
+              { action: "ADDON_ACTIVATED", addonId, addonName: addon?.name }
+            );
+          }
+          break;
+        }
+
         if (session.mode === "subscription" && session.subscription) {
           const companyId = session.metadata?.companyId;
           const planId = session.metadata?.planId;
@@ -349,6 +396,19 @@ export const webhook = async (
           });
 
           if (company) {
+            // Idempotency: check if we already processed this Stripe invoice
+            const existingInvoice = await Invoices.findOne({
+              where: {
+                companyId: company.id,
+                detail: `Stripe invoice ${invoice.id}`
+              }
+            });
+
+            if (existingInvoice) {
+              logger.info(`invoice.paid: Already processed ${invoice.id} for company ${company.id}, skipping`);
+              break;
+            }
+
             const isAnnual = company.recurrence === "annual";
             await extendDueDate(company, isAnnual ? 365 : 30);
 

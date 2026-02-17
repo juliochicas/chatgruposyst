@@ -19,4 +19,12 @@ companyRoutes.post("/companies/cadastro", CompanyController.store);
 companyRoutes.get("/companies/listPlan/:id", isAuth, CompanyController.listPlan);
 companyRoutes.get("/companiesPlan", isAuth, CompanyController.indexPlan);
 
+// Plan usage (real-time limits & features)
+companyRoutes.get("/companies/:id/plan-usage", isAuth, CompanyController.planUsage);
+
+// Admin backup and delete
+companyRoutes.post("/companies/:id/backup", isAuth, isSuper, CompanyController.backup);
+companyRoutes.get("/companies/:id/backup/download", isAuth, isSuper, CompanyController.downloadBackup);
+companyRoutes.delete("/companies/:id/full", isAuth, isSuper, CompanyController.removeWithBackup);
+
 export default companyRoutes;

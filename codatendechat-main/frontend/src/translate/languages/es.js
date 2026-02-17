@@ -1458,6 +1458,7 @@ const messages = {
           confirmModal: {
             title: "Eliminación de Registro",
             confirm: "¿Desea realmente eliminar este registro?",
+            message: "¿Desea realmente eliminar este registro? Esta acción no se puede deshacer.",
           },
           form: {
             name: "Nombre",
@@ -1475,6 +1476,7 @@ const messages = {
             monthly: "Mensual",
             expire: "Vencimiento",
             createdAt: "Creada En",
+            actions: "Acciones",
           },
           buttons: {
             clear: "Limpiar",
@@ -1883,6 +1885,9 @@ const messages = {
         ERR_FETCH_WAPP_MSG: "Error al buscar el mensaje en WhatsApp, tal vez sea muy antiguo.",
         ERR_QUEUE_COLOR_ALREADY_EXISTS: "Este color ya está en uso, elija otro.",
         ERR_WAPP_GREETING_REQUIRED: "El mensaje de saludo es obligatorio cuando hay más de una cola.",
+        ERR_COMPANY_EXPIRED: "Tu suscripción ha expirado. Por favor renueva tu plan para continuar usando el servicio.",
+        ERR_COMPANY_DISABLED: "Tu cuenta ha sido deshabilitada. Contacta al administrador.",
+        ERR_COMPANY_NOT_FOUND: "Empresa no encontrada.",
       },
     }
   }

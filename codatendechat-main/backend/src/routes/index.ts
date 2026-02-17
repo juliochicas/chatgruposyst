@@ -1,4 +1,5 @@
 import { Router } from "express";
+import isCompanyActive from "../middleware/isCompanyActive";
 
 import userRoutes from "./userRoutes";
 import authRoutes from "./authRoutes";
@@ -38,8 +39,13 @@ import metaRoutes from "./metaRoutes";
 import ultraMsgRoutes from "./ultraMsgRoutes";
 import emailRoutes from "./emailRoutes";
 import shopifyRoutes from "./shopifyRoutes";
+import addonRoutes from "./addonRoutes";
+import balanceRoutes from "./balanceRoutes";
 
 const routes = Router();
+
+// Global middleware: block expired companies (exempt routes checked inside)
+routes.use(isCompanyActive);
 
 routes.use(userRoutes);
 routes.use("/auth", authRoutes);
@@ -80,5 +86,7 @@ routes.use(metaRoutes)
 routes.use(ultraMsgRoutes)
 routes.use(emailRoutes)
 routes.use(shopifyRoutes)
+routes.use(addonRoutes)
+routes.use(balanceRoutes)
 
 export default routes;

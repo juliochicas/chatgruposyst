@@ -13,6 +13,7 @@ import {
   AllowNull
 } from "sequelize-typescript";
 import Contact from "./Contact";
+import CompanyAddon from "./CompanyAddon";
 import Message from "./Message";
 
 import Plan from "./Plan";
@@ -64,6 +65,10 @@ class Company extends Model<Company> {
   @AllowNull(true)
   @Column
   stripeSubscriptionId: string;
+
+  @AllowNull(false)
+  @Column({ type: DataType.DECIMAL(10, 2), defaultValue: 0 })
+  balance: number;
 
   @ForeignKey(() => Plan)
   @Column
@@ -140,6 +145,13 @@ class Company extends Model<Company> {
     hooks: true
   })
   ticketTrankins: TicketTraking[];
+
+  @HasMany(() => CompanyAddon, {
+    onUpdate: "CASCADE",
+    onDelete: "CASCADE",
+    hooks: true
+  })
+  companyAddons: CompanyAddon[];
 }
 
 export default Company;

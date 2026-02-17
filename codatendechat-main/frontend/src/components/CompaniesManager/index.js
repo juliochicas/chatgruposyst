@@ -19,15 +19,27 @@ import { Formik, Form, Field } from "formik";
 import ButtonWithSpinner from "../ButtonWithSpinner";
 import ConfirmationModal from "../ConfirmationModal";
 
-import { Edit as EditIcon } from "@material-ui/icons";
+import {
+  Edit as EditIcon,
+  Backup as BackupIcon,
+  GetApp as DownloadIcon,
+  DeleteForever as DeleteForeverIcon,
+  AccountBalanceWallet as WalletIcon,
+} from "@material-ui/icons";
+import {
+  Tooltip,
+  Chip,
+} from "@material-ui/core";
 
 import { toast } from "react-toastify";
 import useCompanies from "../../hooks/useCompanies";
 import usePlans from "../../hooks/usePlans";
 import ModalUsers from "../ModalUsers";
+import ConfirmationModal from "../ConfirmationModal";
 import api from "../../services/api";
 import { head, isArray, has } from "lodash";
 import { useDate } from "../../hooks/useDate";
+import toastError from "../../errors/toastError";
 
 import moment from "moment";
 import { i18n } from "../../translate/i18n";
@@ -400,9 +412,11 @@ export function CompanyForm(props) {
 }
 
 export function CompaniesManagerGrid(props) {
-  const { records, onSelect } = props;
+  const { records, onSelect, onBackup, onDownloadBackup, onDeleteFull } = props;
   const classes = useStyles();
   const { dateToClient } = useDate();
+  const [deleteConfirmOpen, setDeleteConfirmOpen] = useState(false);
+  const [selectedForDelete, setSelectedForDelete] = useState(null);
 
   const renderStatus = (row) => {
     return row.status === false ? "No" : "Sí";
@@ -464,13 +478,14 @@ export function CompaniesManagerGrid(props) {
             <TableCell align="left">{i18n.t("settings.company.form.status")}</TableCell>
             <TableCell align="left">{i18n.t("settings.company.form.createdAt")}</TableCell>
             <TableCell align="left">{i18n.t("settings.company.form.expire")}</TableCell>
+            <TableCell align="center">{i18n.t("settings.company.form.actions") || "Acciones"}</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {records.map((row, key) => (
             <TableRow style={rowStyle(row)} key={key}>
               <TableCell align="center" style={{ width: "1%" }}>
-                <IconButton onClick={() => onSelect(row)} aria-label="delete">
+                <IconButton onClick={() => onSelect(row)} aria-label="edit">
                   <EditIcon />
                 </IconButton>
               </TableCell>
@@ -486,10 +501,49 @@ export function CompaniesManagerGrid(props) {
                 <br />
                 <span>{row.recurrence}</span>
               </TableCell>
+              <TableCell align="center" style={{ whiteSpace: "nowrap" }}>
+                <Tooltip title="Crear Backup">
+                  <IconButton size="small" onClick={() => onBackup && onBackup(row)}>
+                    <BackupIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Descargar Backup">
+                  <IconButton size="small" onClick={() => onDownloadBackup && onDownloadBackup(row)}>
+                    <DownloadIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title="Eliminar con Backup">
+                  <IconButton
+                    size="small"
+                    onClick={() => {
+                      setSelectedForDelete(row);
+                      setDeleteConfirmOpen(true);
+                    }}
+                    style={{ color: "#e53935" }}
+                  >
+                    <DeleteForeverIcon fontSize="small" />
+                  </IconButton>
+                </Tooltip>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
       </Table>
+      <ConfirmationModal
+        title="Eliminar empresa con backup"
+        open={deleteConfirmOpen}
+        onClose={() => setDeleteConfirmOpen(false)}
+        onConfirm={() => {
+          if (selectedForDelete) {
+            onDeleteFull && onDeleteFull(selectedForDelete);
+          }
+          setDeleteConfirmOpen(false);
+        }}
+      >
+        {selectedForDelete
+          ? `Se creará un backup y luego se eliminará permanentemente la empresa "${selectedForDelete.name}". Esta acción no se puede deshacer.`
+          : ""}
+      </ConfirmationModal>
     </Paper>
   );
 }
@@ -605,6 +659,51 @@ export default function CompaniesManager() {
     }));
   };
 
+  const handleBackup = async (company) => {
+    try {
+      setLoading(true);
+      const { data } = await api.post(`/companies/${company.id}/backup`);
+      toast.success(`Backup creado: ${data.fileName}`);
+    } catch (e) {
+      toastError(e);
+    }
+    setLoading(false);
+  };
+
+  const handleDownloadBackup = async (company) => {
+    try {
+      const response = await api.get(`/companies/${company.id}/backup/download`, {
+        responseType: "blob",
+      });
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement("a");
+      link.href = url;
+      const contentDisposition = response.headers["content-disposition"];
+      const fileName = contentDisposition
+        ? contentDisposition.split("filename=")[1]?.replace(/"/g, "")
+        : `backup_${company.name}.json`;
+      link.setAttribute("download", fileName);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+    } catch (e) {
+      toastError(e);
+    }
+  };
+
+  const handleDeleteFull = async (company) => {
+    try {
+      setLoading(true);
+      const { data } = await api.delete(`/companies/${company.id}/full`);
+      toast.success(data.message);
+      await loadPlans();
+      handleCancel();
+    } catch (e) {
+      toastError(e);
+    }
+    setLoading(false);
+  };
+
   return (
     <Paper className={classes.mainPaper} elevation={0}>
       <Grid spacing={2} container>
@@ -618,7 +717,13 @@ export default function CompaniesManager() {
           />
         </Grid>
         <Grid xs={12} item>
-          <CompaniesManagerGrid records={records} onSelect={handleSelect} />
+          <CompaniesManagerGrid
+            records={records}
+            onSelect={handleSelect}
+            onBackup={handleBackup}
+            onDownloadBackup={handleDownloadBackup}
+            onDeleteFull={handleDeleteFull}
+          />
         </Grid>
       </Grid>
       <ConfirmationModal

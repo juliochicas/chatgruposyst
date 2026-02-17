@@ -162,6 +162,32 @@ const useStyles = makeStyles((theme) => ({
     overflowY: "scroll",
     ...theme.scrollbarStyles,
   },
+  expirationBanner: {
+    background: "#ff9800",
+    color: "#fff",
+    padding: "8px 16px",
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: 600,
+    "& a": {
+      color: "#fff",
+      textDecoration: "underline",
+      marginLeft: 8,
+    },
+  },
+  expirationBannerCritical: {
+    background: "#e53935",
+    color: "#fff",
+    padding: "8px 16px",
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: 600,
+    "& a": {
+      color: "#fff",
+      textDecoration: "underline",
+      marginLeft: 8,
+    },
+  },
   NotificationsPopOver: {
     // color: theme.barraSuperior.secondary.main,
   },
@@ -273,7 +299,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
 
     socket.on(`company-${companyId}-auth`, (data) => {
       if (data.user.id === +userId) {
-        toastError("Sua conta foi acessada em outro computador.");
+        toastError("Tu cuenta fue accedida desde otro dispositivo.");
         setTimeout(() => {
           localStorage.clear();
           window.location.reload();
@@ -508,7 +534,29 @@ const LoggedInLayout = ({ children, themeToggle }) => {
       </AppBar>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
-
+        {/* Expiration warning banner */}
+        {user?.company?.dueDate && (() => {
+          const now = moment().startOf("day");
+          const due = moment(user.company.dueDate).startOf("day");
+          const daysLeft = due.diff(now, "days");
+          if (daysLeft <= 0) {
+            return (
+              <div className={classes.expirationBannerCritical}>
+                Tu suscripción ha expirado. Renueva ahora para mantener el acceso a tu cuenta.
+                <a href="/#/financeiro">Renovar Suscripción</a>
+              </div>
+            );
+          }
+          if (daysLeft <= 7) {
+            return (
+              <div className={classes.expirationBanner}>
+                Tu suscripción vence en {daysLeft} día{daysLeft > 1 ? "s" : ""}.
+                <a href="/#/financeiro">Revisar Facturación</a>
+              </div>
+            );
+          }
+          return null;
+        })()}
         {children ? children : null}
       </main>
     </div>

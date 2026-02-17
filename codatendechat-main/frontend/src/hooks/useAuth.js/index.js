@@ -39,6 +39,15 @@ const useAuth = () => {
     async (error) => {
       const originalRequest = error.config;
 
+      // Handle company expired/disabled errors – don't try token refresh
+      const errorMsg = error?.response?.data?.error;
+      if (
+        error?.response?.status === 403 &&
+        (errorMsg === "ERR_COMPANY_EXPIRED" || errorMsg === "ERR_COMPANY_DISABLED")
+      ) {
+        return Promise.reject(error);
+      }
+
       if (error?.response?.status === 403 && !originalRequest._retry) {
         if (isRefreshing) {
           return new Promise((resolve, reject) => {

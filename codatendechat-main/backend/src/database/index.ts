@@ -52,6 +52,9 @@ import EmailCampaignShipping from "../models/EmailCampaignShipping";
 import ShopifyConnection from "../models/ShopifyConnection";
 import ShopifyProduct from "../models/ShopifyProduct";
 import ShopifyCart from "../models/ShopifyCart";
+import Addon from "../models/Addon";
+import CompanyAddon from "../models/CompanyAddon";
+import BalanceTransaction from "../models/BalanceTransaction";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -113,6 +116,9 @@ const models = [
   ShopifyConnection,
   ShopifyProduct,
   ShopifyCart,
+  Addon,
+  CompanyAddon,
+  BalanceTransaction,
 ];
 
 sequelize.addModels(models);

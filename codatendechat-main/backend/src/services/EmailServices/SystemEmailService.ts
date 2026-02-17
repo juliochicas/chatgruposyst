@@ -338,3 +338,41 @@ export const sendAccountExpiredEmail = async (
     logger.error(`SystemEmail -> Account expired email failed for ${company.email}: ${err.message}`);
   }
 };
+
+/**
+ * Account deleted – sent when the admin removes a company from the system
+ */
+export const sendAccountDeletedEmail = async (
+  company: CompanyInfo
+): Promise<void> => {
+  if (!isConfigured() || !company.email) return;
+
+  const { apiKey, from } = getConfig();
+
+  const html = baseLayout(`
+    <h2>Cuenta Eliminada</h2>
+    <p>Hola <strong>${company.name}</strong>,</p>
+    <div class="error">
+      <p><strong>Tu cuenta en ChateaYA ha sido dada de baja.</strong></p>
+    </div>
+    <p>Debido a que tu suscripción no fue renovada, tu cuenta ha sido eliminada de nuestro sistema.</p>
+    <p>Un respaldo de tus datos ha sido guardado de forma segura por nuestro equipo. Si necesitas una copia de tus datos o deseas reactivar tu cuenta, por favor contáctanos.</p>
+    <div class="highlight">
+      <p><strong>¿Necesitas ayuda?</strong></p>
+      <p>Escríbenos y con gusto te asistiremos con la recuperación de tu información o la reactivación de tu servicio.</p>
+    </div>
+    <p>Gracias por haber sido parte de ChateaYA.</p>
+  `);
+
+  try {
+    await sendEmail({ apiKey }, {
+      from,
+      to: company.email,
+      subject: "Tu cuenta ChateaYA ha sido eliminada",
+      html
+    });
+    logger.info(`SystemEmail -> Account deleted sent to ${company.email}`);
+  } catch (err) {
+    logger.error(`SystemEmail -> Account deleted email failed for ${company.email}: ${err.message}`);
+  }
+};

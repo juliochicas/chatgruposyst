@@ -1,5 +1,6 @@
 import express from "express";
 import isAuth from "../middleware/isAuth";
+import isPlanFeatureEnabled from "../middleware/isPlanFeatureEnabled";
 
 import * as CampaignController from "../controllers/CampaignController";
 import multer from "multer";
@@ -15,7 +16,7 @@ routes.get("/campaigns", isAuth, CampaignController.index);
 
 routes.get("/campaigns/:id", isAuth, CampaignController.show);
 
-routes.post("/campaigns", isAuth, CampaignController.store);
+routes.post("/campaigns", isAuth, isPlanFeatureEnabled("useCampaigns"), CampaignController.store);
 
 routes.put("/campaigns/:id", isAuth, CampaignController.update);
 
