@@ -41,6 +41,7 @@ import emailRoutes from "./emailRoutes";
 import shopifyRoutes from "./shopifyRoutes";
 import addonRoutes from "./addonRoutes";
 import balanceRoutes from "./balanceRoutes";
+import supportTicketRoutes from "./supportTicketRoutes";
 
 const routes = Router();
 
@@ -88,5 +89,6 @@ routes.use(emailRoutes)
 routes.use(shopifyRoutes)
 routes.use(addonRoutes)
 routes.use(balanceRoutes)
+routes.use(supportTicketRoutes)
 
 export default routes;

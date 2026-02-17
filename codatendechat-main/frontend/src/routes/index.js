@@ -44,6 +44,9 @@ import UltraMsgConfig from "../pages/UltraMsgConfig";
 import EmailConfig from "../pages/EmailConfig";
 import EmailCampaigns from "../pages/EmailCampaigns";
 import ShopifyConfig from "../pages/ShopifyConfig";
+import SupportTickets from "../pages/SupportTickets";
+import TicketDetail from "../pages/SupportTickets/TicketDetail";
+import SupportAdminDashboard from "../pages/SupportTickets/AdminDashboard";
 
 const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
@@ -137,6 +140,9 @@ const Routes = () => {
                   component={Subscription}
                   isPrivate
                 />
+                <Route exact path="/support-tickets" component={SupportTickets} isPrivate />
+                <Route exact path="/support-tickets/admin" component={SupportAdminDashboard} isPrivate />
+                <Route exact path="/support-tickets/:id" component={TicketDetail} isPrivate />
                 <Route exact path="/chats/:id?" component={Chat} isPrivate />
                 {showCampaigns && (
                   <>

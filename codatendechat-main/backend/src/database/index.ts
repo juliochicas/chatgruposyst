@@ -55,6 +55,8 @@ import ShopifyCart from "../models/ShopifyCart";
 import Addon from "../models/Addon";
 import CompanyAddon from "../models/CompanyAddon";
 import BalanceTransaction from "../models/BalanceTransaction";
+import SupportTicket from "../models/SupportTicket";
+import SupportMessage from "../models/SupportMessage";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -119,6 +121,8 @@ const models = [
   Addon,
   CompanyAddon,
   BalanceTransaction,
+  SupportTicket,
+  SupportMessage,
 ];
 
 sequelize.addModels(models);

@@ -41,7 +41,7 @@ import BorderColorIcon from '@material-ui/icons/BorderColor';
 import ToDoList from "../pages/ToDoList/";
 import toastError from "../errors/toastError";
 import { makeStyles } from "@material-ui/core/styles";
-import { AccountTree, AllInclusive, AttachFile, BlurCircular, Business, Chat, DeviceHubOutlined, Email, Schedule, SendOutlined, Store as StoreIcon } from '@material-ui/icons';
+import { AccountTree, AllInclusive, AttachFile, BlurCircular, Business, Chat, DeviceHubOutlined, Email, Schedule, SendOutlined, Store as StoreIcon, HeadsetMic } from '@material-ui/icons';
 import usePlans from "../hooks/usePlans";
 import Typography from "@material-ui/core/Typography";
 import { ShapeLine } from "@mui/icons-material";
@@ -349,6 +349,12 @@ const MainListItems = (props) => {
         icon={<HelpOutlineIcon />}
       />
 
+      <ListItemLink
+        to="/support-tickets"
+        primary={i18n.t("mainDrawer.listItems.supportTickets")}
+        icon={<HeadsetMic />}
+      />
+
       <Can
         role={user.profile}
         perform="drawer-admin-items:view"
@@ -589,6 +595,11 @@ const MainListItems = (props) => {
                   to="/settings?tab=plans"
                   primary={i18n.t("mainDrawer.listItems.plans")}
                   icon={<LoyaltyRoundedIcon />}
+                />
+                <ListItemLink
+                  to="/support-tickets/admin"
+                  primary={i18n.t("mainDrawer.listItems.supportAdmin")}
+                  icon={<HeadsetMic />}
                 />
               </>
             )}

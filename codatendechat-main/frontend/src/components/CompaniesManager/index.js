@@ -14,6 +14,7 @@ import {
   TableRow,
   IconButton,
   Select,
+  Tooltip,
 } from "@material-ui/core";
 import { Formik, Form, Field } from "formik";
 import ButtonWithSpinner from "../ButtonWithSpinner";
@@ -24,18 +25,12 @@ import {
   Backup as BackupIcon,
   GetApp as DownloadIcon,
   DeleteForever as DeleteForeverIcon,
-  AccountBalanceWallet as WalletIcon,
 } from "@material-ui/icons";
-import {
-  Tooltip,
-  Chip,
-} from "@material-ui/core";
 
 import { toast } from "react-toastify";
 import useCompanies from "../../hooks/useCompanies";
 import usePlans from "../../hooks/usePlans";
 import ModalUsers from "../ModalUsers";
-import ConfirmationModal from "../ConfirmationModal";
 import api from "../../services/api";
 import { head, isArray, has } from "lodash";
 import { useDate } from "../../hooks/useDate";
