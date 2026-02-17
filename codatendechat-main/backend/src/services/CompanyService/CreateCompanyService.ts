@@ -1,9 +1,11 @@
 import * as Yup from "yup";
 import AppError from "../../errors/AppError";
 import Company from "../../models/Company";
+import Plan from "../../models/Plan";
 import User from "../../models/User";
 import Setting from "../../models/Setting";
 import { hash } from "bcryptjs";
+import { sendWelcomeEmail } from "../EmailServices/SystemEmailService";
 
 interface CompanyData {
   name: string;
@@ -301,6 +303,20 @@ const CreateCompanyService = async (
     if (!created) {
       await setting.update({ value: `${campaignsEnabled}` });
     }
+  }
+
+  // Send welcome email (non-blocking)
+  if (company.email) {
+    let planName = "Básico";
+    if (planId) {
+      const plan = await Plan.findByPk(planId);
+      if (plan) planName = plan.name;
+    }
+    sendWelcomeEmail({
+      name: company.name,
+      email: company.email,
+      planName
+    }).catch(() => {}); // fire-and-forget
   }
 
   return company;

@@ -7,6 +7,12 @@ import Invoices from "../models/Invoices";
 import Subscriptions from "../models/Subscriptions";
 import { getIO } from "../libs/socket";
 import { logger } from "../utils/logger";
+import {
+  sendSubscriptionConfirmEmail,
+  sendPaymentReceiptEmail,
+  sendPaymentFailedEmail,
+  sendSubscriptionCancelledEmail
+} from "../services/EmailServices/SystemEmailService";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "", {
   apiVersion: "2023-10-16" as any
@@ -280,8 +286,20 @@ export const webhook = async (
               // Extend due date
               await extendDueDate(company);
 
-              // Notify frontend
+              // Send subscription confirmation email
+              const confirmedPlan = planId ? await Plan.findByPk(planId) : null;
               await company.reload();
+              sendSubscriptionConfirmEmail(
+                { name: company.name, email: company.email },
+                {
+                  planName: confirmedPlan?.name || "Plan",
+                  amount: (session.amount_total || 0) / 100,
+                  recurrence: session.metadata?.recurrence || "monthly",
+                  dueDate: company.dueDate
+                }
+              ).catch(() => {});
+
+              // Notify frontend
               const io = getIO();
               io.to(`company-${companyId}-mainchannel`).emit(
                 `company-${companyId}-payment`,
@@ -354,6 +372,16 @@ export const webhook = async (
               });
             }
 
+            // Send payment receipt email
+            sendPaymentReceiptEmail(
+              { name: company.name, email: company.email },
+              {
+                amount: (invoice.amount_paid || 0) / 100,
+                invoiceId: invoice.id,
+                date: new Date().toLocaleDateString("es-ES")
+              }
+            ).catch(() => {});
+
             await company.reload();
             const io = getIO();
             io.to(`company-${company.id}-mainchannel`).emit(
@@ -398,6 +426,15 @@ export const webhook = async (
               companyId: company.id
             });
 
+            // Send payment failed email
+            sendPaymentFailedEmail(
+              { name: company.name, email: company.email },
+              {
+                amount: (invoice.amount_due || 0) / 100,
+                invoiceId: invoice.id
+              }
+            ).catch(() => {});
+
             const io = getIO();
             io.to(`company-${company.id}-mainchannel`).emit(
               `company-${company.id}-payment`,
@@ -430,6 +467,13 @@ export const webhook = async (
           if (sub) {
             await sub.update({ isActive: false });
           }
+
+          // Send cancellation email
+          sendSubscriptionCancelledEmail({
+            name: company.name,
+            email: company.email,
+            dueDate: company.dueDate
+          }).catch(() => {});
 
           logger.info(
             `customer.subscription.deleted: Company ${company.id} subscription cancelled`

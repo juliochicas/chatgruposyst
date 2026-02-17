@@ -37,6 +37,10 @@ import EmailCampaignShipping from "./models/EmailCampaignShipping";
 import EmailConfig from "./models/EmailConfig";
 import { sendEmail } from "./services/EmailServices/ResendAPI";
 import { generateEmailVariation } from "./services/EmailServices/AIEmailVariation";
+import {
+  sendExpirationWarningEmail,
+  sendAccountExpiredEmail
+} from "./services/EmailServices/SystemEmailService";
 
 
 const nodemailer = require('nodemailer');
@@ -84,6 +88,8 @@ export const sendScheduledMessages = new BullQueue(
 export const campaignQueue = new BullQueue("CampaignQueue", connection);
 
 export const emailCampaignQueue = new BullQueue("EmailCampaignQueue", connection);
+
+export const expirationMonitor = new BullQueue("ExpirationMonitor", connection);
 
 async function handleSendMessage(job) {
   try {
@@ -1263,6 +1269,48 @@ handleCloseTicketsAutomatic()
 
 handleInvoiceCreate()
 
+async function handleCheckExpirations(job) {
+  try {
+    if (!process.env.RESEND_API_KEY) return;
+
+    const companies = await Company.findAll({
+      where: {
+        dueDate: { [Op.ne]: null },
+        email: { [Op.ne]: null }
+      }
+    });
+
+    const today = moment().startOf("day");
+
+    for (const company of companies) {
+      const due = moment(company.dueDate).startOf("day");
+      const daysRemaining = due.diff(today, "days");
+
+      // Send warning at 7, 3, and 1 days before expiration
+      if ([7, 3, 1].includes(daysRemaining)) {
+        sendExpirationWarningEmail(
+          {
+            name: company.name,
+            email: company.email,
+            dueDate: due.format("DD/MM/YYYY")
+          },
+          daysRemaining
+        ).catch(() => {});
+      }
+
+      // Send expired email on the day of expiration
+      if (daysRemaining === 0) {
+        sendAccountExpiredEmail({
+          name: company.name,
+          email: company.email
+        }).catch(() => {});
+      }
+    }
+  } catch (err: any) {
+    logger.error("handleCheckExpirations error:", err.message);
+  }
+}
+
 export async function startQueueProcess() {
 
   logger.info("[🏁] - Iniciando procesamiento de colas");
@@ -1288,6 +1336,9 @@ export async function startQueueProcess() {
   emailCampaignQueue.process("ProcessEmailCampaign", 1, handleProcessEmailCampaign);
   emailCampaignQueue.process("DispatchEmailBatch", 1, handleDispatchEmailBatch);
   emailCampaignQueue.process("VerifyEmailCampaigns", 1, handleVerifyEmailCampaigns);
+
+  // Expiration warning email processor
+  expirationMonitor.process("CheckExpirations", handleCheckExpirations);
 
   //queueMonitor.process("VerifyQueueStatus", handleVerifyQueue);
 
@@ -1366,6 +1417,16 @@ export async function startQueueProcess() {
     {},
     {
       repeat: { cron: "*/20 * * * * *" },
+      removeOnComplete: true
+    }
+  );
+
+  // Check expirations daily at 9:00 AM
+  expirationMonitor.add(
+    "CheckExpirations",
+    {},
+    {
+      repeat: { cron: "0 9 * * *", key: "check-expirations" },
       removeOnComplete: true
     }
   );
