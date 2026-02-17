@@ -68,7 +68,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        REACT_APP_BACKEND_URL: https://chateaya.app
+        REACT_APP_BACKEND_URL: https://app.chateaya.app
     restart: unless-stopped
     depends_on:
       - backend
@@ -98,6 +98,7 @@ services:
     depends_on:
       - frontend
       - backend
+      - landing
     networks:
       - chateaya_net
 
