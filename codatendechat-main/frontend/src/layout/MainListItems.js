@@ -466,7 +466,7 @@ const MainListItems = (props) => {
                   <ListItemText
                       primary={i18n.t("mainDrawer.listItems.flows")}
                   />
-                  {openCampaignSubmenu ? (
+                  {openFlowsSubmenu ? (
                       <ExpandLessIcon />
                   ) : (
                       <ExpandMoreIcon />
