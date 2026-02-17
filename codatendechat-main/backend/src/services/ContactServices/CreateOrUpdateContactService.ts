@@ -16,6 +16,7 @@ interface Request {
   companyId: number;
   extraInfo?: ExtraInfo[];
   whatsappId?: number;
+  channel?: string;
 }
 
 const CreateOrUpdateContactService = async ({

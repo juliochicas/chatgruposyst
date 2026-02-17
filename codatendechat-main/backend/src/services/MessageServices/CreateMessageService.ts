@@ -14,6 +14,7 @@ export interface MessageData {
   mediaUrl?: string;
   ack?: number;
   queueId?: number;
+  channel?: string;
 }
 interface Request {
   messageData: MessageData;
