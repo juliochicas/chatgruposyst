@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
 import Title from "../../components/Title";
@@ -57,7 +58,9 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingsCustom = () => {
   const classes = useStyles();
-  const [tab, setTab] = useState("options");
+  const { search } = useLocation();
+  const queryTab = new URLSearchParams(search).get("tab");
+  const [tab, setTab] = useState(queryTab || "options");
   const [schedules, setSchedules] = useState([]);
   const [company, setCompany] = useState({});
   const [loading, setLoading] = useState(false);

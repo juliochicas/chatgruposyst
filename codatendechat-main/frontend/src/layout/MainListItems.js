@@ -41,7 +41,7 @@ import BorderColorIcon from '@material-ui/icons/BorderColor';
 import ToDoList from "../pages/ToDoList/";
 import toastError from "../errors/toastError";
 import { makeStyles } from "@material-ui/core/styles";
-import { AccountTree, AllInclusive, AttachFile, BlurCircular, Chat, DeviceHubOutlined, Email, Schedule, SendOutlined, Store as StoreIcon } from '@material-ui/icons';
+import { AccountTree, AllInclusive, AttachFile, BlurCircular, Business, Chat, DeviceHubOutlined, Email, Schedule, SendOutlined, Store as StoreIcon } from '@material-ui/icons';
 import usePlans from "../hooks/usePlans";
 import Typography from "@material-ui/core/Typography";
 import { ShapeLine } from "@mui/icons-material";
@@ -564,6 +564,34 @@ const MainListItems = (props) => {
               primary={i18n.t("mainDrawer.listItems.financeiro")}
               icon={<LocalAtmIcon />}
             />
+
+            {user.super && (
+              <>
+                <Divider />
+                <ListSubheader
+                  hidden={collapsed}
+                  style={{
+                    position: "relative",
+                    fontSize: "17px",
+                    textAlign: "left",
+                    paddingLeft: 20
+                  }}
+                  inset
+                  color="inherit">
+                  {i18n.t("mainDrawer.listItems.superAdmin")}
+                </ListSubheader>
+                <ListItemLink
+                  to="/settings?tab=companies"
+                  primary={i18n.t("mainDrawer.listItems.companies")}
+                  icon={<Business />}
+                />
+                <ListItemLink
+                  to="/settings?tab=plans"
+                  primary={i18n.t("mainDrawer.listItems.plans")}
+                  icon={<LoyaltyRoundedIcon />}
+                />
+              </>
+            )}
 
             <ListItemLink
               to="/settings"
