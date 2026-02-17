@@ -37,6 +37,7 @@ import flowCampaignRoutes from "./flowCampaignRoutes";
 import metaRoutes from "./metaRoutes";
 import ultraMsgRoutes from "./ultraMsgRoutes";
 import emailRoutes from "./emailRoutes";
+import shopifyRoutes from "./shopifyRoutes";
 
 const routes = Router();
 
@@ -79,5 +80,6 @@ routes.use(flowCampaignRoutes)
 routes.use(metaRoutes)
 routes.use(ultraMsgRoutes)
 routes.use(emailRoutes)
+routes.use(shopifyRoutes)
 
 export default routes;

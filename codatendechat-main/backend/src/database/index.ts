@@ -49,6 +49,9 @@ import UltraMsgConfig from "../models/UltraMsgConfig";
 import EmailConfig from "../models/EmailConfig";
 import EmailCampaign from "../models/EmailCampaign";
 import EmailCampaignShipping from "../models/EmailCampaignShipping";
+import ShopifyConnection from "../models/ShopifyConnection";
+import ShopifyProduct from "../models/ShopifyProduct";
+import ShopifyCart from "../models/ShopifyCart";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -107,6 +110,9 @@ const models = [
   EmailConfig,
   EmailCampaign,
   EmailCampaignShipping,
+  ShopifyConnection,
+  ShopifyProduct,
+  ShopifyCart,
 ];
 
 sequelize.addModels(models);

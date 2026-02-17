@@ -43,6 +43,7 @@ import FlowBuilderConfig from "../pages/FlowBuilderConfig";
 import UltraMsgConfig from "../pages/UltraMsgConfig";
 import EmailConfig from "../pages/EmailConfig";
 import EmailCampaigns from "../pages/EmailCampaigns";
+import ShopifyConfig from "../pages/ShopifyConfig";
 
 const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
@@ -204,6 +205,12 @@ const Routes = () => {
                       exact
                       path="/email-campaigns"
                       component={EmailCampaigns}
+                      isPrivate
+                    />
+                    <Route
+                      exact
+                      path="/shopify-config"
+                      component={ShopifyConfig}
                       isPrivate
                     />
                   </>

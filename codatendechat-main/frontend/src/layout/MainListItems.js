@@ -41,7 +41,7 @@ import BorderColorIcon from '@material-ui/icons/BorderColor';
 import ToDoList from "../pages/ToDoList/";
 import toastError from "../errors/toastError";
 import { makeStyles } from "@material-ui/core/styles";
-import { AccountTree, AllInclusive, AttachFile, BlurCircular, Chat, DeviceHubOutlined, Email, Schedule, SendOutlined } from '@material-ui/icons';
+import { AccountTree, AllInclusive, AttachFile, BlurCircular, Chat, DeviceHubOutlined, Email, Schedule, SendOutlined, Store as StoreIcon } from '@material-ui/icons';
 import usePlans from "../hooks/usePlans";
 import Typography from "@material-ui/core/Typography";
 import { ShapeLine } from "@mui/icons-material";
@@ -443,6 +443,15 @@ const MainListItems = (props) => {
                         <SettingsOutlinedIcon />
                       </ListItemIcon>
                       <ListItemText primary="Email Config" />
+                    </ListItem>
+                    <ListItem
+                      onClick={() => history.push("/shopify-config")}
+                      button
+                    >
+                      <ListItemIcon>
+                        <StoreIcon />
+                      </ListItemIcon>
+                      <ListItemText primary="Shopify" />
                     </ListItem>
                   </List>
                 </Collapse>
