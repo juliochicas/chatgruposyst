@@ -4,7 +4,9 @@ import { RadioGroup, FormControlLabel, Radio } from '@material-ui/core';
 import api from "../../services/api";
 
 const LanguageControl = () => {
-    const [selectedLanguage, setSelectedLanguage] = useState('en');
+    const [selectedLanguage, setSelectedLanguage] = useState(
+        localStorage.getItem('i18nextLng') || 'es'
+    );
 
     const handleLanguageChange = async (event) => {
         const newLanguage = event.target.value;
@@ -21,7 +23,11 @@ const LanguageControl = () => {
 
     useEffect(() => {
         const saveLanguage = localStorage.getItem('i18nextLng');
-        setSelectedLanguage(saveLanguage);
+        if (saveLanguage) {
+            setSelectedLanguage(saveLanguage);
+        } else {
+            changeLanguage('es');
+        }
     }, []);
 
     return (

@@ -170,27 +170,18 @@ const SignUp = () => {
 								
 							<Grid item xs={12}>
 								<Field
-									as={InputMask}
-									mask="(99) 99999-9999"
+									as={TextField}
 									variant="outlined"
 									fullWidth
 									id="phone"
 									name="phone"
+									label={i18n.t("signup.form.phone")}
 									error={touched.phone && Boolean(errors.phone)}
 									helperText={touched.phone && errors.phone}
 									autoComplete="phone"
+									inputProps={{ maxLength: 15 }}
 									required
-								>
-									{({ field }) => (
-										<TextField
-											{...field}
-											variant="outlined"
-											fullWidth
-											label={i18n.t("signup.form.phone")}
-											inputProps={{ maxLength: 11 }} // Definindo o limite de caracteres
-										/>
-									)}
-								</Field>
+								/>
 							</Grid>
 								<Grid item xs={12}>
 									<Field
@@ -208,7 +199,7 @@ const SignUp = () => {
 									/>
 								</Grid>
 								<Grid item xs={12}>
-									<InputLabel htmlFor="plan-selection">Plano</InputLabel>
+									<InputLabel htmlFor="plan-selection">{i18n.t("signup.form.plan")}</InputLabel>
 									<Field
 										as={Select}
 										variant="outlined"
