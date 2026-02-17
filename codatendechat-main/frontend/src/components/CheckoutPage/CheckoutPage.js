@@ -69,8 +69,8 @@ function _renderStepContent(step, setFieldValue, setActiveStep, values ) {
     try {
       const plan = JSON.parse(values.plan);
       const newValues = {
-        firstName: values.firstName,
-        price: plan.price,
+        planId: plan.planId,
+        recurrence: plan.recurrence || "monthly",
         users: plan.users,
         connections: plan.connections,
         invoiceId: invoiceId

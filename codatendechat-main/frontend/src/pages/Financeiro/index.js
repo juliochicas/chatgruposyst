@@ -95,7 +95,20 @@ const Invoices = () => {
   const [storagePlans, setStoragePlans] = React.useState([]);
   const [selectedContactId, setSelectedContactId] = useState(null);
   const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [portalLoading, setPortalLoading] = useState(false);
 
+  const handleOpenPortal = async () => {
+    setPortalLoading(true);
+    try {
+      const { data } = await api.post("/subscription/portal");
+      if (data.url) {
+        window.open(data.url, "_blank");
+      }
+    } catch (err) {
+      toastError(err);
+    }
+    setPortalLoading(false);
+  };
 
   const handleOpenContactModal = (invoices) => {
     setStoragePlans(invoices);
@@ -184,6 +197,16 @@ const Invoices = () => {
       ></SubscriptionModal>
       <MainHeader>
         <Title>{i18n.t("invoices.title")}</Title>
+        <MainHeaderButtonsWrapper>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenPortal}
+            disabled={portalLoading}
+          >
+            {portalLoading ? "..." : (i18n.t("invoices.manageBilling") || "Gestionar Suscripción")}
+          </Button>
+        </MainHeaderButtonsWrapper>
       </MainHeader>
       <Paper
         className={classes.mainPaper}

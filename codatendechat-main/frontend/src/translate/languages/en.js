@@ -203,6 +203,7 @@ const messages = {
 				action: "Action",
 				PAY: "PAY",
 				PAID: "PAID",
+				manageBilling: "Manage Subscription",
 			},
 			checkoutPage: {
 				steps: {

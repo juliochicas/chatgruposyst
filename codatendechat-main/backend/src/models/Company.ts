@@ -9,7 +9,8 @@ import {
   ForeignKey,
   BelongsTo,
   DataType,
-  HasMany
+  HasMany,
+  AllowNull
 } from "sequelize-typescript";
 import Contact from "./Contact";
 import Message from "./Message";
@@ -55,6 +56,14 @@ class Company extends Model<Company> {
     type: DataType.JSONB
   })
   schedules: [];
+
+  @AllowNull(true)
+  @Column
+  stripeCustomerId: string;
+
+  @AllowNull(true)
+  @Column
+  stripeSubscriptionId: string;
 
   @ForeignKey(() => Plan)
   @Column

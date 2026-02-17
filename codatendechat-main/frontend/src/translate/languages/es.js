@@ -204,6 +204,7 @@ const messages = {
         action: "Acción",
         PAY: "PAGAR",
         PAID: "PAGADO",
+        manageBilling: "Gestionar Suscripción",
       },
       checkoutPage: {
         steps: {

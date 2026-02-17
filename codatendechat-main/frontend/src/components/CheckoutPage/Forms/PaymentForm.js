@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer } from 'react';
+import React, { useState, useEffect } from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -10,8 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 
 import IconButton from '@material-ui/core/IconButton';
-import MinimizeIcon from '@material-ui/icons/Minimize';
+import RemoveIcon from '@material-ui/icons/Remove';
 import AddIcon from '@material-ui/icons/Add';
+import Switch from '@material-ui/core/Switch';
+import Chip from '@material-ui/core/Chip';
 
 import usePlans from "../../../hooks/usePlans";
 import useCompanies from "../../../hooks/useCompanies";
@@ -25,14 +27,13 @@ const useStyles = makeStyles((theme) => ({
       listStyle: 'none',
     },
   },
-  margin: {
-    margin: theme.spacing(1),
-  },
-
-
   cardHeader: {
     backgroundColor:
       theme.palette.type === 'light' ? theme.palette.grey[200] : theme.palette.grey[700],
+  },
+  featuredHeader: {
+    backgroundColor: theme.palette.primary.main,
+    color: '#fff',
   },
   cardPricing: {
     display: 'flex',
@@ -40,193 +41,259 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'baseline',
     marginBottom: theme.spacing(2),
   },
-  footer: {
-    borderTop: `1px solid ${theme.palette.divider}`,
-    marginTop: theme.spacing(8),
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    [theme.breakpoints.up('sm')]: {
-      paddingTop: theme.spacing(6),
-      paddingBottom: theme.spacing(6),
-    },
+  toggleWrap: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: theme.spacing(3),
+    gap: theme.spacing(1),
   },
-
-  customCard: {
-    display: "flex",
-    marginTop: "16px",
-    alignItems: "center",
-    flexDirection: "column",
+  discountBadge: {
+    backgroundColor: '#4caf50',
+    color: '#fff',
+    fontWeight: 'bold',
   },
-  custom: {
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "space-between",
-  }
+  qtyControl: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: theme.spacing(1),
+    marginBottom: theme.spacing(1),
+  },
+  qtyLabel: {
+    minWidth: 120,
+    textAlign: 'right',
+    marginRight: theme.spacing(1),
+  },
+  qtyValue: {
+    fontWeight: 'bold',
+    minWidth: 30,
+    textAlign: 'center',
+  },
+  selectedCard: {
+    border: `2px solid ${theme.palette.primary.main}`,
+  },
 }));
 
 
-export default function Pricing(props) {
+export default function PaymentForm(props) {
   const {
     setFieldValue,
     setActiveStep,
     activeStep,
   } = props;
 
-  const handleChangeAdd = (event, newValue) => {
-    if (newValue < 3) return
-
-    const newPrice = 11.00;
-
-    setUsersPlans(newValue);
-    setCustomValuePlans(customValuePlans + newPrice);
-  }
-
-  const handleChangeMin = (event, newValue) => {
-    if (newValue < 3) return
-
-    const newPrice = 11;
-
-    setUsersPlans(newValue);
-    setCustomValuePlans(customValuePlans - newPrice);
-  }
-
-  const handleChangeConnectionsAdd = (event, newValue) => {
-    if (newValue < 3) return
-    const newPrice = 20.00;
-    setConnectionsPlans(newValue);
-    setCustomValuePlans(customValuePlans + newPrice);
-  }
-
-  const handleChangeConnectionsMin = (event, newValue) => {
-    if (newValue < 3) return
-    const newPrice = 20;
-    setConnectionsPlans(newValue);
-    setCustomValuePlans(customValuePlans - newPrice);
-  }
-
-  const { list, finder } = usePlans();
+  const { list: listPlans } = usePlans();
   const { find } = useCompanies();
 
   const classes = useStyles();
-  const [usersPlans, setUsersPlans] = React.useState(3);
-  const [companiesPlans, setCompaniesPlans] = useState(0);
-  const [connectionsPlans, setConnectionsPlans] = React.useState(3);
-  const [storagePlans, setStoragePlans] = React.useState([]);
-  const [customValuePlans, setCustomValuePlans] = React.useState(49.00);
-  const [loading, setLoading] = React.useState(false);
+  const [plans, setPlans] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [isAnnual, setIsAnnual] = useState(false);
+  const [currentPlanId, setCurrentPlanId] = useState(null);
+
+  // Custom plan adjustments
+  const [customUsers, setCustomUsers] = useState(3);
+  const [customConnections, setCustomConnections] = useState(1);
+
   const companyId = localStorage.getItem("companyId");
 
   useEffect(() => {
     async function fetchData() {
-      await loadCompanies();
+      setLoading(true);
+      try {
+        // Load company to know current plan
+        const company = await find(companyId);
+        setCurrentPlanId(company.planId);
+
+        // Load all plans
+        const allPlans = await listPlans();
+        if (Array.isArray(allPlans)) {
+          setPlans(allPlans);
+
+          // Set custom plan defaults from the custom plan
+          const customPlan = allPlans.find(p => p.isCustom);
+          if (customPlan) {
+            setCustomUsers(customPlan.users || 3);
+            setCustomConnections(customPlan.connections || 1);
+          }
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      setLoading(false);
     }
     fetchData();
-  }, [])
+  }, []); // eslint-disable-line
 
-  const loadCompanies = async () => {
-    setLoading(true);
-    try {
-      const companiesList = await find(companyId);
-      setCompaniesPlans(companiesList.planId);
-      await loadPlans(companiesList.planId);
-    } catch (e) {
-      console.log(e);
-      // toast.error("Não foi possível carregar a lista de registros");
+  const calculatePrice = (plan) => {
+    let monthly = plan.value;
+
+    if (plan.isCustom) {
+      const baseUsers = plan.users || 3;
+      const baseConns = plan.connections || 1;
+      const extraU = Math.max(0, customUsers - baseUsers);
+      const extraC = Math.max(0, customConnections - baseConns);
+      monthly += extraU * 13 + extraC * 20;
     }
-    setLoading(false);
-  };
-  const loadPlans = async (companiesPlans) => {
-    setLoading(true);
-    try {
-      const plansCompanies = await finder(companiesPlans);
-      const plans = []
 
-      //plansCompanies.forEach((plan) => {
-      plans.push({
-        title: plansCompanies.name,
-        planId: plansCompanies.id,
-        price: plansCompanies.value,
-        description: [
-          `${plansCompanies.users} ${i18n.t("checkoutPage.pricing.users")}`,
-          `${plansCompanies.connections} ${i18n.t("checkoutPage.pricing.connection")}`,
-          `${plansCompanies.queues} ${i18n.t("checkoutPage.pricing.queues")}`
-        ],
-        users: plansCompanies.users,
-        connections: plansCompanies.connections,
-        queues: plansCompanies.queues,
-        buttonText: i18n.t("checkoutPage.pricing.SELECT"),
-        buttonVariant: 'outlined',
-      })
-
-      // setStoragePlans(data);
-      //});
-      setStoragePlans(plans);
-    } catch (e) {
-      console.log(e);
-      // toast.error("Não foi possível carregar a lista de registros");
+    if (isAnnual) {
+      return Math.round(monthly * 12 * 0.8);
     }
-    setLoading(false);
+    return monthly;
   };
 
+  const handleSelectPlan = (plan) => {
+    const payload = {
+      planId: plan.id,
+      recurrence: isAnnual ? "annual" : "monthly",
+      users: plan.isCustom ? customUsers : plan.users,
+      connections: plan.isCustom ? customConnections : plan.connections,
+    };
+    setFieldValue("plan", JSON.stringify(payload));
+    setActiveStep(activeStep + 1);
+  };
 
-  const tiers = storagePlans
+  const handleUsersChange = (delta) => {
+    setCustomUsers(prev => Math.max(1, prev + delta));
+  };
+
+  const handleConnectionsChange = (delta) => {
+    setCustomConnections(prev => Math.max(1, prev + delta));
+  };
+
+  if (loading) {
+    return (
+      <Typography variant="h6" align="center" style={{ padding: 32 }}>
+        Cargando planes...
+      </Typography>
+    );
+  }
+
   return (
     <React.Fragment>
-      <Grid container spacing={3}>
-        {tiers.map((tier) => (
-          // Enterprise card is full width at sm breakpoint
-          <Grid item key={tier.title} xs={12} sm={tier.title === 'Enterprise' ? 12 : 12} md={12}>
-            <Card>
+      {/* Monthly / Annual toggle */}
+      <div className={classes.toggleWrap}>
+        <Typography variant="body1" style={{ fontWeight: !isAnnual ? 'bold' : 'normal' }}>
+          Mensual
+        </Typography>
+        <Switch
+          checked={isAnnual}
+          onChange={() => setIsAnnual(!isAnnual)}
+          color="primary"
+        />
+        <Typography variant="body1" style={{ fontWeight: isAnnual ? 'bold' : 'normal' }}>
+          Anual
+        </Typography>
+        {isAnnual && (
+          <Chip label="-20%" className={classes.discountBadge} size="small" />
+        )}
+      </div>
+
+      <Grid container spacing={3} justifyContent="center">
+        {plans
+          .filter(p => p.isPublic !== false)
+          .map((plan) => (
+          <Grid item key={plan.id} xs={12} sm={6} md={4}>
+            <Card className={currentPlanId === plan.id ? classes.selectedCard : ''}>
               <CardHeader
-                title={tier.title}
-                subheader={tier.subheader}
+                title={plan.name}
+                subheader={plan.isFeatured ? "MÁS POPULAR" : (plan.isCustom ? "A tu medida" : "")}
                 titleTypographyProps={{ align: 'center' }}
-                subheaderTypographyProps={{ align: 'center' }}
-                action={tier.title === 'Pro' ? <StarIcon /> : null}
-                className={classes.cardHeader}
+                subheaderTypographyProps={{ align: 'center', style: plan.isFeatured ? { color: '#fff' } : {} }}
+                action={plan.isFeatured ? <StarIcon style={{ color: '#fff' }} /> : null}
+                className={plan.isFeatured ? classes.featuredHeader : classes.cardHeader}
               />
               <CardContent>
                 <div className={classes.cardPricing}>
                   <Typography component="h2" variant="h3" color="textPrimary">
-                    {
-
-                      <React.Fragment>
-                        ${tier.price.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </React.Fragment>
-                    }
+                    ${calculatePrice(plan).toLocaleString('en-US', { minimumFractionDigits: 0 })}
                   </Typography>
                   <Typography variant="h6" color="textSecondary">
-                    /{i18n.t("checkoutPage.pricing.month")}
+                    /{isAnnual ? "año" : "mes"}
                   </Typography>
                 </div>
-                <ul>
-                  {tier.description.map((line) => (
-                    <Typography component="li" variant="subtitle1" align="center" key={line}>
-                      {line}
+
+                {plan.description && (
+                  <Typography variant="subtitle1" align="center" color="textSecondary" style={{ marginBottom: 8 }}>
+                    {plan.description}
+                  </Typography>
+                )}
+
+                {/* Custom plan +/- controls */}
+                {plan.isCustom && (
+                  <div style={{ marginBottom: 16 }}>
+                    <div className={classes.qtyControl}>
+                      <Typography className={classes.qtyLabel} variant="body2">
+                        Usuarios:
+                      </Typography>
+                      <IconButton size="small" onClick={() => handleUsersChange(-1)} disabled={customUsers <= 1}>
+                        <RemoveIcon />
+                      </IconButton>
+                      <Typography className={classes.qtyValue}>{customUsers}</Typography>
+                      <IconButton size="small" onClick={() => handleUsersChange(1)}>
+                        <AddIcon />
+                      </IconButton>
+                      <Typography variant="caption" color="textSecondary">
+                        (+$13/u)
+                      </Typography>
+                    </div>
+                    <div className={classes.qtyControl}>
+                      <Typography className={classes.qtyLabel} variant="body2">
+                        Conexiones:
+                      </Typography>
+                      <IconButton size="small" onClick={() => handleConnectionsChange(-1)} disabled={customConnections <= 1}>
+                        <RemoveIcon />
+                      </IconButton>
+                      <Typography className={classes.qtyValue}>{customConnections}</Typography>
+                      <IconButton size="small" onClick={() => handleConnectionsChange(1)}>
+                        <AddIcon />
+                      </IconButton>
+                      <Typography variant="caption" color="textSecondary">
+                        (+$20/c)
+                      </Typography>
+                    </div>
+                  </div>
+                )}
+
+                {/* Feature list */}
+                {plan.features && Array.isArray(plan.features) && (
+                  <ul>
+                    {plan.features.map((feature, idx) => (
+                      <Typography component="li" variant="subtitle1" align="center" key={idx}>
+                        {feature}
+                      </Typography>
+                    ))}
+                  </ul>
+                )}
+
+                {(!plan.features || !Array.isArray(plan.features)) && (
+                  <ul>
+                    <Typography component="li" variant="subtitle1" align="center">
+                      {plan.users} {i18n.t("checkoutPage.pricing.users")}
                     </Typography>
-                  ))}
-                </ul>
+                    <Typography component="li" variant="subtitle1" align="center">
+                      {plan.connections} {i18n.t("checkoutPage.pricing.connection")}
+                    </Typography>
+                    {plan.queues > 0 && (
+                      <Typography component="li" variant="subtitle1" align="center">
+                        {plan.queues} {i18n.t("checkoutPage.pricing.queues")}
+                      </Typography>
+                    )}
+                  </ul>
+                )}
               </CardContent>
               <CardActions>
                 <Button
                   fullWidth
-                  variant={tier.buttonVariant}
+                  variant={plan.isFeatured ? "contained" : "outlined"}
                   color="primary"
-                  onClick={() => {
-                    if (tier.custom) {
-                      setFieldValue("plan", JSON.stringify({
-                        users: usersPlans,
-                        connections: connectionsPlans,
-                        price: customValuePlans,
-                      }));
-                    } else {
-                      setFieldValue("plan", JSON.stringify(tier));
-                    }
-                    setActiveStep(activeStep + 1);
-                  }
-                  }
+                  onClick={() => handleSelectPlan(plan)}
                 >
-                  {tier.buttonText}
+                  {currentPlanId === plan.id
+                    ? "Plan Actual"
+                    : (i18n.t("checkoutPage.pricing.SELECT") || "Seleccionar")
+                  }
                 </Button>
               </CardActions>
             </Card>
