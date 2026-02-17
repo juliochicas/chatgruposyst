@@ -46,6 +46,9 @@ import { WebhookModel } from "../models/Webhook";
 import MetaConnection from "../models/MetaConnection";
 import MetaConnectionQueue from "../models/MetaConnectionQueue";
 import UltraMsgConfig from "../models/UltraMsgConfig";
+import EmailConfig from "../models/EmailConfig";
+import EmailCampaign from "../models/EmailCampaign";
+import EmailCampaignShipping from "../models/EmailCampaignShipping";
 
 // eslint-disable-next-line
 const dbConfig = require("../config/database");
@@ -101,6 +104,9 @@ const models = [
   MetaConnection,
   MetaConnectionQueue,
   UltraMsgConfig,
+  EmailConfig,
+  EmailCampaign,
+  EmailCampaignShipping,
 ];
 
 sequelize.addModels(models);

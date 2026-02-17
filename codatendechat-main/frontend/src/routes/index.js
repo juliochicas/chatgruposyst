@@ -41,6 +41,8 @@ import CampaignsPhrase from "../pages/CampaignsPhrase";
 import FlowBuilder from "../pages/FlowBuilder";
 import FlowBuilderConfig from "../pages/FlowBuilderConfig";
 import UltraMsgConfig from "../pages/UltraMsgConfig";
+import EmailConfig from "../pages/EmailConfig";
+import EmailCampaigns from "../pages/EmailCampaigns";
 
 const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
@@ -190,6 +192,18 @@ const Routes = () => {
                       exact
                       path="/ultramsg-config"
                       component={UltraMsgConfig}
+                      isPrivate
+                    />
+                    <Route
+                      exact
+                      path="/email-config"
+                      component={EmailConfig}
+                      isPrivate
+                    />
+                    <Route
+                      exact
+                      path="/email-campaigns"
+                      component={EmailCampaigns}
                       isPrivate
                     />
                   </>

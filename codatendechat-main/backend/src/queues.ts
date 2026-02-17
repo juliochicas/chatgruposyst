@@ -32,6 +32,11 @@ import UltraMsgConfig from "./models/UltraMsgConfig";
 import { sendTextMessage, sendImage, sendDocument, sendVideo, sendAudio } from "./services/UltraMsgServices/UltraMsgAPI";
 import { generateMessageVariation } from "./services/CampaignService/AIMessageVariation";
 import Prompt from "./models/Prompt";
+import EmailCampaign from "./models/EmailCampaign";
+import EmailCampaignShipping from "./models/EmailCampaignShipping";
+import EmailConfig from "./models/EmailConfig";
+import { sendEmail } from "./services/EmailServices/ResendAPI";
+import { generateEmailVariation } from "./services/EmailServices/AIEmailVariation";
 
 
 const nodemailer = require('nodemailer');
@@ -77,6 +82,8 @@ export const sendScheduledMessages = new BullQueue(
 );
 
 export const campaignQueue = new BullQueue("CampaignQueue", connection);
+
+export const emailCampaignQueue = new BullQueue("EmailCampaignQueue", connection);
 
 async function handleSendMessage(job) {
   try {
@@ -895,6 +902,271 @@ async function handleDispatchCampaign(job) {
   }
 }
 
+// ========== EMAIL CAMPAIGN HANDLERS ==========
+
+async function handleProcessEmailCampaign(job) {
+  try {
+    const { campaignId, companyId } = job.data;
+
+    logger.info(`[📧] - Procesando campana de email ID: ${campaignId}`);
+
+    const campaign = await EmailCampaign.findByPk(campaignId, {
+      include: [
+        {
+          model: ContactList,
+          include: [{ model: ContactListItem, as: "contacts" }]
+        }
+      ]
+    });
+
+    if (!campaign || campaign.status === "CANCELLED") {
+      logger.info(`[📧] - Campana ${campaignId} no encontrada o cancelada`);
+      return;
+    }
+
+    const emailConfig = await EmailConfig.findOne({
+      where: { companyId, isActive: true }
+    });
+
+    if (!emailConfig) {
+      logger.error(`[📧] - No hay configuracion de email activa para empresa ${companyId}`);
+      await campaign.update({ status: "CANCELLED" });
+      return;
+    }
+
+    const contacts = campaign.contactList?.contacts?.filter(
+      c => c.email && c.email.trim() !== ""
+    ) || [];
+
+    if (contacts.length === 0) {
+      logger.warn(`[📧] - No hay contactos con email en campana ${campaignId}`);
+      await campaign.update({ status: "COMPLETED", completedAt: moment().toDate() });
+      return;
+    }
+
+    logger.info(`[📧] - ${contacts.length} contactos con email encontrados`);
+
+    // Create shipping records for each contact
+    for (const contact of contacts) {
+      await EmailCampaignShipping.findOrCreate({
+        where: {
+          emailCampaignId: campaign.id,
+          contactEmail: contact.email
+        },
+        defaults: {
+          emailCampaignId: campaign.id,
+          contactEmail: contact.email,
+          contactName: contact.name || "",
+          subject: campaign.subject,
+          body: campaign.htmlBody || campaign.textBody || "",
+          status: "PENDING"
+        }
+      });
+    }
+
+    // Process in batches
+    const batchSize = campaign.batchSize || 50;
+    const delayBetweenBatches = (campaign.delayBetweenBatches || 60) * 1000;
+
+    const pendingShippings = await EmailCampaignShipping.findAll({
+      where: { emailCampaignId: campaign.id, status: "PENDING" }
+    });
+
+    const batches = [];
+    for (let i = 0; i < pendingShippings.length; i += batchSize) {
+      batches.push(pendingShippings.slice(i, i + batchSize));
+    }
+
+    for (let batchIndex = 0; batchIndex < batches.length; batchIndex++) {
+      const batch = batches[batchIndex];
+      const delay = batchIndex * delayBetweenBatches;
+
+      emailCampaignQueue.add(
+        "DispatchEmailBatch",
+        {
+          campaignId: campaign.id,
+          companyId,
+          shippingIds: batch.map(s => s.id),
+          batchNumber: batchIndex + 1,
+          totalBatches: batches.length
+        },
+        { removeOnComplete: true, delay }
+      );
+
+      logger.info(`[📧] - Lote ${batchIndex + 1}/${batches.length} programado con delay ${delay}ms`);
+    }
+  } catch (err: any) {
+    Sentry.captureException(err);
+    logger.error(`[📧] - Error procesando campana de email: ${err.message}`);
+  }
+}
+
+async function handleDispatchEmailBatch(job) {
+  try {
+    const { campaignId, companyId, shippingIds, batchNumber, totalBatches } = job.data;
+
+    logger.info(`[📧] - Enviando lote ${batchNumber}/${totalBatches} de campana ${campaignId}`);
+
+    const campaign = await EmailCampaign.findByPk(campaignId);
+    if (!campaign || campaign.status === "CANCELLED") {
+      logger.info(`[📧] - Campana ${campaignId} cancelada, omitiendo lote`);
+      return;
+    }
+
+    const emailConfig = await EmailConfig.findOne({
+      where: { companyId, isActive: true }
+    });
+
+    if (!emailConfig) {
+      logger.error(`[📧] - Config de email no encontrada para empresa ${companyId}`);
+      return;
+    }
+
+    const shippings = await EmailCampaignShipping.findAll({
+      where: { id: { [Op.in]: shippingIds }, status: "PENDING" }
+    });
+
+    let sentCount = 0;
+    let failedCount = 0;
+
+    for (const shipping of shippings) {
+      // Check if campaign was cancelled mid-batch
+      const freshCampaign = await EmailCampaign.findByPk(campaignId);
+      if (freshCampaign?.status === "CANCELLED") {
+        logger.info(`[📧] - Campana cancelada durante envio, deteniendo lote`);
+        break;
+      }
+
+      try {
+        let emailSubject = shipping.subject;
+        let emailBody = shipping.body;
+
+        // AI variation per contact
+        if (campaign.useAIVariation && campaign.aiPromptId) {
+          try {
+            logger.info(`[🤖📧] - Generando variacion IA para: ${shipping.contactName}`);
+            const variation = await generateEmailVariation({
+              baseSubject: emailSubject,
+              baseBody: emailBody,
+              contactName: shipping.contactName || "Estimado/a",
+              contactEmail: shipping.contactEmail,
+              promptId: campaign.aiPromptId
+            });
+            emailSubject = variation.subject;
+            emailBody = variation.body;
+          } catch (aiError: any) {
+            logger.error(`[🤖📧] - Error IA, usando original: ${aiError.message}`);
+          }
+        }
+
+        // Send via Resend API
+        const result = await sendEmail(
+          { apiKey: emailConfig.apiKey },
+          {
+            from: `${emailConfig.fromName} <${emailConfig.fromEmail}>`,
+            to: shipping.contactEmail,
+            subject: emailSubject,
+            html: emailBody,
+            replyTo: emailConfig.replyTo || undefined,
+            tags: [
+              { name: "campaign_id", value: String(campaignId) },
+              { name: "shipping_id", value: String(shipping.id) }
+            ]
+          }
+        );
+
+        await shipping.update({
+          status: "SENT",
+          sentAt: new Date(),
+          resendEmailId: result.id,
+          subject: emailSubject,
+          body: emailBody
+        });
+
+        sentCount++;
+        logger.info(`[📧] - Email enviado a: ${shipping.contactEmail} (ID: ${result.id})`);
+
+        // Rate limit: Resend allows 2 req/sec, wait 600ms between sends
+        await new Promise(resolve => setTimeout(resolve, 600));
+
+      } catch (sendError: any) {
+        failedCount++;
+        await shipping.update({
+          status: "FAILED",
+          errorMessage: sendError.message
+        });
+        logger.error(`[📧] - Error enviando a ${shipping.contactEmail}: ${sendError.message}`);
+      }
+    }
+
+    // Update campaign counters
+    await campaign.reload();
+    await campaign.update({
+      totalSent: (campaign.totalSent || 0) + sentCount,
+      totalFailed: (campaign.totalFailed || 0) + failedCount
+    });
+
+    logger.info(`[📧] - Lote ${batchNumber} completado: ${sentCount} enviados, ${failedCount} fallidos`);
+
+    // Check if all batches done
+    if (batchNumber === totalBatches) {
+      const pendingCount = await EmailCampaignShipping.count({
+        where: { emailCampaignId: campaignId, status: "PENDING" }
+      });
+
+      if (pendingCount === 0) {
+        await campaign.update({
+          status: "COMPLETED",
+          completedAt: new Date()
+        });
+        logger.info(`[📧] - Campana ${campaignId} completada`);
+      }
+    }
+
+    // Emit socket update
+    const io = getIO();
+    io.to(`company-${companyId}-mainchannel`).emit(`company-${companyId}-email-campaign`, {
+      action: "update",
+      record: campaign
+    });
+
+  } catch (err: any) {
+    Sentry.captureException(err);
+    logger.error(`[📧] - Error en dispatch de lote: ${err.message}`);
+  }
+}
+
+async function handleVerifyEmailCampaigns(job) {
+  try {
+    const campaigns: { id: number; scheduledAt: string; companyId: number }[] =
+      await sequelize.query(
+        `SELECT id, "scheduledAt", "companyId" FROM "EmailCampaigns"
+         WHERE "scheduledAt" BETWEEN now() AND now() + '1 hour'::interval
+         AND status = 'SCHEDULED'`,
+        { type: QueryTypes.SELECT }
+      );
+
+    if (campaigns.length > 0) {
+      logger.info(`[📧] - Campanas de email programadas encontradas: ${campaigns.length}`);
+    }
+
+    for (const campaign of campaigns) {
+      const delay = Math.max(0, moment(campaign.scheduledAt).diff(moment(), "milliseconds"));
+
+      emailCampaignQueue.add(
+        "ProcessEmailCampaign",
+        { campaignId: campaign.id, companyId: campaign.companyId },
+        { removeOnComplete: true, delay }
+      );
+
+      logger.info(`[📧] - Campana de email ${campaign.id} programada con delay ${delay}ms`);
+    }
+  } catch (err: any) {
+    Sentry.captureException(err);
+    logger.error(`[📧] - Error verificando campanas de email: ${err.message}`);
+  }
+}
+
 async function handleLoginStatus(job) {
   const users: { id: number }[] = await sequelize.query(
     `select id from "Users" where "updatedAt" < now() - '5 minutes'::interval and online = true`,
@@ -1012,6 +1284,10 @@ export async function startQueueProcess() {
 
   campaignQueue.process("DispatchCampaign", 1, handleDispatchCampaign);
 
+  // Email campaign queue processors
+  emailCampaignQueue.process("ProcessEmailCampaign", 1, handleProcessEmailCampaign);
+  emailCampaignQueue.process("DispatchEmailBatch", 1, handleDispatchEmailBatch);
+  emailCampaignQueue.process("VerifyEmailCampaigns", 1, handleVerifyEmailCampaigns);
 
   //queueMonitor.process("VerifyQueueStatus", handleVerifyQueue);
 
@@ -1063,6 +1339,15 @@ export async function startQueueProcess() {
     {},
     {
       repeat: { cron: "*/20 * * * * *", key: "verify-campaing" },
+      removeOnComplete: true
+    }
+  );
+
+  emailCampaignQueue.add(
+    "VerifyEmailCampaigns",
+    {},
+    {
+      repeat: { cron: "*/30 * * * * *", key: "verify-email-campaigns" },
       removeOnComplete: true
     }
   );
