@@ -3,6 +3,7 @@ import React, { useContext, useEffect, useRef, useState } from "react";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 
+import { toast } from "react-toastify";
 import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import ConfirmationModal from "../ConfirmationModal";
@@ -63,6 +64,25 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 		setContactId(null);
 	}
 
+	const handleExportChat = async () => {
+		handleClose();
+		try {
+			const { data } = await api.get(`/messages/${ticket.id}/export`);
+			const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+			const url = window.URL.createObjectURL(blob);
+			const link = document.createElement("a");
+			link.href = url;
+			link.setAttribute("download", `chat_${ticket.id}_${ticket.contact?.name || "export"}_${new Date().toISOString().split("T")[0]}.json`);
+			document.body.appendChild(link);
+			link.click();
+			link.parentNode.removeChild(link);
+			window.URL.revokeObjectURL(url);
+			toast.success(i18n.t("ticketOptionsMenu.exportSuccess"));
+		} catch (err) {
+			toastError(err);
+		}
+	};
+
 	return (
 		<>
 			<Menu
@@ -86,6 +106,9 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 				</MenuItem>
 				<MenuItem onClick={handleOpenTransferModal}>
 					{i18n.t("ticketOptionsMenu.transfer")}
+				</MenuItem>
+				<MenuItem onClick={handleExportChat}>
+					{i18n.t("ticketOptionsMenu.export")}
 				</MenuItem>
 				<Can
 					role={user.profile}

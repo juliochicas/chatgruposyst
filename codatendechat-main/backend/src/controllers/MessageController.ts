@@ -11,6 +11,7 @@ import formatBody from "../helpers/Mustache";
 
 import ListMessagesService from "../services/MessageServices/ListMessagesService";
 import ShowTicketService from "../services/TicketServices/ShowTicketService";
+import Contact from "../models/Contact";
 import FindOrCreateTicketService from "../services/TicketServices/FindOrCreateTicketService";
 import UpdateTicketService from "../services/TicketServices/UpdateTicketService";
 import DeleteWhatsAppMessage from "../services/WbotServices/DeleteWhatsAppMessage";
@@ -261,4 +262,79 @@ export const sendMessageFlow = async (
       throw new AppError(err.message);
     }
   }
+};
+
+export const exportMessages = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { ticketId } = req.params;
+  const { companyId } = req.user;
+
+  const ticket = await ShowTicketService(ticketId, companyId);
+
+  if (!ticket) {
+    throw new AppError("ERR_NO_TICKET_FOUND", 404);
+  }
+
+  const messages = await Message.findAll({
+    where: { ticketId: ticket.id, companyId },
+    include: [
+      {
+        model: Contact,
+        as: "contact",
+        attributes: ["name", "number"]
+      },
+      {
+        model: Message,
+        as: "quotedMsg",
+        include: ["contact"]
+      },
+      {
+        model: Queue,
+        as: "queue"
+      }
+    ],
+    order: [["createdAt", "ASC"]]
+  });
+
+  const exportData = {
+    ticket: {
+      id: ticket.id,
+      status: ticket.status,
+      createdAt: ticket.createdAt,
+      updatedAt: ticket.updatedAt,
+      contact: {
+        name: ticket.contact?.name,
+        number: ticket.contact?.number,
+        email: ticket.contact?.email
+      },
+      queue: ticket.queue?.name || null
+    },
+    messages: messages.map(msg => ({
+      id: msg.id,
+      body: msg.body,
+      fromMe: msg.fromMe,
+      createdAt: msg.createdAt,
+      mediaType: msg.mediaType,
+      mediaUrl: msg.mediaUrl,
+      read: msg.read,
+      isDeleted: msg.isDeleted,
+      contact: msg.contact?.name || (msg.fromMe ? "Agente" : ticket.contact?.name),
+      quotedMsg: msg.quotedMsg ? {
+        body: msg.quotedMsg.body,
+        contact: msg.quotedMsg.contact?.name
+      } : null
+    })),
+    exportDate: new Date().toISOString(),
+    messageCount: messages.length
+  };
+
+  res.setHeader(
+    "Content-Disposition",
+    `attachment; filename=chat_${ticket.id}_${new Date().toISOString().split("T")[0]}.json`
+  );
+  res.setHeader("Content-Type", "application/json");
+
+  return res.json(exportData);
 };

@@ -1559,6 +1559,8 @@ const messages = {
         schedule: "Programación",
         delete: "Eliminar",
         transfer: "Transferir",
+        export: "Exportar historial",
+        exportSuccess: "Historial de chat exportado con éxito",
         registerAppointment: "Observaciones del Contacto",
         appointmentsModal: {
           title: "Observaciones del Contacto",
