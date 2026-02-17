@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atendechat | Plataforma Multiagente para WhatsApp y Redes Sociales</title>
+    <meta name="description" content="Gestiona tus chats con Atendechat: conecta WhatsApp, Instagram y Facebook, centraliza mensajes y asigna chats a tu equipo. Desde $39 USD al mes.">
+    <link rel="icon" href="../frontend/public/favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- HEADER -->
+    <header class="header" id="header">
+        <div class="container">
+            <a href="#" class="logo"><img src="../frontend/src/assets/logo.png" alt="Atendechat"></a>
+            <nav class="nav" id="nav">
+                <a href="#features">Funciones</a>
+                <a href="#how-it-works">Como Funciona</a>
+                <a href="#integrations">Integraciones</a>
+                <a href="#pricing">Precios</a>
+                <a href="#faq">FAQ</a>
+            </nav>
+            <div class="nav-buttons">
+                <a href="/login" class="btn btn-ghost">Iniciar Sesion</a>
+                <a href="/signup" class="btn btn-primary">Prueba Gratis</a>
+            </div>
+            <button class="menu-toggle" id="menuToggle" aria-label="Menu"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+    <!-- MOBILE NAV -->
+    <div class="mobile-nav" id="mobileNav">
+        <a href="#features">Funciones</a><a href="#how-it-works">Como Funciona</a><a href="#integrations">Integraciones</a><a href="#pricing">Precios</a><a href="#faq">FAQ</a>
+        <div class="mobile-nav-buttons">
+            <a href="/login" class="btn btn-ghost" style="width:100%">Iniciar Sesion</a>
+            <a href="/signup" class="btn btn-primary" style="width:100%">Prueba Gratis</a>
+        </div>
+    </div>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-bg"><div class="hero-gradient"></div><div class="hero-grid-pattern"></div></div>
+        <div class="container hero-container">
+            <div class="hero-content" data-animate>
+                <div class="hero-badge"><span class="badge-dot"></span> 14 dias gratis &middot; Sin tarjeta de credito</div>
+                <h1>Gestiona todos tus chats en <span class="gradient-text">una sola plataforma</span></h1>
+                <p class="hero-desc">Conecta WhatsApp, Instagram y Facebook. Centraliza mensajes, asigna conversaciones a tu equipo y automatiza respuestas con chatbots e inteligencia artificial.</p>
+                <div class="hero-actions">
+                    <a href="/signup" class="btn btn-primary btn-lg"><span>Comenzar Gratis</span>
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+                    <a href="#features" class="btn btn-outline btn-lg">Ver Funciones</a>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat"><strong>500+</strong><span>Empresas activas</span></div>
+                    <div class="stat-divider"></div>
+                    <div class="stat"><strong>1M+</strong><span>Mensajes al mes</span></div>
+                    <div class="stat-divider"></div>
+                    <div class="stat"><strong>99.9%</strong><span>Uptime garantizado</span></div>
+                </div>
+            </div>
+            <div class="hero-visual" data-animate data-delay="200">
+                <div class="hero-mockup">
+                    <div class="mockup-header">
+                        <div class="mockup-dots"><span></span><span></span><span></span></div>
+                        <div class="mockup-title">Atendechat</div><div></div>
+                    </div>
+                    <div class="mockup-body">
+                        <div class="mockup-sidebar">
+                            <div class="mockup-search"></div>
+                            <div class="mockup-chat-item active"><div class="chat-avatar" style="background:#7C3AED"></div><div class="chat-info"><div class="chat-name">Maria Lopez</div><div class="chat-preview">Hola, necesito ayuda con...</div></div><div class="chat-badge">3</div></div>
+                            <div class="mockup-chat-item"><div class="chat-avatar" style="background:#06B6D4"></div><div class="chat-info"><div class="chat-name">Carlos R.</div><div class="chat-preview">Gracias por la info</div></div></div>
+                            <div class="mockup-chat-item"><div class="chat-avatar" style="background:#F59E0B"></div><div class="chat-info"><div class="chat-name">Ana Garcia</div><div class="chat-preview">Cuando llega mi pedido?</div></div></div>
+                            <div class="mockup-chat-item"><div class="chat-avatar" style="background:#10B981"></div><div class="chat-info"><div class="chat-name">Pedro M.</div><div class="chat-preview">Ok perfecto!</div></div></div>
+                        </div>
+                        <div class="mockup-main">
+                            <div class="mockup-chat-header"><div class="chat-avatar small" style="background:#7C3AED"></div><div><div class="chat-name">Maria Lopez</div><div class="chat-status">En linea</div></div></div>
+                            <div class="mockup-messages">
+                                <div class="msg msg-in"><div class="msg-bubble">Hola! Necesito informacion sobre sus planes</div><div class="msg-time">10:30</div></div>
+                                <div class="msg msg-out"><div class="msg-bubble">Hola Maria! Con gusto te ayudo. Tenemos planes desde $39/mes</div><div class="msg-time">10:31</div></div>
+                                <div class="msg msg-in"><div class="msg-bubble">Que incluye el plan Pro?</div><div class="msg-time">10:32</div></div>
+                                <div class="msg msg-out"><div class="msg-bubble ai"><span class="ai-badge">IA</span> El plan Pro incluye 8 agentes, chatbots ilimitados y soporte prioritario</div><div class="msg-time">10:32</div></div>
+                            </div>
+                            <div class="mockup-input"><div class="input-placeholder">Escribe un mensaje...</div><div class="input-send"></div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-float float-1" data-animate data-delay="600"><div class="float-icon">&#128172;</div><div class="float-text">WhatsApp</div></div>
+                <div class="hero-float float-2" data-animate data-delay="800"><div class="float-icon">&#129302;</div><div class="float-text">Chatbot IA</div></div>
+                <div class="hero-float float-3" data-animate data-delay="1000"><div class="float-icon">&#128247;</div><div class="float-text">Instagram</div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- BRANDS -->
+    <section class="brands">
+        <div class="container">
+            <p class="brands-label">Integraciones disponibles</p>
+            <div class="brands-track">
+                <div class="brand-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a3.8 3.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg> WhatsApp</div>
+                <div class="brand-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="#E4405F"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg> Instagram</div>
+                <div class="brand-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="#1877F2"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</div>
+                <div class="brand-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="#0088CC"><path d="M11.944 0A12 12 0 000 12a12 12 0 0012 12 12 12 0 0012-12A12 12 0 0012 0h-.056zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 01.171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.479.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> Telegram</div>
+                <div class="brand-item"><svg width="24" height="24" viewBox="0 0 24 24" fill="#7C3AED" stroke="#7C3AED" stroke-width="1" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg> API REST</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header" data-animate>
+                <span class="section-tag">Funciones</span>
+                <h2>Todo lo que necesitas para atender mejor</h2>
+                <p>Herramientas potentes para gestionar la comunicacion de tu negocio de forma centralizada y eficiente.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" data-animate>
+                    <div class="feature-icon purple"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+                    <h3>Multiagente</h3><p>Varios agentes atienden chats simultaneamente desde una misma cuenta de WhatsApp, Instagram o Facebook.</p>
+                </div>
+                <div class="feature-card" data-animate data-delay="100">
+                    <div class="feature-icon blue"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2M9 9h.01M15 9h.01"/></svg></div>
+                    <h3>Chatbot Inteligente</h3><p>Crea flujos automatizados para responder preguntas frecuentes, calificar leads y derivar conversaciones.</p>
+                </div>
+                <div class="feature-card" data-animate data-delay="200">
+                    <div class="feature-icon green"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0110 10 10 10 0 01-10 10A10 10 0 012 12 10 10 0 0112 2z"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg></div>
+                    <h3>Inteligencia Artificial</h3><p>Integra GPT-4o y los modelos mas avanzados para respuestas inteligentes y personalizadas automaticamente.</p>
+                </div>
+                <div class="feature-card" data-animate>
+                    <div class="feature-icon orange"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg></div>
+                    <h3>Campanas Masivas</h3><p>Envia mensajes masivos a tus contactos con campanas programadas y segmentadas por listas.</p>
+                </div>
+                <div class="feature-card" data-animate data-delay="100">
+                    <div class="feature-icon pink"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+                    <h3>Dashboard y Reportes</h3><p>Monitorea el rendimiento de tu equipo con metricas en tiempo real y reportes detallados.</p>
+                </div>
+                <div class="feature-card" data-animate data-delay="200">
+                    <div class="feature-icon cyan"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+                    <h3>Respuestas Rapidas</h3><p>Configura respuestas predefinidas para agilizar la atencion. Tu equipo respondera en segundos.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header" data-animate>
+                <span class="section-tag">Como Funciona</span>
+                <h2>Comienza en minutos, no en dias</h2>
+                <p>Configurar Atendechat es rapido y sencillo. En 3 simples pasos estaras listo.</p>
+            </div>
+            <div class="steps">
+                <div class="step" data-animate><div class="step-number">1</div><div class="step-line"></div><h3>Registrate gratis</h3><p>Crea tu cuenta en segundos. No necesitas tarjeta de credito. 14 dias de prueba gratuita.</p></div>
+                <div class="step" data-animate data-delay="200"><div class="step-number">2</div><div class="step-line"></div><h3>Conecta tus canales</h3><p>Vincula tu WhatsApp con codigo QR o API oficial. Agrega Instagram y Facebook.</p></div>
+                <div class="step" data-animate data-delay="400"><div class="step-number">3</div><h3>Empieza a atender</h3><p>Tu equipo gestiona conversaciones desde multiples dispositivos al instante.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTEGRATIONS -->
+    <section class="integrations" id="integrations">
+        <div class="container integrations-container">
+            <div class="integrations-visual" data-animate>
+                <div class="int-grid">
+                    <div class="int-card"><div class="int-icon" style="background:#DCFCE7;color:#16A34A"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a3.8 3.8 0 00-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div><span>WhatsApp</span></div>
+                    <div class="int-card"><div class="int-icon" style="background:#FCE7F3;color:#DB2777"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8z"/></svg></div><span>Instagram</span></div>
+                    <div class="int-card"><div class="int-icon" style="background:#DBEAFE;color:#2563EB"><svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></div><span>Facebook</span></div>
+                    <div class="int-card"><div class="int-icon" style="background:#F3E8FF;color:#7C3AED"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg></div><span>OpenAI</span></div>
+                    <div class="int-card"><div class="int-icon" style="background:#FEF3C7;color:#D97706"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div><span>Webhooks</span></div>
+                    <div class="int-card"><div class="int-icon" style="background:#E0E7FF;color:#4F46E5"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg></div><span>Stripe</span></div>
+                </div>
+            </div>
+            <div class="integrations-content" data-animate data-delay="200">
+                <span class="section-tag">Integraciones</span>
+                <h2>Conecta con tus herramientas favoritas</h2>
+                <p>Atendechat se integra con las plataformas que ya usas para potenciar tu atencion al cliente.</p>
+                <ul class="check-list">
+                    <li><span class="check-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> WhatsApp API Oficial y QR</li>
+                    <li><span class="check-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Instagram Direct y Facebook Messenger</li>
+                    <li><span class="check-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> OpenAI (GPT-4o, O3, O1) para IA</li>
+                    <li><span class="check-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Webhooks y API REST</li>
+                    <li><span class="check-icon"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Stripe para pagos y suscripciones</li>
+                </ul>
+                <a href="/signup" class="btn btn-primary">Probar Integraciones</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- PRICING -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header" data-animate>
+                <span class="section-tag">Precios</span>
+                <h2>Planes simples y transparentes</h2>
+                <p>Elige el plan que mejor se adapte a tu negocio. Todos incluyen 14 dias de prueba gratis.</p>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card" data-animate>
+                    <div class="pricing-header"><h3 class="pricing-name">Basico</h3><p class="pricing-desc">Ideal para equipos pequenos</p></div>
+                    <div class="pricing-price-wrap"><div class="pricing-price"><span class="currency">$</span><span class="amount">39</span></div><span class="period">USD / mes</span><p class="annual">$374 USD/ano <span class="save-badge">Ahorra 20%</span></p></div>
+                    <hr class="pricing-divider">
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> 3 agentes incluidos</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> 1 conexion WhatsApp</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Chats ilimitados</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Contactos ilimitados</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Hasta 8 chatbots</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Historial de 1 ano</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Instagram y Facebook</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Integracion IA (GPT-4o)</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Soporte por WhatsApp</li>
+                    </ul>
+                    <a href="/signup" class="btn btn-outline" style="width:100%">Comenzar Gratis</a>
+                </div>
+                <div class="pricing-card featured" data-animate data-delay="150">
+                    <div class="popular-badge">Mas Popular</div>
+                    <div class="pricing-header"><h3 class="pricing-name">Pro</h3><p class="pricing-desc">Para equipos en crecimiento</p></div>
+                    <div class="pricing-price-wrap"><div class="pricing-price"><span class="currency">$</span><span class="amount">99</span></div><span class="period">USD / mes</span><p class="annual">$950 USD/ano <span class="save-badge">Ahorra 20%</span></p></div>
+                    <hr class="pricing-divider">
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> 8 agentes incluidos</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> 3 conexiones WhatsApp</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Chats ilimitados</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Chatbots ilimitados</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Historial ilimitado</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> 5+ cuentas Instagram/Facebook</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> IA avanzada</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Campanas masivas</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Exportar historial</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Soporte prioritario</li>
+                    </ul>
+                    <a href="/signup" class="btn btn-primary" style="width:100%">Comenzar Gratis</a>
+                </div>
+                <div class="pricing-card" data-animate data-delay="300">
+                    <div class="pricing-header"><h3 class="pricing-name">Personalizado</h3><p class="pricing-desc">Para operaciones grandes</p></div>
+                    <div class="pricing-price-wrap"><div class="pricing-price"><span class="amount custom-amount">A medida</span></div><span class="period">Contactanos para cotizar</span></div>
+                    <hr class="pricing-divider">
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Agentes ilimitados</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Conexiones ilimitadas</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Todo lo del plan Pro</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Onboarding personalizado</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> SLA garantizado</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Integraciones a medida</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Servidor dedicado</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M13.5 4.5l-7 7L3 8" stroke="#7C3AED" stroke-width="2" stroke-linecap="round"/></svg> Soporte 24/7</li>
+                    </ul>
+                    <a href="#" class="btn btn-outline" style="width:100%">Contactar Ventas</a>
+                </div>
+            </div>
+            <p class="pricing-note">Conexion WhatsApp adicional: $20 USD/mes &middot; Agente adicional desde: $13 USD/mes</p>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content" data-animate>
+                <h2>Comienza tu prueba gratuita de 14 dias</h2>
+                <p>Sin tarjeta de credito. Sin compromisos. Configura tu cuenta en menos de 5 minutos y transforma la atencion al cliente de tu negocio.</p>
+                <a href="/signup" class="btn btn-white btn-lg"><span>Crear Cuenta Gratis</span>
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10h12m0 0l-4-4m4 4l-4 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header" data-animate><span class="section-tag">FAQ</span><h2>Preguntas Frecuentes</h2></div>
+            <div class="faq-list">
+                <div class="faq-item" data-animate><button class="faq-q"><span>Necesito la API oficial de WhatsApp?</span><svg class="faq-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="faq-a"><p>No es obligatorio. Puedes conectar tu WhatsApp escaneando un codigo QR. Para mayor estabilidad recomendamos la API oficial de WhatsApp Business.</p></div></div>
+                <div class="faq-item" data-animate data-delay="50"><button class="faq-q"><span>Cuantos agentes pueden usar la plataforma?</span><svg class="faq-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="faq-a"><p>El plan Basico incluye 3 y el Pro incluye 8. Puedes agregar agentes adicionales por $13 USD/mes. El plan Personalizado no tiene limites.</p></div></div>
+                <div class="faq-item" data-animate data-delay="100"><button class="faq-q"><span>Puedo integrar inteligencia artificial?</span><svg class="faq-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="faq-a"><p>Si. Atendechat se integra con OpenAI (GPT-4o, O3, O1). Solo necesitas tu API Key y configurar el prompt desde la plataforma.</p></div></div>
+                <div class="faq-item" data-animate data-delay="150"><button class="faq-q"><span>Puedo cancelar en cualquier momento?</span><svg class="faq-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="faq-a"><p>Si, sin contratos de permanencia. Tu cuenta seguira activa hasta el final del periodo pagado.</p></div></div>
+                <div class="faq-item" data-animate data-delay="200"><button class="faq-q"><span>El historial de conversaciones se guarda?</span><svg class="faq-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="faq-a"><p>Si. Plan Basico guarda 1 ano, el Pro tiene historial ilimitado. Puedes exportar conversaciones en JSON.</p></div></div>
+                <div class="faq-item" data-animate data-delay="250"><button class="faq-q"><span>Ofrecen soporte tecnico?</span><svg class="faq-arrow" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 7.5l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></button><div class="faq-a"><p>Si. Todos los planes incluyen soporte por WhatsApp. Pro tiene soporte prioritario y Personalizado ofrece 24/7.</p></div></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand"><img src="../frontend/src/assets/logo.png" alt="Atendechat"><p>Plataforma multiagente para WhatsApp y redes sociales. Centraliza la comunicacion de tu empresa con inteligencia artificial.</p></div>
+                <div class="footer-col"><h4>Producto</h4><ul><li><a href="#features">Funciones</a></li><li><a href="#pricing">Precios</a></li><li><a href="#integrations">Integraciones</a></li><li><a href="#faq">FAQ</a></li></ul></div>
+                <div class="footer-col"><h4>Empresa</h4><ul><li><a href="#">Sobre Nosotros</a></li><li><a href="#">Blog</a></li><li><a href="#">Contacto</a></li></ul></div>
+                <div class="footer-col"><h4>Legal</h4><ul><li><a href="#">Terminos de Servicio</a></li><li><a href="#">Politica de Privacidad</a></li></ul></div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 Atendechat. Todos los derechos reservados.</p>
+                <div class="footer-social">
+                    <a href="#" aria-label="Facebook"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg></a>
+                    <a href="#" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8z"/></svg></a>
+                    <a href="#" aria-label="LinkedIn"><svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 110-4.125 2.062 2.062 0 010 4.125zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+    window.addEventListener('scroll',()=>{document.getElementById('header').classList.toggle('scrolled',window.scrollY>10)});
+    document.getElementById('menuToggle').addEventListener('click',()=>{document.getElementById('mobileNav').classList.toggle('open');document.getElementById('menuToggle').classList.toggle('open')});
+    document.querySelectorAll('.mobile-nav a').forEach(l=>{l.addEventListener('click',()=>{document.getElementById('mobileNav').classList.remove('open');document.getElementById('menuToggle').classList.remove('open')})});
+    document.querySelectorAll('.faq-q').forEach(b=>{b.addEventListener('click',()=>{const i=b.parentElement;const w=i.classList.contains('active');document.querySelectorAll('.faq-item').forEach(x=>x.classList.remove('active'));if(!w)i.classList.add('active')})});
+    const obs=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){const d=x.target.dataset.delay||0;setTimeout(()=>x.target.classList.add('visible'),d)}})},{threshold:.1});
+    document.querySelectorAll('[data-animate]').forEach(el=>obs.observe(el));
+    document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth',block:'start'})})});
+    </script>
+</body>
+</html>
