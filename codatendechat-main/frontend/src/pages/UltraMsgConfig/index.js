@@ -29,6 +29,7 @@ import MainHeader from "../../components/MainHeader";
 import Title from "../../components/Title";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -99,7 +100,7 @@ const UltraMsgConfig = () => {
 
   const handleSave = async () => {
     if (!instanceId || !token) {
-      toast.error("Instance ID y Token son requeridos");
+      toast.error(i18n.t("ultraMsgConfig.requiresInstanceToken"));
       return;
     }
 
@@ -111,7 +112,7 @@ const UltraMsgConfig = () => {
       });
       setConfigId(data.id);
       setHasConfig(true);
-      toast.success("Configuracion guardada correctamente");
+      toast.success(i18n.t("ultraMsgConfig.configSaved"));
     } catch (err) {
       toastError(err);
     }
@@ -124,9 +125,9 @@ const UltraMsgConfig = () => {
       const { data } = await api.post("/ultramsg-config/test");
       setStatus(data.status);
       if (data.success) {
-        toast.success("Conexion exitosa - Estado: " + data.status);
+        toast.success(i18n.t("ultraMsgConfig.connectionSuccess") + data.status);
       } else {
-        toast.error("Error de conexion: " + (data.message || "No se pudo conectar"));
+        toast.error(i18n.t("ultraMsgConfig.connectionError") + (data.message || ""));
       }
     } catch (err) {
       toastError(err);
@@ -155,7 +156,7 @@ const UltraMsgConfig = () => {
       setStatus("DISCONNECTED");
       setConfigId(null);
       setHasConfig(false);
-      toast.success("Configuracion eliminada");
+      toast.success(i18n.t("ultraMsgConfig.configDeleted"));
     } catch (err) {
       toastError(err);
     }
@@ -186,12 +187,12 @@ const UltraMsgConfig = () => {
   return (
     <MainContainer>
       <MainHeader>
-        <Title>Configuracion UltraMsg - WhatsApp API</Title>
+        <Title>{i18n.t("ultraMsgConfig.title")}</Title>
       </MainHeader>
 
       <Paper className={classes.paper} variant="outlined">
         <Typography variant="h6" gutterBottom>
-          Estado de la Conexion
+          {i18n.t("ultraMsgConfig.connectionStatus")}
         </Typography>
 
         <Box display="flex" alignItems="center" mb={2}>
@@ -206,20 +207,20 @@ const UltraMsgConfig = () => {
             style={{ marginLeft: 16 }}
             startIcon={<RefreshIcon />}
           >
-            Actualizar
+            {i18n.t("ultraMsgConfig.refresh")}
           </Button>
         </Box>
 
         <Divider style={{ marginBottom: 24 }} />
 
         <Typography variant="h6" gutterBottom>
-          Credenciales de API
+          {i18n.t("ultraMsgConfig.apiCredentials")}
         </Typography>
 
         <Card className={classes.infoCard} variant="outlined">
           <CardContent>
             <Typography variant="body2" color="textSecondary" paragraph>
-              Para obtener tu Instance ID y Token, registrate en{" "}
+              {i18n.t("ultraMsgConfig.credentialsInfo")}{" "}
               <a
                 href="https://ultramsg.com"
                 target="_blank"
@@ -227,8 +228,7 @@ const UltraMsgConfig = () => {
               >
                 ultramsg.com
               </a>
-              . Luego de crear una instancia, escanea el codigo QR con tu
-              WhatsApp y copia las credenciales aqui.
+              {i18n.t("ultraMsgConfig.credentialsInfoSuffix")}
             </Typography>
           </CardContent>
         </Card>
@@ -241,8 +241,8 @@ const UltraMsgConfig = () => {
               fullWidth
               value={instanceId}
               onChange={(e) => setInstanceId(e.target.value)}
-              placeholder="Ej: instance12345"
-              helperText="ID de tu instancia en UltraMsg"
+              placeholder={i18n.t("ultraMsgConfig.instanceIdPlaceholder")}
+              helperText={i18n.t("ultraMsgConfig.instanceIdHelperText")}
             />
           </Grid>
           <Grid item xs={12} md={6}>
@@ -252,9 +252,9 @@ const UltraMsgConfig = () => {
               fullWidth
               value={token}
               onChange={(e) => setToken(e.target.value)}
-              placeholder="Ej: abc123xyz..."
+              placeholder={i18n.t("ultraMsgConfig.tokenPlaceholder")}
               type="password"
-              helperText="Token de autenticacion de la API"
+              helperText={i18n.t("ultraMsgConfig.tokenHelperText")}
             />
           </Grid>
         </Grid>
@@ -269,7 +269,7 @@ const UltraMsgConfig = () => {
               loading ? <CircularProgress size={20} /> : <SaveIcon />
             }
           >
-            {hasConfig ? "Actualizar" : "Guardar"}
+            {hasConfig ? i18n.t("ultraMsgConfig.update") : i18n.t("ultraMsgConfig.save")}
           </Button>
 
           {hasConfig && (
@@ -286,7 +286,7 @@ const UltraMsgConfig = () => {
                 )
               }
             >
-              Probar Conexion
+              {i18n.t("ultraMsgConfig.testConnection")}
             </Button>
           )}
 
@@ -296,7 +296,7 @@ const UltraMsgConfig = () => {
               color="secondary"
               onClick={handleDelete}
             >
-              Eliminar Configuracion
+              {i18n.t("ultraMsgConfig.deleteConfig")}
             </Button>
           )}
         </div>
@@ -304,7 +304,7 @@ const UltraMsgConfig = () => {
 
       <Paper className={classes.paper} variant="outlined">
         <Typography variant="h6" gutterBottom>
-          Como Funciona
+          {i18n.t("ultraMsgConfig.howItWorks")}
         </Typography>
 
         <Grid container spacing={2}>
@@ -312,11 +312,10 @@ const UltraMsgConfig = () => {
             <Card variant="outlined">
               <CardContent>
                 <Typography variant="subtitle1" gutterBottom>
-                  1. Configurar
+                  {i18n.t("ultraMsgConfig.step1Title")}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Ingresa tu Instance ID y Token de UltraMsg. Prueba la conexion
-                  para verificar que todo funcione correctamente.
+                  {i18n.t("ultraMsgConfig.step1Description")}
                 </Typography>
               </CardContent>
             </Card>
@@ -325,11 +324,10 @@ const UltraMsgConfig = () => {
             <Card variant="outlined">
               <CardContent>
                 <Typography variant="subtitle1" gutterBottom>
-                  2. Crear Campana
+                  {i18n.t("ultraMsgConfig.step2Title")}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  Al crear una campana, selecciona "UltraMsg" como canal de
-                  envio. Activa la variacion con IA para evitar baneos.
+                  {i18n.t("ultraMsgConfig.step2Description")}
                 </Typography>
               </CardContent>
             </Card>
@@ -338,12 +336,10 @@ const UltraMsgConfig = () => {
             <Card variant="outlined">
               <CardContent>
                 <Typography variant="subtitle1" gutterBottom>
-                  3. Anti-Ban
+                  {i18n.t("ultraMsgConfig.step3Title")}
                 </Typography>
                 <Typography variant="body2" color="textSecondary">
-                  El sistema envia mensajes con delays aleatorios, pausas
-                  automaticas y variaciones de IA para cada contacto,
-                  minimizando el riesgo de baneo.
+                  {i18n.t("ultraMsgConfig.step3Description")}
                 </Typography>
               </CardContent>
             </Card>

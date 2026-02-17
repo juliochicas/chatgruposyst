@@ -33,6 +33,7 @@ import {
   Email as EmailIcon,
 } from "@material-ui/icons";
 
+import { i18n } from "../../translate/i18n";
 import MainContainer from "../../components/MainContainer";
 import MainHeader from "../../components/MainHeader";
 import MainHeaderButtonsWrapper from "../../components/MainHeaderButtonsWrapper";
@@ -75,12 +76,12 @@ const statusColors = {
 };
 
 const statusLabels = {
-  DRAFT: "Borrador",
-  SCHEDULED: "Programada",
-  SENDING: "Enviando",
-  PAUSED: "Pausada",
-  COMPLETED: "Completada",
-  CANCELLED: "Cancelada",
+  DRAFT: i18n.t("emailCampaigns.statusDraft"),
+  SCHEDULED: i18n.t("emailCampaigns.statusScheduled"),
+  SENDING: i18n.t("emailCampaigns.statusSending"),
+  PAUSED: i18n.t("emailCampaigns.statusPaused"),
+  COMPLETED: i18n.t("emailCampaigns.statusCompleted"),
+  CANCELLED: i18n.t("emailCampaigns.statusCancelled"),
 };
 
 const reducer = (state, action) => {
@@ -168,7 +169,7 @@ const EmailCampaigns = () => {
     if (!deletingId) return;
     try {
       await api.delete(`/email-campaigns/${deletingId}`);
-      toast.success("Campana eliminada");
+      toast.success(i18n.t("emailCampaigns.deleted"));
       fetchCampaigns();
     } catch (err) {
       toastError(err);
@@ -180,7 +181,7 @@ const EmailCampaigns = () => {
   const handleStart = async (id) => {
     try {
       const { data } = await api.post(`/email-campaigns/${id}/start`);
-      toast.success(`${data.message} (${data.contactCount} contactos)`);
+      toast.success(`${data.message} (${data.contactCount} ${i18n.t("emailCampaigns.contacts")})`);
     } catch (err) {
       toastError(err);
     }
@@ -189,7 +190,7 @@ const EmailCampaigns = () => {
   const handleCancel = async (id) => {
     try {
       await api.post(`/email-campaigns/${id}/cancel`);
-      toast.success("Campana cancelada");
+      toast.success(i18n.t("emailCampaigns.cancelled"));
     } catch (err) {
       toastError(err);
     }
@@ -215,12 +216,12 @@ const EmailCampaigns = () => {
       />
 
       <ConfirmationModal
-        title="Eliminar Campana de Email"
+        title={i18n.t("emailCampaigns.deleteTitle")}
         open={confirmDelete}
         onClose={() => setConfirmDelete(false)}
         onConfirm={handleDelete}
       >
-        Estas seguro de que deseas eliminar esta campana?
+        {i18n.t("emailCampaigns.deleteConfirm")}
       </ConfirmationModal>
 
       {/* Report Dialog */}
@@ -231,7 +232,7 @@ const EmailCampaigns = () => {
         fullWidth
       >
         <DialogTitle>
-          Reporte de Campana:{" "}
+          {i18n.t("emailCampaigns.reportTitle")}{" "}
           {reportData?.campaign?.name || ""}
         </DialogTitle>
         <DialogContent dividers>
@@ -240,7 +241,7 @@ const EmailCampaigns = () => {
               <Grid container spacing={3} style={{ marginBottom: 16 }}>
                 <Grid item xs={6} md={3}>
                   <Paper className={classes.reportCard} variant="outlined">
-                    <Typography variant="caption">Total</Typography>
+                    <Typography variant="caption">{i18n.t("emailCampaigns.total")}</Typography>
                     <Typography className={classes.reportValue}>
                       {reportData.stats.totalContacts}
                     </Typography>
@@ -248,7 +249,7 @@ const EmailCampaigns = () => {
                 </Grid>
                 <Grid item xs={6} md={3}>
                   <Paper className={classes.reportCard} variant="outlined">
-                    <Typography variant="caption">Enviados</Typography>
+                    <Typography variant="caption">{i18n.t("emailCampaigns.sent")}</Typography>
                     <Typography
                       className={classes.reportValue}
                       style={{ color: "#4caf50" }}
@@ -259,7 +260,7 @@ const EmailCampaigns = () => {
                 </Grid>
                 <Grid item xs={6} md={3}>
                   <Paper className={classes.reportCard} variant="outlined">
-                    <Typography variant="caption">Fallidos</Typography>
+                    <Typography variant="caption">{i18n.t("emailCampaigns.failed")}</Typography>
                     <Typography
                       className={classes.reportValue}
                       style={{ color: "#f44336" }}
@@ -270,7 +271,7 @@ const EmailCampaigns = () => {
                 </Grid>
                 <Grid item xs={6} md={3}>
                   <Paper className={classes.reportCard} variant="outlined">
-                    <Typography variant="caption">Pendientes</Typography>
+                    <Typography variant="caption">{i18n.t("emailCampaigns.pending")}</Typography>
                     <Typography
                       className={classes.reportValue}
                       style={{ color: "#ff9800" }}
@@ -284,7 +285,7 @@ const EmailCampaigns = () => {
               {reportData.stats.totalContacts > 0 && (
                 <Box mb={2}>
                   <Typography variant="body2" gutterBottom>
-                    Progreso: {reportData.stats.successRate}%
+                    {i18n.t("emailCampaigns.progress")}: {reportData.stats.successRate}%
                   </Typography>
                   <LinearProgress
                     variant="determinate"
@@ -296,11 +297,11 @@ const EmailCampaigns = () => {
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Email</TableCell>
-                    <TableCell>Nombre</TableCell>
-                    <TableCell>Estado</TableCell>
-                    <TableCell>Enviado</TableCell>
-                    <TableCell>Error</TableCell>
+                    <TableCell>{i18n.t("emailCampaigns.email")}</TableCell>
+                    <TableCell>{i18n.t("emailCampaigns.name")}</TableCell>
+                    <TableCell>{i18n.t("emailCampaigns.status")}</TableCell>
+                    <TableCell>{i18n.t("emailCampaigns.sentAt")}</TableCell>
+                    <TableCell>{i18n.t("emailCampaigns.error")}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -338,16 +339,16 @@ const EmailCampaigns = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setReportOpen(false)} color="primary">
-            Cerrar
+            {i18n.t("emailCampaigns.close")}
           </Button>
         </DialogActions>
       </Dialog>
 
       <MainHeader>
-        <Title>Campanas de Email</Title>
+        <Title>{i18n.t("emailCampaigns.title")}</Title>
         <MainHeaderButtonsWrapper>
           <TextField
-            placeholder="Buscar..."
+            placeholder={i18n.t("emailCampaigns.search")}
             size="small"
             variant="outlined"
             value={searchParam}
@@ -366,7 +367,7 @@ const EmailCampaigns = () => {
             onClick={() => handleOpenModal()}
             startIcon={<AddIcon />}
           >
-            Nueva Campana
+            {i18n.t("emailCampaigns.newCampaign")}
           </Button>
         </MainHeaderButtonsWrapper>
       </MainHeader>
@@ -375,14 +376,14 @@ const EmailCampaigns = () => {
         <Table size="small">
           <TableHead>
             <TableRow>
-              <TableCell>Nombre</TableCell>
-              <TableCell>Asunto</TableCell>
-              <TableCell>Lista</TableCell>
-              <TableCell>Estado</TableCell>
-              <TableCell>Enviados</TableCell>
-              <TableCell>Fallidos</TableCell>
-              <TableCell>IA</TableCell>
-              <TableCell align="center">Acciones</TableCell>
+              <TableCell>{i18n.t("emailCampaigns.name")}</TableCell>
+              <TableCell>{i18n.t("emailCampaigns.subject")}</TableCell>
+              <TableCell>{i18n.t("emailCampaigns.list")}</TableCell>
+              <TableCell>{i18n.t("emailCampaigns.status")}</TableCell>
+              <TableCell>{i18n.t("emailCampaigns.sent")}</TableCell>
+              <TableCell>{i18n.t("emailCampaigns.failed")}</TableCell>
+              <TableCell>{i18n.t("emailCampaigns.ai")}</TableCell>
+              <TableCell align="center">{i18n.t("emailCampaigns.actions")}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -394,7 +395,7 @@ const EmailCampaigns = () => {
                       style={{ fontSize: 48, color: "#ccc", marginBottom: 8 }}
                     />
                     <Typography variant="body2" color="textSecondary">
-                      No hay campanas de email. Crea una nueva para comenzar.
+                      {i18n.t("emailCampaigns.emptyState")}
                     </Typography>
                   </Box>
                 </TableCell>
@@ -420,7 +421,7 @@ const EmailCampaigns = () => {
                 <TableCell>{campaign.totalFailed || 0}</TableCell>
                 <TableCell>
                   {campaign.useAIVariation ? (
-                    <Chip size="small" label="IA" color="primary" />
+                    <Chip size="small" label={i18n.t("emailCampaigns.ai")} color="primary" />
                   ) : (
                     "-"
                   )}
@@ -429,7 +430,7 @@ const EmailCampaigns = () => {
                   <IconButton
                     size="small"
                     onClick={() => handleViewReport(campaign.id)}
-                    title="Ver Reporte"
+                    title={i18n.t("emailCampaigns.viewReport")}
                   >
                     <ReportIcon />
                   </IconButton>
@@ -441,7 +442,7 @@ const EmailCampaigns = () => {
                       <IconButton
                         size="small"
                         onClick={() => handleOpenModal(campaign.id)}
-                        title="Editar"
+                        title={i18n.t("emailCampaigns.edit")}
                       >
                         <EditIcon />
                       </IconButton>
@@ -449,7 +450,7 @@ const EmailCampaigns = () => {
                         size="small"
                         color="primary"
                         onClick={() => handleStart(campaign.id)}
-                        title="Iniciar Envio"
+                        title={i18n.t("emailCampaigns.startSending")}
                       >
                         <PlayIcon />
                       </IconButton>
@@ -461,7 +462,7 @@ const EmailCampaigns = () => {
                       size="small"
                       color="secondary"
                       onClick={() => handleCancel(campaign.id)}
-                      title="Cancelar"
+                      title={i18n.t("emailCampaigns.cancel")}
                     >
                       <StopIcon />
                     </IconButton>
@@ -474,7 +475,7 @@ const EmailCampaigns = () => {
                         setDeletingId(campaign.id);
                         setConfirmDelete(true);
                       }}
-                      title="Eliminar"
+                      title={i18n.t("emailCampaigns.delete")}
                     >
                       <DeleteIcon />
                     </IconButton>
@@ -492,7 +493,7 @@ const EmailCampaigns = () => {
               onClick={() => setPageNumber((prev) => prev + 1)}
               disabled={loading}
             >
-              {loading ? <CircularProgress size={20} /> : "Cargar mas"}
+              {loading ? <CircularProgress size={20} /> : i18n.t("emailCampaigns.loadMore")}
             </Button>
           </Box>
         )}

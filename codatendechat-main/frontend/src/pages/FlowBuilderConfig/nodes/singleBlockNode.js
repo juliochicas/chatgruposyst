@@ -14,6 +14,7 @@ import React, { memo } from "react";
 import { Handle } from "react-flow-renderer";
 import { useNodeStorage } from "../../../stores/useNodeStorage";
 import { Typography } from "@mui/material";
+import { i18n } from "../../../../translate/i18n";
 
 export default memo(({ data, isConnectable, id }) => {
   const storageItems = useNodeStorage();
@@ -95,7 +96,7 @@ export default memo(({ data, isConnectable, id }) => {
             color: "#EC5858"
           }}
         />
-        <div style={{ color: "#232323", fontSize: "16px" }}>Conteúdo</div>
+        <div style={{ color: "#232323", fontSize: "16px" }}>{i18n.t("flowBuilder.content")}</div>
       </div>
       <div style={{ color: "#232323", fontSize: "12px", width: 180 }}>
         {data.seq.map(item => (
@@ -159,7 +160,7 @@ export default memo(({ data, isConnectable, id }) => {
                     data.elements.filter(itemLoc => itemLoc.number === item)[0]
                       .value
                   }{" "}
-                  segundos
+                  {i18n.t("flowBuilder.seconds")}
                 </Typography>
               </div>
             )}

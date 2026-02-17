@@ -9,6 +9,7 @@ import React, { memo } from "react";
 
 import { Handle } from "react-flow-renderer";
 import { useNodeStorage } from "../../../stores/useNodeStorage";
+import { i18n } from "../../../../translate/i18n";
 
 export default memo(({ data, isConnectable, id }) => {
   const storageItems = useNodeStorage();
@@ -91,7 +92,7 @@ export default memo(({ data, isConnectable, id }) => {
             color: "#1FBADC"
           }}
         />
-        <div style={{ color: "#232323", fontSize: "16px" }}>Randomizador</div>
+        <div style={{ color: "#232323", fontSize: "16px" }}>{i18n.t("flowBuilder.randomizer")}</div>
       </div>
       <div
         style={{

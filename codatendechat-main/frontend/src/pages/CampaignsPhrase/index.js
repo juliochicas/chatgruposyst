@@ -166,7 +166,7 @@ const CampaignsPhrase = () => {
       <MainHeader>
         <Grid style={{ width: "99.6%" }} container>
           <Grid xs={12} sm={8} item>
-            <Title>Campanhas</Title>
+            <Title>{i18n.t("campaignPhrase.title")}</Title>
           </Grid>
           <Grid xs={12} sm={4} item>
             <Grid spacing={2} container>
@@ -199,7 +199,7 @@ const CampaignsPhrase = () => {
                 >
                   <Stack direction={"row"} gap={1}>
                     <AddCircle />
-                    {"Campanha"}
+                    {i18n.t("campaignPhrase.campaignButton")}
                   </Stack>
                 </Button>
               </Grid>
@@ -215,10 +215,10 @@ const CampaignsPhrase = () => {
         <Stack>
           <Grid container style={{ padding: "8px" }}>
             <Grid item xs={4}>
-              Nome
+              {i18n.t("contacts.table.name")}
             </Grid>
             <Grid item xs={4} align="center">
-              Status
+              {i18n.t("flowBuilder.status")}
             </Grid>
             <Grid item xs={4} align="end">
               {i18n.t("contacts.table.actions")}
@@ -252,7 +252,7 @@ const CampaignsPhrase = () => {
                   </Grid>
                   <Grid item xs={4} align="center" style={{ color: "#252525" }}>
                     <Stack justifyContent={"center"} height={"100%"}>
-                      {flow.status ? "Ativo" : "Desativado"}
+                      {flow.status ? i18n.t("flowBuilder.active") : i18n.t("flowBuilder.inactive")}
                     </Stack>
                   </Grid>
                   <Grid item xs={4} align="end">

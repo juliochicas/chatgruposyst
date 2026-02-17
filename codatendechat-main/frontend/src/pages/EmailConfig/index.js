@@ -29,6 +29,7 @@ import MainHeader from "../../components/MainHeader";
 import Title from "../../components/Title";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -111,7 +112,7 @@ const EmailConfig = () => {
 
   const handleSave = async () => {
     if (!apiKey || !fromEmail || !fromName) {
-      toast.error("API Key, email remitente y nombre son requeridos");
+      toast.error(i18n.t("emailConfig.requiresApiKey"));
       return;
     }
 
@@ -125,7 +126,7 @@ const EmailConfig = () => {
       });
       setConfigId(data.id);
       setHasConfig(true);
-      toast.success("Configuracion de email guardada correctamente");
+      toast.success(i18n.t("emailConfig.configSaved"));
     } catch (err) {
       toastError(err);
     }
@@ -139,10 +140,10 @@ const EmailConfig = () => {
       if (data.success) {
         setIsActive(true);
         setDomains(data.domains || []);
-        toast.success("Conexion exitosa con Resend");
+        toast.success(i18n.t("emailConfig.connectionSuccess"));
       } else {
         setIsActive(false);
-        toast.error("Error: " + (data.message || "No se pudo conectar"));
+        toast.error(i18n.t("emailConfig.connectionError") + (data.message || "No se pudo conectar"));
       }
     } catch (err) {
       toastError(err);
@@ -152,7 +153,7 @@ const EmailConfig = () => {
 
   const handleSendTestEmail = async () => {
     if (!testEmail) {
-      toast.error("Ingresa un email de prueba");
+      toast.error(i18n.t("emailConfig.enterTestEmail"));
       return;
     }
     setSendingTest(true);
@@ -163,7 +164,7 @@ const EmailConfig = () => {
       if (data.success) {
         toast.success(data.message);
       } else {
-        toast.error("Error: " + data.message);
+        toast.error(i18n.t("emailConfig.connectionError") + data.message);
       }
     } catch (err) {
       toastError(err);
@@ -194,7 +195,7 @@ const EmailConfig = () => {
       setConfigId(null);
       setHasConfig(false);
       setDomains([]);
-      toast.success("Configuracion eliminada");
+      toast.success(i18n.t("emailConfig.configDeleted"));
     } catch (err) {
       toastError(err);
     }
@@ -203,12 +204,12 @@ const EmailConfig = () => {
   return (
     <MainContainer>
       <MainHeader>
-        <Title>Configuracion Email - Resend API</Title>
+        <Title>{i18n.t("emailConfig.title")}</Title>
       </MainHeader>
 
       <Paper className={classes.paper} variant="outlined">
         <Typography variant="h6" gutterBottom>
-          Estado de la Conexion
+          {i18n.t("emailConfig.connectionStatus")}
         </Typography>
 
         <Box display="flex" alignItems="center" mb={2}>
@@ -225,7 +226,7 @@ const EmailConfig = () => {
             style={{ marginLeft: 16 }}
             startIcon={<RefreshIcon />}
           >
-            Actualizar
+            {i18n.t("emailConfig.refresh")}
           </Button>
         </Box>
 
@@ -241,7 +242,7 @@ const EmailConfig = () => {
         <Divider style={{ marginBottom: 24 }} />
 
         <Typography variant="h6" gutterBottom>
-          Credenciales de Resend
+          {i18n.t("emailConfig.resendCredentials")}
         </Typography>
 
         <Card className={classes.infoCard} variant="outlined">
@@ -264,7 +265,7 @@ const EmailConfig = () => {
         <Grid container spacing={3}>
           <Grid item xs={12} md={6}>
             <TextField
-              label="API Key"
+              label={i18n.t("emailConfig.apiKey")}
               variant="outlined"
               fullWidth
               value={apiKey}
@@ -276,7 +277,7 @@ const EmailConfig = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Email Remitente"
+              label={i18n.t("emailConfig.senderEmail")}
               variant="outlined"
               fullWidth
               value={fromEmail}
@@ -287,7 +288,7 @@ const EmailConfig = () => {
           </Grid>
           <Grid item xs={12} md={6}>
             <TextField
-              label="Nombre Remitente"
+              label={i18n.t("emailConfig.senderName")}
               variant="outlined"
               fullWidth
               value={fromName}
@@ -319,7 +320,7 @@ const EmailConfig = () => {
               loading ? <CircularProgress size={20} /> : <SaveIcon />
             }
           >
-            {hasConfig ? "Actualizar" : "Guardar"}
+            {hasConfig ? i18n.t("emailConfig.update") : i18n.t("emailConfig.save")}
           </Button>
 
           {hasConfig && (
@@ -332,7 +333,7 @@ const EmailConfig = () => {
                 testing ? <CircularProgress size={20} /> : <SendIcon />
               }
             >
-              Probar Conexion
+              {i18n.t("emailConfig.testConnection")}
             </Button>
           )}
 
@@ -342,7 +343,7 @@ const EmailConfig = () => {
               color="secondary"
               onClick={handleDelete}
             >
-              Eliminar
+              {i18n.t("emailConfig.deleteConfig")}
             </Button>
           )}
         </div>
@@ -350,12 +351,12 @@ const EmailConfig = () => {
         {hasConfig && isActive && (
           <div className={classes.testEmailSection}>
             <Typography variant="h6" gutterBottom>
-              Enviar Email de Prueba
+              {i18n.t("emailConfig.sendTestEmail")}
             </Typography>
             <Grid container spacing={2} alignItems="flex-end">
               <Grid item xs={12} md={6}>
                 <TextField
-                  label="Email de prueba"
+                  label={i18n.t("emailConfig.testEmailPlaceholder")}
                   variant="outlined"
                   fullWidth
                   value={testEmail}
@@ -378,7 +379,7 @@ const EmailConfig = () => {
                   }
                   fullWidth
                 >
-                  Enviar Prueba
+                  {i18n.t("emailConfig.sendTest")}
                 </Button>
               </Grid>
             </Grid>
@@ -388,7 +389,7 @@ const EmailConfig = () => {
 
       <Paper className={classes.paper} variant="outlined">
         <Typography variant="h6" gutterBottom>
-          Como Funciona
+          {i18n.t("emailConfig.howItWorks")}
         </Typography>
 
         <Grid container spacing={2}>

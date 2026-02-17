@@ -205,8 +205,8 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
       >
         <DialogTitle>
           {metaConnectionId
-            ? "Editar Conexion Meta"
-            : "Agregar Conexion Facebook / Instagram / Threads"}
+            ? i18n.t("metaConnection.editTitle")
+            : i18n.t("metaConnection.addTitle")}
         </DialogTitle>
         <Formik
           initialValues={metaConnection}
@@ -226,7 +226,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                 {!metaConnectionId && (
                   <div style={{ marginBottom: 16 }}>
                     <p style={{ marginBottom: 8, fontWeight: 500 }}>
-                      Canal:
+                      {i18n.t("metaConnection.channel")}
                     </p>
                     <span
                       className={`${classes.channelChip} ${classes.channelFacebook} ${selectedChannel === "facebook" ? "selected" : ""}`}
@@ -273,7 +273,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                             checked={values.isDefault}
                           />
                         }
-                        label="Predeterminado"
+                        label={i18n.t("metaConnection.default")}
                       />
                     </Grid>
                   </Grid>
@@ -282,7 +282,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                 <div>
                   <Field
                     as={TextField}
-                    label="Mensaje de bienvenida"
+                    label={i18n.t("metaConnection.greetingMessage")}
                     multiline
                     rows={3}
                     fullWidth
@@ -294,7 +294,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                 <div>
                   <Field
                     as={TextField}
-                    label="Mensaje de conclusion"
+                    label={i18n.t("metaConnection.completionMessage")}
                     multiline
                     rows={3}
                     fullWidth
@@ -306,7 +306,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                 <div>
                   <Field
                     as={TextField}
-                    label="Mensaje fuera de horario"
+                    label={i18n.t("metaConnection.outOfHoursMessage")}
                     multiline
                     rows={3}
                     fullWidth
@@ -318,7 +318,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                 <div>
                   <Field
                     as={TextField}
-                    label="Mensaje de calificacion"
+                    label={i18n.t("metaConnection.ratingMessage")}
                     multiline
                     rows={3}
                     fullWidth
@@ -376,8 +376,8 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                 </FormControl>
 
                 <div>
-                  <h3>Redireccion de Cola</h3>
-                  <p>Seleccione una cola para redirigir contactos sin cola asignada</p>
+                  <h3>{i18n.t("metaConnection.queueRedirection")}</h3>
+                  <p>{i18n.t("metaConnection.queueRedirectionDesc")}</p>
                   <Grid container spacing={2}>
                     <Grid item sm={6}>
                       <Field
@@ -395,7 +395,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                         selectedQueueIds={selectedQueueId}
                         onChange={(selectedId) => setSelectedQueueId(selectedId)}
                         multiple={false}
-                        title="Cola de Transferencia"
+                        title={i18n.t("metaConnection.transferQueue")}
                       />
                     </Grid>
                   </Grid>
@@ -432,7 +432,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                   disabled={isSubmitting}
                   variant="outlined"
                 >
-                  Cancelar
+                  {i18n.t("metaConnection.cancel")}
                 </Button>
                 <Button
                   type="submit"
@@ -441,7 +441,7 @@ const MetaConnectionModal = ({ open, onClose, metaConnectionId }) => {
                   variant="contained"
                   className={classes.btnWrapper}
                 >
-                  {metaConnectionId ? "Guardar" : "Agregar"}
+                  {metaConnectionId ? i18n.t("metaConnection.save") : i18n.t("metaConnection.add")}
                   {isSubmitting && (
                     <CircularProgress
                       size={24}

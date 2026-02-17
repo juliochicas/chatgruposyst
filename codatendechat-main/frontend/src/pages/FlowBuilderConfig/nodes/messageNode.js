@@ -8,6 +8,7 @@ import React, { memo } from "react";
 
 import { Handle } from "react-flow-renderer";
 import { useNodeStorage } from "../../../stores/useNodeStorage";
+import { i18n } from "../../../../translate/i18n";
 
 export default memo(({ data, isConnectable, id }) => {
   const storageItems = useNodeStorage();
@@ -83,7 +84,7 @@ export default memo(({ data, isConnectable, id }) => {
             marginTop: "4px"
           }}
         />
-        <div style={{ color: "#ededed", fontSize: "16px" }}>Mensagem</div>
+        <div style={{ color: "#ededed", fontSize: "16px" }}>{i18n.t("flowBuilder.message")}</div>
       </div>
       <div style={{ color: "#ededed", fontSize: "12px", width: 180 }}>
         {data.label}

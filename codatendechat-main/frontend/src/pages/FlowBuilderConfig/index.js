@@ -144,7 +144,7 @@ const initialNodes = [
   {
     id: "1",
     position: { x: 250, y: 100 },
-    data: { label: "Inicio do fluxo" },
+    data: { label: i18n.t("flowBuilder.startFlow") },
     type: "start",
   },
 ];
@@ -191,7 +191,7 @@ const FlowBuilderConfig = () => {
           {
             id: "1",
             position: { x: posX, y: posY },
-            data: { label: "Inicio do fluxo" },
+            data: { label: i18n.t("flowBuilder.startFlow") },
             type: "start",
           },
         ];
@@ -217,7 +217,7 @@ const FlowBuilderConfig = () => {
           {
             id: geraStringAleatoria(30),
             position: { x: posX, y: posY },
-            data: { label: `Intervalo ${data.sec} seg.`, sec: data.sec },
+            data: { label: `${i18n.t("flowBuilder.interval")} ${data.sec} ${i18n.t("flowBuilder.sec")}`, sec: data.sec },
             type: "interval",
           },
         ];
@@ -459,7 +459,7 @@ const FlowBuilderConfig = () => {
         connections: edges,
       })
       .then((res) => {
-        toast.success("Fluxo salvo com sucesso");
+        toast.success(i18n.t("flowBuilder.savedSuccess"));
       });
   };
 
@@ -555,7 +555,7 @@ const FlowBuilderConfig = () => {
           }}
         />
       ),
-      name: "Inicio",
+      name: i18n.t("flowBuilder.start"),
       type: "start",
     },
     {
@@ -566,7 +566,7 @@ const FlowBuilderConfig = () => {
           }}
         />
       ),
-      name: "Conteúdo",
+      name: i18n.t("flowBuilder.content"),
       type: "content",
     },
     {
@@ -577,7 +577,7 @@ const FlowBuilderConfig = () => {
           }}
         />
       ),
-      name: "Menu",
+      name: i18n.t("flowBuilder.menuLabel"),
       type: "menu",
     },
     {
@@ -588,7 +588,7 @@ const FlowBuilderConfig = () => {
           }}
         />
       ),
-      name: "Randomizador",
+      name: i18n.t("flowBuilder.randomizer"),
       type: "random",
     },
     {
@@ -599,7 +599,7 @@ const FlowBuilderConfig = () => {
           }}
         />
       ),
-      name: "Intervalo",
+      name: i18n.t("flowBuilder.interval"),
       type: "interval",
     },
     {
@@ -610,7 +610,7 @@ const FlowBuilderConfig = () => {
           }}
         />
       ),
-      name: "Ticket",
+      name: i18n.t("flowBuilder.ticketLabel"),
       type: "ticket",
     },
     {
@@ -648,7 +648,7 @@ const FlowBuilderConfig = () => {
           }}
         />
       ),
-      name: "Pergunta",
+      name: i18n.t("flowBuilder.questionLabel"),
       type: "question",
     },
   ];
@@ -842,7 +842,7 @@ const FlowBuilderConfig = () => {
       />
 
       <MainHeader>
-        <Title>Desenhe seu fluxo</Title>
+        <Title>{i18n.t("flowBuilder.drawYourFlow")}</Title>
       </MainHeader>
       {!loading && (
         <Paper
@@ -887,7 +887,7 @@ const FlowBuilderConfig = () => {
             <Typography
               style={{ color: "#010101", textShadow: "#010101 1px 0 10px" }}
             >
-              Não se esqueça de salvar seu fluxo!
+              {i18n.t("flowBuilder.rememberToSave")}
             </Typography>
           </Stack>
           <Stack direction={"row"} justifyContent={"end"}>

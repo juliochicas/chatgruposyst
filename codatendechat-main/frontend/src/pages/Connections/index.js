@@ -160,14 +160,14 @@ const Connections = () => {
 			const instagram = params.get("instagram") || "";
 			const threads = params.get("threads") || "";
 			toast.success(
-				`Conectado con éxito${pageName ? ` a Facebook (${pageName})` : ""}${instagram ? ` e Instagram (@${instagram})` : ""}${threads ? ` y Threads (@${threads})` : ""}`
+				`${i18n.t("metaConnection.connectedSuccess")}${pageName ? ` a Facebook (${pageName})` : ""}${instagram ? ` e Instagram (@${instagram})` : ""}${threads ? ` y Threads (@${threads})` : ""}`
 			);
 			fetchMetaConnections();
 			// Clean URL
 			window.history.replaceState({}, document.title, "/connections");
 		}
 		if (params.get("error")) {
-			toast.error("Error al conectar con Meta. Intente nuevamente.");
+			toast.error(i18n.t("metaConnection.connectionError"));
 			window.history.replaceState({}, document.title, "/connections");
 		}
 	}, [fetchMetaConnections]);
@@ -270,8 +270,8 @@ const Connections = () => {
 		if (action === "deleteMeta") {
 			setConfirmModalInfo({
 				action: action,
-				title: "Eliminar",
-				message: "Esta seguro? Esta accion no puede ser revertida.",
+				title: i18n.t("connections.confirmationModal.deleteTitle"),
+				message: i18n.t("connections.confirmationModal.deleteMessage"),
 				whatsAppId: whatsAppId, // reusing field for metaConnectionId
 			});
 		}
@@ -365,7 +365,7 @@ const Connections = () => {
 			return (
 				<Chip
 					size="small"
-					label="Conectado"
+					label={i18n.t("metaConnection.connected")}
 					style={{ backgroundColor: green[500], color: "#fff" }}
 				/>
 			);
@@ -382,7 +382,7 @@ const Connections = () => {
 				startIcon={<LinkIcon />}
 				onClick={() => handleConnectMeta(metaConn.id)}
 			>
-				Conectar con Meta
+				{i18n.t("metaConnection.connectWithMeta")}
 			</Button>
 		);
 	};
@@ -495,7 +495,7 @@ const Connections = () => {
 									}}
 									onClick={handleOpenMetaModal}
 								>
-									+ Facebook / Instagram / Threads
+									{i18n.t("metaConnection.addMeta")}
 								</Button>
 							</>
 						)}
@@ -506,7 +506,7 @@ const Connections = () => {
 			{/* WhatsApp Connections Table */}
 			<Paper className={classes.mainPaper} variant="outlined">
 				<div className={classes.sectionTitle}>
-					WhatsApp
+					{i18n.t("metaConnection.whatsappSection")}
 				</div>
 				<Table size="small">
 					<TableHead>
@@ -609,28 +609,28 @@ const Connections = () => {
 					<span style={{ color: "#1877F2", fontWeight: "bold", fontSize: 18 }}>FB</span>
 					<span style={{ color: "#E4405F", fontWeight: "bold", fontSize: 18 }}>IG</span>
 					<span style={{ color: "#000", fontWeight: "bold", fontSize: 18 }}>TH</span>
-					Facebook / Instagram / Threads
+					{i18n.t("metaConnection.metaSectionTitle")}
 				</div>
 				<Table size="small">
 					<TableHead>
 						<TableRow>
-							<TableCell align="center">Canal</TableCell>
-							<TableCell align="center">Nombre</TableCell>
-							<TableCell align="center">Estado</TableCell>
-							<TableCell align="center">Cuenta</TableCell>
+							<TableCell align="center">{i18n.t("metaConnection.channelHeader")}</TableCell>
+							<TableCell align="center">{i18n.t("metaConnection.nameHeader")}</TableCell>
+							<TableCell align="center">{i18n.t("metaConnection.statusHeader")}</TableCell>
+							<TableCell align="center">{i18n.t("metaConnection.accountHeader")}</TableCell>
 							<Can
 								role={user.profile}
 								perform="connections-page:actionButtons"
 								yes={() => (
-									<TableCell align="center">Sesion</TableCell>
+									<TableCell align="center">{i18n.t("metaConnection.sessionHeader")}</TableCell>
 								)}
 							/>
-							<TableCell align="center">Ultima actualizacion</TableCell>
+							<TableCell align="center">{i18n.t("metaConnection.lastUpdateHeader")}</TableCell>
 							<Can
 								role={user.profile}
 								perform="connections-page:editOrDeleteConnection"
 								yes={() => (
-									<TableCell align="center">Acciones</TableCell>
+									<TableCell align="center">{i18n.t("metaConnection.actionsHeader")}</TableCell>
 								)}
 							/>
 						</TableRow>
@@ -702,7 +702,7 @@ const Connections = () => {
 								) : (
 									<TableRow>
 										<TableCell colSpan={7} align="center" style={{ color: "#999", padding: 20 }}>
-											No hay conexiones de Facebook/Instagram/Threads. Haga clic en "+ Facebook / Instagram / Threads" para agregar una.
+											{i18n.t("metaConnection.noMetaConnections")}
 										</TableCell>
 									</TableRow>
 								)}

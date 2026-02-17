@@ -188,7 +188,7 @@ const FlowBuilder = () => {
         setDeletingContact(null);
         setReloadData((old) => !old);
       });
-      toast.success("Fluxo excluído com sucesso");
+      toast.success(i18n.t("flowBuilder.deletedSuccess"));
     } catch (err) {
       toastError(err);
     }
@@ -202,7 +202,7 @@ const FlowBuilder = () => {
           setDeletingContact(null);
           setReloadData((old) => !old);
         });
-      toast.success("Fluxo duplicado com sucesso");
+      toast.success(i18n.t("flowBuilder.duplicatedSuccess"));
     } catch (err) {
       toastError(err);
     }
@@ -270,13 +270,13 @@ const FlowBuilder = () => {
         }
       >
         {deletingContact
-          ? `Tem certeza que deseja deletar este fluxo? Todas as integrações relacionados serão perdidos.`
+          ? i18n.t("flowBuilder.deleteConfirmMessage")
           : `${i18n.t("contacts.confirmationModal.importMessage")}`}
       </ConfirmationModal>
       <ConfirmationModal
         title={
           deletingContact
-            ? `Deseja duplicar o fluxo ${deletingContact.name}?`
+            ? `${i18n.t("flowBuilder.duplicateConfirmTitle")} ${deletingContact.name}?`
             : `${i18n.t("contacts.confirmationModal.importTitlte")}`
         }
         open={confirmDuplicateOpen}
@@ -286,11 +286,11 @@ const FlowBuilder = () => {
         }
       >
         {deletingContact
-          ? `Tem certeza que deseja duplicar este fluxo?`
+          ? i18n.t("flowBuilder.duplicateConfirmMessage")
           : `${i18n.t("contacts.confirmationModal.importMessage")}`}
       </ConfirmationModal>
       <MainHeader>
-        <Title>Fluxos de conversa</Title>
+        <Title>{i18n.t("flowBuilder.title")}</Title>
         <MainHeaderButtonsWrapper>
           <TextField
             placeholder={i18n.t("contacts.searchPlaceholder")}
@@ -328,7 +328,7 @@ const FlowBuilder = () => {
               {i18n.t("contacts.table.name")}
             </Grid>
             <Grid item xs={4} align="center">
-              Status
+              {i18n.t("flowBuilder.status")}
             </Grid>
             <Grid item xs={4} align="end">
               {i18n.t("contacts.table.actions")}
@@ -371,7 +371,7 @@ const FlowBuilder = () => {
                   onClick={() => history.push(`/flowbuilder/${contact.id}`)}
                 >
                   <Stack justifyContent={"center"} height={"100%"}>
-                    {contact.active ? "Ativo" : "Desativado"}
+                    {contact.active ? i18n.t("flowBuilder.active") : i18n.t("flowBuilder.inactive")}
                   </Stack>
                 </Grid>
                 <Grid item xs={4} align="end">

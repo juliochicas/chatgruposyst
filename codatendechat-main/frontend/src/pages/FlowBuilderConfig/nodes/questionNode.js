@@ -15,6 +15,7 @@ import { Handle } from "react-flow-renderer";
 import { useNodeStorage } from "../../../stores/useNodeStorage";
 import { Typography } from "@mui/material";
 import BallotIcon from '@mui/icons-material/Ballot';
+import { i18n } from "../../../../translate/i18n";
 
 
 export default memo(({ data, isConnectable, id }) => {
@@ -97,7 +98,7 @@ export default memo(({ data, isConnectable, id }) => {
             color: "#EC5858",
           }}
         />
-        <div style={{ color: "#232323", fontSize: "16px" }}>Pergunta</div>
+        <div style={{ color: "#232323", fontSize: "16px" }}>{i18n.t("flowBuilder.questionLabel")}</div>
       </div>
       <div style={{ color: "#232323", fontSize: "12px", width: 180 }}>
          <div style={{ gap: "5px", padding: "6px" }}>
