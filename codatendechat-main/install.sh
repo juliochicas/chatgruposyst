@@ -2,7 +2,7 @@
 set -e
 
 # ╔══════════════════════════════════════════════════════════╗
-# ║           ATENDECHAT - EASY INSTALLER                   ║
+# ║           CHATEAYA - EASY INSTALLER                     ║
 # ║  One command to install everything with Docker           ║
 # ╚══════════════════════════════════════════════════════════╝
 
@@ -15,7 +15,7 @@ NC='\033[0m'
 print_banner() {
   echo ""
   echo -e "${BLUE}╔══════════════════════════════════════════════╗${NC}"
-  echo -e "${BLUE}║       ${GREEN}ATENDECHAT - EASY INSTALLER${BLUE}            ║${NC}"
+  echo -e "${BLUE}║       ${GREEN}CHATEAYA - EASY INSTALLER${BLUE}              ║${NC}"
   echo -e "${BLUE}║       ${NC}v6.0.0 - Docker Edition${BLUE}                ║${NC}"
   echo -e "${BLUE}╚══════════════════════════════════════════════╝${NC}"
   echo ""
@@ -77,11 +77,11 @@ collect_config() {
   FRONTEND_PORT=${FRONTEND_PORT:-3000}
 
   # Database
-  read -p "Database name [atendechat]: " DB_NAME
-  DB_NAME=${DB_NAME:-atendechat}
+  read -p "Database name [chateaya]: " DB_NAME
+  DB_NAME=${DB_NAME:-chateaya}
 
-  read -p "Database user [atendechat]: " DB_USER
-  DB_USER=${DB_USER:-atendechat}
+  read -p "Database user [chateaya]: " DB_USER
+  DB_USER=${DB_USER:-chateaya}
 
   # Auto-generate secure passwords
   DB_PASS=$(gen_password)
