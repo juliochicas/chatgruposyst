@@ -190,7 +190,9 @@ const EmbedChat = ({ user, token, embedToken }) => {
   }, [loadMessages]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   }, [messages]);
 
   const handleSendMessage = async () => {

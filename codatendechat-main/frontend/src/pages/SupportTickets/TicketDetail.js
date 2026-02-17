@@ -212,7 +212,9 @@ const TicketDetail = () => {
   };
 
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
   const handleSendMessage = async () => {
