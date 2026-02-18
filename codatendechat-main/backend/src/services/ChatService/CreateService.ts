@@ -19,10 +19,9 @@ const CreateService = async (data: Data): Promise<Chat> => {
   });
 
   if (Array.isArray(users) && users.length > 0) {
-    await ChatUser.create({ chatId: record.id, userId: ownerId });
-    for (let user of users) {
-      await ChatUser.create({ chatId: record.id, userId: user.id });
-    }
+    const chatUsers = users.map(user => ({ chatId: record.id, userId: user.id }));
+    chatUsers.unshift({ chatId: record.id, userId: ownerId });
+    await ChatUser.bulkCreate(chatUsers);
   }
 
   await record.reload({
