@@ -114,41 +114,47 @@ const UpdateTicketService = async ({
     }
 
     if (status !== undefined && ["closed"].indexOf(status) > -1) {
-      const { complationMessage, ratingMessage } = await ShowWhatsAppService(
-        ticket.whatsappId,
-        companyId
-      );
+      try {
+        const { complationMessage, ratingMessage } = await ShowWhatsAppService(
+          ticket.whatsappId,
+          companyId
+        );
 
-      if (setting?.value === "enabled") {
-        if (ticketTraking.ratingAt == null) {
-          const ratingTxt = ratingMessage || "";
-          let bodyRatingMessage = `\u200e${ratingTxt}\n\n`;
-          bodyRatingMessage +=
-            "Escriba del 1 al 3 para calificar nuestra atención:\n*1* - _Insatisfecho_\n*2* - _Satisfecho_\n*3* - _Muy Satisfecho_\n\n";
-          await SendWhatsAppMessage({ body: bodyRatingMessage, ticket });
+        if (setting?.value === "enabled") {
+          if (ticketTraking.ratingAt == null) {
+            const ratingTxt = ratingMessage || "";
+            let bodyRatingMessage = `\u200e${ratingTxt}\n\n`;
+            bodyRatingMessage +=
+              "Escriba del 1 al 3 para calificar nuestra atención:\n*1* - _Insatisfecho_\n*2* - _Satisfecho_\n*3* - _Muy Satisfecho_\n\n";
+            await SendWhatsAppMessage({ body: bodyRatingMessage, ticket });
 
-          await ticketTraking.update({
-            ratingAt: moment().toDate(),
-            userId: actionUserId
-          });
-
-          io.to(`company-${ticket.companyId}-open`)
-            .to(`queue-${ticket.queueId}-open`)
-            .to(ticketId.toString())
-            .emit(`company-${ticket.companyId}-ticket`, {
-              action: "delete",
-              ticketId: ticket.id
+            await ticketTraking.update({
+              ratingAt: moment().toDate(),
+              userId: actionUserId
             });
 
-          return { ticket, oldStatus, oldUserId };
-        }
-        ticketTraking.ratingAt = moment().toDate();
-        ticketTraking.rated = false;
-      }
+            io.to(`company-${ticket.companyId}-open`)
+              .to(`queue-${ticket.queueId}-open`)
+              .to(ticketId.toString())
+              .emit(`company-${ticket.companyId}-ticket`, {
+                action: "delete",
+                ticketId: ticket.id
+              });
 
-      if (!isNil(complationMessage) && complationMessage !== "") {
-        const body = `\u200e${complationMessage}`;
-        await SendWhatsAppMessage({ body, ticket });
+            return { ticket, oldStatus, oldUserId };
+          }
+          ticketTraking.ratingAt = moment().toDate();
+          ticketTraking.rated = false;
+        }
+
+        if (!isNil(complationMessage) && complationMessage !== "") {
+          const body = `\u200e${complationMessage}`;
+          await SendWhatsAppMessage({ body, ticket });
+        }
+      } catch (err) {
+        // If the WhatsApp connection is not found or fails for any reason,
+        // we log it but proceed to close the ticket in the database.
+        console.warn(`UpdateTicketService: Failed to send closing messages for ticket ${ticket.id} (likely deleted connection). Error: ${err.message}`);
       }
       await ticket.update({
         promptId: null,
@@ -176,7 +182,7 @@ const UpdateTicketService = async ({
       // Mensaje de transferencia de la COLA
       if (oldQueueId !== queueId && oldUserId === userId && !isNil(oldQueueId) && !isNil(queueId)) {
 
-        const {language} = await Company.findByPk(companyId);
+        const { language } = await Company.findByPk(companyId);
         const queue = await Queue.findByPk(queueId);
         const wbot = await GetTicketWbot(ticket);
 
@@ -198,14 +204,14 @@ const UpdateTicketService = async ({
         // Mensaje de transferencia del AGENTE
         if (oldUserId !== userId && oldQueueId === queueId && !isNil(oldUserId) && !isNil(userId)) {
 
-          const {language} = await Company.findByPk(companyId);
+          const { language } = await Company.findByPk(companyId);
           const wbot = await GetTicketWbot(ticket);
           const nome = await ShowUserService(ticketData.userId);
 
           const translatedMessage = {
-              'pt': "*Mensaje automático*:\nFue transferido al agente *" + nome.name + "*\naguarde, ¡ya lo vamos a atender!",
-              'en': "*Automatic message*:\nYou have been transferred to agent *" + nome.name + "*\nplease wait, we'll assist you soon!",
-              'es': "*Mensaje automático*:\nFue transferido al agente *" + nome.name + "*\naguarde, ¡ya lo vamos a atender!"
+            'pt': "*Mensaje automático*:\nFue transferido al agente *" + nome.name + "*\naguarde, ¡ya lo vamos a atender!",
+            'en': "*Automatic message*:\nYou have been transferred to agent *" + nome.name + "*\nplease wait, we'll assist you soon!",
+            'es': "*Mensaje automático*:\nFue transferido al agente *" + nome.name + "*\naguarde, ¡ya lo vamos a atender!"
           }
 
           const queueChangedMessage = await wbot.sendMessage(
@@ -220,7 +226,7 @@ const UpdateTicketService = async ({
           // Mensaje de transferencia del AGENTE y de la COLA
           if (oldUserId !== userId && !isNil(oldUserId) && !isNil(userId) && oldQueueId !== queueId && !isNil(oldQueueId) && !isNil(queueId)) {
 
-            const {language} = await Company.findByPk(companyId);
+            const { language } = await Company.findByPk(companyId);
             const wbot = await GetTicketWbot(ticket);
             const queue = await Queue.findByPk(queueId);
             const nome = await ShowUserService(ticketData.userId);
@@ -241,7 +247,7 @@ const UpdateTicketService = async ({
           } else
             if (oldUserId !== undefined && isNil(userId) && oldQueueId !== queueId && !isNil(queueId)) {
 
-              const {language} = await Company.findByPk(companyId);
+              const { language } = await Company.findByPk(companyId);
               const queue = await Queue.findByPk(queueId);
               const wbot = await GetTicketWbot(ticket);
 

@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
+import { Op } from "sequelize";
 import { getIO } from "../libs/socket";
 import Ticket from "../models/Ticket";
+import Whatsapp from "../models/Whatsapp";
 
 import CreateTicketService from "../services/TicketServices/CreateTicketService";
 import DeleteTicketService from "../services/TicketServices/DeleteTicketService";
@@ -195,7 +197,61 @@ export const update = async (
   });
 
 
+
   return res.status(200).json(ticket);
+};
+
+export const removeOrphaned = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { companyId } = req.user;
+
+  // 1. Get all distinct whatsappIds from open/pending tickets
+  const tickets: Ticket[] = await Ticket.findAll({
+    where: {
+      companyId,
+      status: { [Op.in]: ["open", "pending"] }
+    },
+    attributes: ["whatsappId"],
+    group: ["whatsappId"],
+  });
+
+  const whatsappIds = tickets.map((t) => t.whatsappId).filter((id) => id);
+
+  if (whatsappIds.length > 0) {
+    // 2. Find which of these IDs actually exist in the Whatsapp table
+    const existingWhatsapps = await Whatsapp.findAll({
+      where: {
+        id: { [Op.in]: whatsappIds },
+        companyId
+      },
+      attributes: ["id"]
+    });
+
+    const existingIds = existingWhatsapps.map((w) => w.id);
+
+    // 3. Identify IDs that are in Tickets but NOT in Whatsapp table
+    const missingIds = whatsappIds.filter((id) => !existingIds.includes(id));
+
+    if (missingIds.length > 0) {
+      // 4. Close tickets associated with these missing IDs
+      const [count] = await Ticket.update(
+        { status: "closed" },
+        {
+          where: {
+            whatsappId: { [Op.in]: missingIds },
+            companyId,
+            status: { [Op.in]: ["open", "pending"] }
+          }
+        }
+      );
+
+      return res.status(200).json({ message: `${count} tickets huérfanos cerrados.`, count });
+    }
+  }
+
+  return res.status(200).json({ message: "No se encontraron tickets huérfanos.", count: 0 });
 };
 
 

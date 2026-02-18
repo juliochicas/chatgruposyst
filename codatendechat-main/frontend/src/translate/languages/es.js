@@ -784,6 +784,8 @@ const messages = {
       ticketsManager: {
         buttons: {
           newTicket: "Nuevo",
+          cleanOrphans: "Limpiar Huérfanos",
+          confirmCleanOrphans: "¿Está seguro que desea limpiar los tickets huérfanos? (Tickets sin conexión de WhatsApp válida)",
         },
       },
       ticketsQueueSelect: {

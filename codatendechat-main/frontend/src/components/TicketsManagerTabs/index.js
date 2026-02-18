@@ -10,6 +10,7 @@ import Tab from "@material-ui/core/Tab";
 import Badge from "@material-ui/core/Badge";
 import MoveToInboxIcon from "@material-ui/icons/MoveToInbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -25,6 +26,9 @@ import TicketsQueueSelect from "../TicketsQueueSelect";
 import { Button } from "@material-ui/core";
 import { TagsFilter } from "../TagsFilter";
 import { UsersFilter } from "../UsersFilter";
+import api from "../../services/api";
+import toastError from "../../errors/toastError";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles(theme => ({
   ticketsWrapper: {
@@ -159,6 +163,7 @@ const TicketsManagerTabs = () => {
   const [selectedQueueIds, setSelectedQueueIds] = useState(userQueueIds || []);
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [cleaningOrphans, setCleaningOrphans] = useState(false);
 
   useEffect(() => {
     if (user.profile.toUpperCase() === "ADMIN") {
@@ -222,6 +227,18 @@ const TicketsManagerTabs = () => {
     setSelectedUsers(users);
   };
 
+  const handleCleanOrphans = async () => {
+    if (!window.confirm(i18n.t("ticketsManager.buttons.confirmCleanOrphans"))) return;
+    setCleaningOrphans(true);
+    try {
+      const { data } = await api.post("/tickets/remove-orphaned");
+      toast.success(data.message);
+    } catch (err) {
+      toastError(err);
+    }
+    setCleaningOrphans(false);
+  };
+
 
 
   return (
@@ -283,6 +300,24 @@ const TicketsManagerTabs = () => {
             >
               {i18n.t("ticketsManager.buttons.newTicket")}
             </Button>
+            <Can
+              role={user.profile}
+              perform="tickets-manager:showall"
+              yes={() => (
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  disabled={cleaningOrphans}
+                  onClick={handleCleanOrphans}
+                  startIcon={<DeleteSweepIcon />}
+                >
+                  {cleaningOrphans
+                    ? "Limpiando..."
+                    : i18n.t("ticketsManager.buttons.cleanOrphans")}
+                </Button>
+              )}
+            />
             <Can
               role={user.profile}
               perform="tickets-manager:showall"

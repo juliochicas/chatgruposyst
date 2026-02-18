@@ -13,6 +13,7 @@ import {
 
 import {
   AllInboxRounded,
+  DeleteSweep,
   HourglassEmptyRounded,
   MoveToInbox,
   Search
@@ -27,6 +28,9 @@ import TicketsQueueSelect from "../TicketsQueueSelect";
 
 import { i18n } from "../../translate/i18n";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import api from "../../services/api";
+import toastError from "../../errors/toastError";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   ticketsWrapper: {
@@ -114,11 +118,23 @@ const TicketsManager = () => {
   const { user } = useContext(AuthContext);
 
   const [openCount, setOpenCount] = useState(0);
-  const [pendingCount, setPendingCount] = useState(0);
-  const [selectedTags, setSelectedTags] = useState([]);
+
+  const [cleaningOrphans, setCleaningOrphans] = useState(false);
 
   const userQueueIds = user.queues.map((q) => q.id);
   const [selectedQueueIds, setSelectedQueueIds] = useState(userQueueIds || []);
+
+  const handleCleanOrphans = async () => {
+    if (!window.confirm(i18n.t("ticketsManager.buttons.confirmCleanOrphans"))) return;
+    setCleaningOrphans(true);
+    try {
+      const { data } = await api.post("/tickets/remove-orphaned");
+      toast.success(data.message);
+    } catch (err) {
+      toastError(err);
+    }
+    setCleaningOrphans(false);
+  };
 
 
   useEffect(() => {
@@ -227,6 +243,24 @@ const TicketsManager = () => {
         >
           {i18n.t("ticketsManager.buttons.newTicket")}
         </Button>
+        <Can
+          role={user.profile}
+          perform="tickets-manager:showall"
+          yes={() => (
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="small"
+              disabled={cleaningOrphans}
+              onClick={handleCleanOrphans}
+              startIcon={<DeleteSweep />}
+            >
+              {cleaningOrphans
+                ? "Limpiando..."
+                : i18n.t("ticketsManager.buttons.cleanOrphans")}
+            </Button>
+          )}
+        />
         <Can
           role={user.profile}
           perform="tickets-manager:showall"
