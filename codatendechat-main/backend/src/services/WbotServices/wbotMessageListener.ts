@@ -1511,36 +1511,6 @@ const handleChartbot = async (
       }
     });
 
-    // const botList = async () => {
-    // const sectionsRows = [];
-
-    // queues.forEach((queue, index) => {
-    //   sectionsRows.push({
-    //     title: queue.name,
-    //     rowId: `${index + 1}`
-    //   });
-    // });
-
-    // const sections = [
-    //   {
-    //     rows: sectionsRows
-    //   }
-    // ];
-
-    //   const listMessage = {
-    //     text: formatBody(`\u200e${queue.greetingMessage}`, ticket.contact),
-    //     buttonText: "Escolha uma opção",
-    //     sections
-    //   };
-
-    //   const sendMsg = await wbot.sendMessage(
-    //     `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-    //     listMessage
-    //   );
-
-    //   await verifyMessage(sendMsg, ticket, ticket.contact);
-    // }
-
     const botButton = async () => {
       const buttons = [];
       queueOptions.forEach((option, i) => {
@@ -1597,10 +1567,6 @@ const handleChartbot = async (
 
       await verifyMessage(sendMsg, ticket, ticket.contact);
     };
-
-    // if (buttonActive.value === "list") {
-    //   return botList();
-    // };
 
     if (buttonActive.value === "button" && QueueOption.length <= 4) {
       return botButton();
