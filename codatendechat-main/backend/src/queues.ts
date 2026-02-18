@@ -470,10 +470,8 @@ function getProcessedMessage(msg: string, variables: any[], contact: any) {
   }
 
   variables.forEach(variable => {
-    if (finalMessage.includes(`{${variable.key}}`)) {
-      const regex = new RegExp(`{${variable.key}}`, "g");
-      finalMessage = finalMessage.replace(regex, variable.value);
-    }
+    const key = `{${variable.key}}`;
+    finalMessage = finalMessage.replaceAll(key, variable.value);
   });
 
   return finalMessage;
