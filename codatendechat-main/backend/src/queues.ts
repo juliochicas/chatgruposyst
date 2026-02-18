@@ -744,18 +744,27 @@ async function handleDispatchCampaign(job) {
 }
 
 async function handleLoginStatus(job) {
-  const users: { id: number }[] = await sequelize.query(
-    `select id from "Users" where "updatedAt" < now() - '5 minutes'::interval and online = true`,
-    { type: QueryTypes.SELECT }
-  );
-  for (let item of users) {
-    try {
-      const user = await User.findByPk(item.id);
-      await user.update({ online: false });
-      logger.info(`Usuário passado para offline: ${item.id}`);
-    } catch (e: any) {
-      Sentry.captureException(e);
+  try {
+    const [_, users] = await User.update(
+      { online: false },
+      {
+        where: {
+          updatedAt: {
+            [Op.lt]: Sequelize.literal("NOW() - INTERVAL '5 MINUTES'"),
+          },
+          online: true,
+        },
+        returning: true,
+      }
+    );
+
+    if (users) {
+      users.forEach((user: User) => {
+        logger.info(`Usuário passado para offline: ${user.id}`);
+      });
     }
+  } catch (e: any) {
+    Sentry.captureException(e);
   }
 }
 
