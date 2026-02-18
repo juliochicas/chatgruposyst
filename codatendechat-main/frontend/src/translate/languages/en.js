@@ -190,6 +190,13 @@ const messages = {
 				},
 				open: "Open",
 				seeTicket: "View Ticket",
+				flow: "Flow",
+				all: "All",
+				default: "Default",
+				empty: {
+					title: "Empty Kanban",
+					description: "There are no tickets or kanban tags configured. Create tags with the Kanban option enabled in Tags to start.",
+				},
 			},
 			invoices: {
 				title: "Invoices",
@@ -1844,7 +1851,7 @@ const messages = {
 				sessionHeader: "Session",
 				lastUpdateHeader: "Last update",
 				accountHeader: "Account",
-			actionsHeader: "Actions",
+				actionsHeader: "Actions",
 			},
 			backendErrors: {
 				ERR_INTERNAL_SERVER_ERROR: "An unexpected error occurred. Please try again later",

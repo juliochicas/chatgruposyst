@@ -191,6 +191,9 @@ const messages = {
         },
         open: "Abierto",
         seeTicket: "Ver Ticket",
+        flow: "Flujo",
+        all: "Todos",
+        default: "Estándar",
         empty: {
           title: "Kanban vacío",
           description: "No hay tickets ni etiquetas kanban configuradas. Crea etiquetas con la opción Kanban activada en Etiquetas para comenzar.",
@@ -592,17 +595,6 @@ const messages = {
         title: {
           add: "Agregar contacto",
           edit: "Editar contacto",
-        },
-        form: {
-          mainInfo: "Datos del contacto",
-          extraInfo: "Información adicional",
-          name: "Nombre",
-          number: "Número de WhatsApp",
-          email: "Email",
-          companyName: "Empresa",
-          extraName: "Nombre del campo",
-          extraValue: "Valor",
-          whatsapp: "Conexión Origen: ",
         },
         formErrors: {
           name: {

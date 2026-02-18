@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Typography, CircularProgress } from "@material-ui/core";
+import { Typography, CircularProgress, Paper, FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
 import api from "../../services/api";
 import { AuthContext } from "../../context/Auth/AuthContext";
 import Board from "react-trello";
@@ -11,10 +11,22 @@ import { useHistory } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   root: {
     display: "flex",
-    alignItems: "center",
+    flexDirection: "column",
+    alignItems: "flex-start",
     padding: theme.spacing(1),
     flex: 1,
     width: "100%",
+  },
+  header: {
+    width: "100%",
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(2),
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  formControl: {
+    minWidth: 200,
   },
   button: {
     background: "#10a110",
@@ -45,6 +57,7 @@ const Kanban = () => {
   const [loadingKanban, setLoadingKanban] = useState(true);
   const [file, setFile] = useState({ lanes: [] });
   const [tickets, setTickets] = useState([]);
+  const [selectedFlow, setSelectedFlow] = useState("all");
 
   const jsonString = (user.queues || []).map((queue) => queue?.UserQueue?.queueId).filter(Boolean);
 
@@ -133,69 +146,73 @@ const Kanban = () => {
     const parentTags = tags.filter(
       (t) => !t.parentId && t.children && t.children.length > 0
     );
-    const childTagIds = new Set();
-    parentTags.forEach((p) => {
-      if (p.children) {
-        p.children.forEach((c) => childTagIds.add(c.id));
-      }
-    });
+
     const standaloneTags = tags.filter(
       (t) => !t.parentId && (!t.children || t.children.length === 0)
     );
 
-    const lanes = [
-      {
+    const lanes = [];
+
+    // 0. Default Lane (Open Tickets) -> Show if "all" or "default"
+    if (selectedFlow === "all" || selectedFlow === "default") {
+      lanes.push({
         id: "lane0",
         title: i18n.t("kanban.open"),
         label: filteredTickets.length.toString(),
         cards: buildTicketCards(filteredTickets),
-      },
-    ];
-
-    // Add standalone tags as regular lanes
-    standaloneTags.forEach((tag) => {
-      const tagTickets = getTicketsForTag(tag.id);
-      lanes.push({
-        id: tag.id.toString(),
-        title: tag.name + getAiIndicator(tag),
-        label: tagTickets.length.toString(),
-        cards: buildTicketCards(tagTickets),
-        style: { backgroundColor: tag.color, color: "white" },
       });
-    });
+    }
 
-    // Add parent categories with their children
-    parentTags.forEach((parent) => {
-      // Parent category lane (collects tickets directly assigned to parent)
-      const parentTickets = getTicketsForTag(parent.id);
-      lanes.push({
-        id: parent.id.toString(),
-        title: "📁 " + parent.name + getAiIndicator(parent),
-        label: parentTickets.length.toString(),
-        cards: buildTicketCards(parentTickets),
-        style: {
-          backgroundColor: parent.color,
-          color: "white",
-          borderTop: "3px solid rgba(0,0,0,0.3)",
-        },
-      });
-
-      // Child lanes under this parent
-      if (parent.children) {
-        parent.children.forEach((child) => {
-          const childTickets = getTicketsForTag(child.id);
-          lanes.push({
-            id: child.id.toString(),
-            title: parent.name + " › " + child.name + getAiIndicator(child),
-            label: childTickets.length.toString(),
-            cards: buildTicketCards(childTickets),
-            style: {
-              backgroundColor: child.color || parent.color,
-              color: "white",
-              opacity: 0.95,
-            },
-          });
+    // 1. Standalone Tags -> Show if "all" or "default"
+    if (selectedFlow === "all" || selectedFlow === "default") {
+      standaloneTags.forEach((tag) => {
+        const tagTickets = getTicketsForTag(tag.id);
+        lanes.push({
+          id: tag.id.toString(),
+          title: tag.name + getAiIndicator(tag),
+          label: tagTickets.length.toString(),
+          cards: buildTicketCards(tagTickets),
+          style: { backgroundColor: tag.color, color: "white" },
         });
+      });
+    }
+
+    // 2. Flow Tags (Parents and their children)
+    parentTags.forEach((parent) => {
+      // Show if "all" OR if this specific parent is currently selected
+      if (selectedFlow === "all" || selectedFlow === parent.id.toString()) {
+
+        // Parent category lane
+        const parentTickets = getTicketsForTag(parent.id);
+        lanes.push({
+          id: parent.id.toString(),
+          title: "📁 " + parent.name + getAiIndicator(parent),
+          label: parentTickets.length.toString(),
+          cards: buildTicketCards(parentTickets),
+          style: {
+            backgroundColor: parent.color,
+            color: "white",
+            borderTop: "3px solid rgba(0,0,0,0.3)",
+          },
+        });
+
+        // Child lanes under this parent
+        if (parent.children) {
+          parent.children.forEach((child) => {
+            const childTickets = getTicketsForTag(child.id);
+            lanes.push({
+              id: child.id.toString(),
+              title: parent.name + " › " + child.name + getAiIndicator(child),
+              label: childTickets.length.toString(),
+              cards: buildTicketCards(childTickets),
+              style: {
+                backgroundColor: child.color || parent.color,
+                color: "white",
+                opacity: 0.95,
+              },
+            });
+          });
+        }
       }
     });
 
@@ -208,7 +225,7 @@ const Kanban = () => {
 
   useEffect(() => {
     popularCards();
-  }, [tags, tickets]);
+  }, [tags, tickets, selectedFlow]);
 
   const handleCardMove = async (cardId, sourceLaneId, targetLaneId) => {
     try {
@@ -221,6 +238,10 @@ const Kanban = () => {
     }
   };
 
+  const handleFlowChange = (event) => {
+    setSelectedFlow(event.target.value);
+  };
+
   if (loadingKanban) {
     return (
       <div className={classes.root}>
@@ -231,9 +252,36 @@ const Kanban = () => {
     );
   }
 
-  if (tickets.length === 0 && tags.length === 0) {
-    return (
-      <div className={classes.root}>
+  // Generate Flow Options for Select
+  const flowOptions = tags.filter(
+    (t) => !t.parentId && t.children && t.children.length > 0
+  );
+
+  return (
+    <div className={classes.root}>
+      <Paper className={classes.header} elevation={1}>
+        <Typography variant="h6">Kanban</Typography>
+        <FormControl variant="outlined" className={classes.formControl} size="small">
+          <InputLabel id="kanban-flow-label">{i18n.t("kanban.flow") || "Flow"}</InputLabel>
+          <Select
+            labelId="kanban-flow-label"
+            id="kanban-flow-select"
+            value={selectedFlow}
+            onChange={handleFlowChange}
+            label={i18n.t("kanban.flow") || "Flow"}
+          >
+            <MenuItem value="all">{i18n.t("kanban.all") || "Todos"}</MenuItem>
+            <MenuItem value="default">{i18n.t("kanban.default") || "Padrao"}</MenuItem>
+            {flowOptions.map((tag) => (
+              <MenuItem key={tag.id} value={tag.id.toString()}>
+                {tag.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Paper>
+
+      {tickets.length === 0 && tags.length === 0 ? (
         <div className={classes.emptyState}>
           <Typography variant="h6" gutterBottom>
             {i18n.t("kanban.empty.title")}
@@ -242,17 +290,13 @@ const Kanban = () => {
             {i18n.t("kanban.empty.description")}
           </Typography>
         </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className={classes.root}>
-      <Board
-        data={file}
-        onCardMoveAcrossLanes={handleCardMove}
-        style={{ backgroundColor: "rgba(252, 252, 252, 0.03)" }}
-      />
+      ) : (
+        <Board
+          data={file}
+          onCardMoveAcrossLanes={handleCardMove}
+          style={{ backgroundColor: "rgba(252, 252, 252, 0.03)", width: "100%" }}
+        />
+      )}
     </div>
   );
 };

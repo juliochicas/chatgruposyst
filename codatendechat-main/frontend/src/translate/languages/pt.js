@@ -66,7 +66,7 @@ const messages = {
           newPassword: {
             required: "Nova senha é obrigatória",
             matches:
-                "Sua senha precisa ter no mínimo 8 caracteres, sendo uma letra maiúscula, uma minúscula e um número.",
+              "Sua senha precisa ter no mínimo 8 caracteres, sendo uma letra maiúscula, uma minúscula e um número.",
           },
           confirmPassword: {
             required: "Confirmação de senha é obrigatória",
@@ -156,7 +156,7 @@ const messages = {
           errorList: "Não foi possível carregar a lista de registros",
           errorOperation: "Não foi possível realizar a operação",
           error:
-              "Não foi possível realizar a operação. Verifique se já existe uma plano com o mesmo nome ou se os campos foram preenchidos corretamente",
+            "Não foi possível realizar a operação. Verifique se já existe uma plano com o mesmo nome ou se os campos foram preenchidos corretamente",
           success: "Operação realizada com sucesso!",
         },
         confirm: {
@@ -192,6 +192,13 @@ const messages = {
         },
         open: "Em aberto",
         seeTicket: "Ver Ticket",
+        flow: "Fluxo",
+        all: "Todos",
+        default: "Padrão",
+        empty: {
+          title: "Kanban vazio",
+          description: "Não há tickets nem tags kanban configuradas. Crie tags com a opção Kanban ativada em Tags para começar.",
+        },
       },
       invoices: {
         title: "Faturas",
@@ -214,7 +221,7 @@ const messages = {
           review: "Revisar",
         },
         success:
-            "Assinatura realizada com sucesso!, aguardando a realização do pagamento",
+          "Assinatura realizada com sucesso!, aguardando a realização do pagamento",
         closeToEnd: "Falta pouco!",
         BACK: "VOLTAR",
         PAY: "PAGAR",
@@ -319,7 +326,7 @@ const messages = {
           deleteMessage: "Você tem certeza? Essa ação não pode ser revertida.",
           disconnectTitle: "Desconectar",
           disconnectMessage:
-              "Tem certeza? Você precisará ler o QR Code novamente.",
+            "Tem certeza? Você precisará ler o QR Code novamente.",
         },
         buttons: {
           add: "Adicionar WhatsApp",
@@ -333,12 +340,12 @@ const messages = {
           disconnected: {
             title: "Falha ao iniciar sessão do WhatsApp",
             content:
-                "Certifique-se de que seu celular esteja conectado à internet e tente novamente, ou solicite um novo QR Code",
+              "Certifique-se de que seu celular esteja conectado à internet e tente novamente, ou solicite um novo QR Code",
           },
           qrcode: {
             title: "Esperando leitura do QR Code",
             content:
-                "Clique no botão 'QR CODE' e leia o QR Code com o seu celular para iniciar a sessão",
+              "Clique no botão 'QR CODE' e leia o QR Code com o seu celular para iniciar a sessão",
           },
           connected: {
             title: "Conexão estabelecida!",
@@ -346,7 +353,7 @@ const messages = {
           timeout: {
             title: "A conexão com o celular foi perdida",
             content:
-                "Certifique-se de que seu celular esteja conectado à internet e o WhatsApp esteja aberto, ou clique no botão 'Desconectar' para obter um novo QR Code",
+              "Certifique-se de que seu celular esteja conectado à internet e o WhatsApp esteja aberto, ou clique no botão 'Desconectar' para obter um novo QR Code",
           },
         },
         table: {
@@ -385,7 +392,7 @@ const messages = {
           queueRedirection: "Redirecionamento de Fila",
           outOfHoursMessage: "Mensagem de fora de expediente",
           queueRedirectionDesc:
-              "Selecione uma fila para os contatos que não possuem fila serem redirecionados",
+            "Selecione uma fila para os contatos que não possuem fila serem redirecionados",
           prompt: "Prompt",
           queue: "Fila de Transferência",
           timeToTransfer: "Transferir após x (minutos)",
@@ -414,7 +421,7 @@ const messages = {
             partThree: "no iPhone",
           },
           three:
-              "3 - Toque em Dispositivos conectados e, em seguida, em Conectar dispositivos",
+            "3 - Toque em Dispositivos conectados e, em seguida, em Conectar dispositivos",
           four: "4 - Aponte seu celular para essa tela para capturar o QR Code",
         },
         waiting: "Aguardando leitura do QR Code",
@@ -434,9 +441,9 @@ const messages = {
           deleteAllTitle: "Deletar Todos",
           importTitle: "Importar contatos",
           deleteMessage:
-              "Tem certeza que deseja deletar este contato? Todos os tickets relacionados serão perdidos.",
+            "Tem certeza que deseja deletar este contato? Todos os tickets relacionados serão perdidos.",
           deleteAllMessage:
-              "Tem certeza que deseja deletar todos os contatos? Todos os tickets relacionados serão perdidos.",
+            "Tem certeza que deseja deletar todos os contatos? Todos os tickets relacionados serão perdidos.",
           importMessage: "Deseja importar todos os contatos do telefone?",
         },
         buttons: {
@@ -807,7 +814,7 @@ const messages = {
         assignedHeader: "Atendendo",
         noTicketsTitle: "Nada aqui!",
         noTicketsMessage:
-            "Nenhum atendimento encontrado com esse status ou termo pesquisado",
+          "Nenhum atendimento encontrado com esse status ou termo pesquisado",
         buttons: {
           accept: "Aceitar",
           closed: "Finalizar",
@@ -831,7 +838,7 @@ const messages = {
         fieldLabel: "Digite para pesquisar o contato",
         add: "Adicionar",
         searchQueueError:
-            "Ocorreu um erro inesperado ao tentar buscar as filas",
+          "Ocorreu um erro inesperado ao tentar buscar as filas",
         selectQueue: "Selecione uma fila",
         selectConection: "Selecione uma conexão",
         buttons: {
@@ -879,10 +886,10 @@ const messages = {
           refresh: "Recarregar página",
           notRegister: "Sem notificações",
           greeting: {
-						hello: "Olá",
-						welcome: "Bem vindo a",
-						active: "Ativo até",
-					},
+            hello: "Olá",
+            welcome: "Bem vindo a",
+            active: "Ativo até",
+          },
           user: {
             profile: "Perfil",
             logout: "Sair",
@@ -907,7 +914,7 @@ const messages = {
         confirmationModal: {
           deleteTitle: "Excluir",
           deleteMessage:
-              "Você tem certeza? Essa ação não pode ser revertida! e será removida das filas e conexões vinculadas",
+            "Você tem certeza? Essa ação não pode ser revertida! e será removida das filas e conexões vinculadas",
         },
       },
       files: {
@@ -942,16 +949,16 @@ const messages = {
           instructions: "Instruções",
           observations: "Observações importantes",
           before1:
-              "Antes de enviar mensagens, é necessário o cadastro do token vinculado à conexão que enviará as mensagens.",
+            "Antes de enviar mensagens, é necessário o cadastro do token vinculado à conexão que enviará as mensagens.",
           before2:
-              "Para realizar o cadastro acesse o menu 'Conexões', clique no botão editar da conexão e insira o token no devido campo.",
+            "Para realizar o cadastro acesse o menu 'Conexões', clique no botão editar da conexão e insira o token no devido campo.",
           numberDescription:
-              "O número para envio não deve ter mascara ou caracteres especiais e deve ser composto por:",
+            "O número para envio não deve ter mascara ou caracteres especiais e deve ser composto por:",
           countryCode: "Código do País",
           number: "Número",
           textMessage2: "1. Mensagens de Texto",
           textMessageInstructions:
-              "Seguem abaixo a lista de informações necessárias para envio das mensagens de texto:",
+            "Seguem abaixo a lista de informações necessárias para envio das mensagens de texto:",
           method2: "Método",
           e: "e",
           tests: "Teste de Envio",
@@ -970,7 +977,7 @@ const messages = {
         },
         toasts: {
           unauthorized:
-              "Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando.",
+            "Esta empresa não possui permissão para acessar essa página! Estamos lhe redirecionando.",
           success: "Mensagem enviada com sucesso!",
         },
         buttons: {
@@ -1167,7 +1174,7 @@ const messages = {
             nameShort: "Nome curto",
             nameLong: "Nome longo",
             helper:
-                "Utilize variáveis como {nome}, {numero}, {email} ou defina variáveis personalziadas.",
+              "Utilize variáveis como {nome}, {numero}, {email} ou defina variáveis personalziadas.",
             nameRequired: "Nome é obrigatório",
             message1: "Mensagem 1",
             message2: "Mensagem 2",
@@ -1287,7 +1294,7 @@ const messages = {
         confirmationModal: {
           deleteTitle: "Excluir",
           deleteMessage:
-              "Você tem certeza? Essa ação não pode ser revertida! Os atendimentos dessa fila continuarão existindo, mas não terão mais nenhuma fila atribuída.",
+            "Você tem certeza? Essa ação não pode ser revertida! Os atendimentos dessa fila continuarão existindo, mas não terão mais nenhuma fila atribuída.",
         },
       },
       queueSelect: {
@@ -1311,7 +1318,7 @@ const messages = {
         confirmationModal: {
           deleteTitle: "Excluir",
           deleteMessage:
-              "Todos os dados do usuário serão perdidos. Os atendimento abertos deste usuário serão movidos para a fila.",
+            "Todos os dados do usuário serão perdidos. Os atendimento abertos deste usuário serão movidos para a fila.",
         },
       },
       todolist: {
@@ -1447,7 +1454,7 @@ const messages = {
             errorList: "Não foi possível carregar a lista de registros",
             errorOperation: "Não foi possível realizar a operação",
             error:
-                "Não foi possível realizar a operação. Verifique se já existe uma helpo com o mesmo nome ou se os campos foram preenchidos corretamente",
+              "Não foi possível realizar a operação. Verifique se já existe uma helpo com o mesmo nome ou se os campos foram preenchidos corretamente",
             success: "Operação realizada com sucesso!",
           },
           buttons: {
@@ -1471,7 +1478,7 @@ const messages = {
             errorList: "Não foi possível carregar a lista de registros",
             errorOperation: "Não foi possível realizar a operação",
             error:
-                "Não foi possível realizar a operação. Verifique se já existe uma empresa com o mesmo nome ou se os campos foram preenchidos corretamente",
+              "Não foi possível realizar a operação. Verifique se já existe uma empresa com o mesmo nome ou se os campos foram preenchidos corretamente",
             success: "Operação realizada com sucesso!",
           },
           confirmModal: {
@@ -1540,7 +1547,7 @@ const messages = {
       messagesInput: {
         placeholderOpen: "Digite uma mensagem",
         placeholderClosed:
-            "Reabra ou aceite esse ticket para enviar uma mensagem.",
+          "Reabra ou aceite esse ticket para enviar uma mensagem.",
         signMessage: "Assinar",
       },
       contactDrawer: {
@@ -1593,7 +1600,7 @@ const messages = {
           title: "Deletar o ticket",
           titleFrom: "do contato ",
           message:
-              "Atenção! Todas as mensagens relacionadas ao ticket serão perdidas.",
+            "Atenção! Todas as mensagens relacionadas ao ticket serão perdidas.",
         },
         buttons: {
           delete: "Excluir",
@@ -1877,28 +1884,28 @@ const messages = {
       },
       backendErrors: {
         ERR_INTERNAL_SERVER_ERROR:
-            "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde",
+          "Ocorreu um erro inesperado. Por favor, tente novamente mais tarde",
         ERR_NO_OTHER_WHATSAPP: "Deve haver pelo menos um WhatsApp padrão.",
         ERR_NO_DEF_WAPP_FOUND:
-            "Nenhum WhatsApp padrão encontrado. Verifique a página de conexões.",
+          "Nenhum WhatsApp padrão encontrado. Verifique a página de conexões.",
         ERR_WAPP_NOT_INITIALIZED:
-            "Esta sessão do WhatsApp não foi inicializada. Verifique a página de conexões.",
+          "Esta sessão do WhatsApp não foi inicializada. Verifique a página de conexões.",
         ERR_WAPP_CHECK_CONTACT:
-            "Não foi possível verificar o contato do WhatsApp. Verifique a página de conexões",
+          "Não foi possível verificar o contato do WhatsApp. Verifique a página de conexões",
         ERR_WAPP_INVALID_CONTACT: "Este não é um número de Whatsapp válido.",
         ERR_WAPP_DOWNLOAD_MEDIA:
-            "Não foi possível baixar mídia do WhatsApp. Verifique a página de conexões.",
+          "Não foi possível baixar mídia do WhatsApp. Verifique a página de conexões.",
         ERR_INVALID_CREDENTIALS:
-            "Erro de autenticação. Por favor, tente novamente.",
+          "Erro de autenticação. Por favor, tente novamente.",
         ERR_USER_DONT_EXISTS:
-            "Usuário não encontrado. Verifique o e-mail informado.",
+          "Usuário não encontrado. Verifique o e-mail informado.",
         ERR_SENDING_WAPP_MSG:
-            "Erro ao enviar mensagem do WhatsApp. Verifique a página de conexões.",
+          "Erro ao enviar mensagem do WhatsApp. Verifique a página de conexões.",
         ERR_DELETE_WAPP_MSG: "Não foi possível excluir a mensagem do WhatsApp.",
         ERR_OTHER_OPEN_TICKET: "Já existe um tíquete aberto para este contato.",
         ERR_SESSION_EXPIRED: "Sessão expirada. Por favor entre.",
         ERR_USER_CREATION_DISABLED:
-            "A criação do usuário foi desabilitada pelo administrador.",
+          "A criação do usuário foi desabilitada pelo administrador.",
         ERR_NO_PERMISSION: "Você não tem permissão para acessar este recurso.",
         ERR_DUPLICATED_CONTACT: "Já existe um contato com este número.",
         ERR_NO_SETTING_FOUND: "Nenhuma configuração encontrada com este ID.",
@@ -1909,11 +1916,11 @@ const messages = {
         ERR_CREATING_MESSAGE: "Erro ao criar mensagem no banco de dados.",
         ERR_CREATING_TICKET: "Erro ao criar tíquete no banco de dados.",
         ERR_FETCH_WAPP_MSG:
-            "Erro ao buscar a mensagem no WhtasApp, talvez ela seja muito antiga.",
+          "Erro ao buscar a mensagem no WhtasApp, talvez ela seja muito antiga.",
         ERR_QUEUE_COLOR_ALREADY_EXISTS:
-            "Esta cor já está em uso, escolha outra.",
+          "Esta cor já está em uso, escolha outra.",
         ERR_WAPP_GREETING_REQUIRED:
-            "A mensagem de saudação é obrigatório quando há mais de uma fila.",
+          "A mensagem de saudação é obrigatório quando há mais de uma fila.",
       },
     },
   },
