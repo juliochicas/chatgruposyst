@@ -44,6 +44,7 @@ import { getWbot } from "../../libs/wbot";
 import { proto } from "@whiskeysockets/baileys";
 import { handleOpenAi } from "../IntegrationsServices/OpenAiService";
 import { IOpenAi } from "../../@types/openai";
+import uploadConfig from "../../config/upload";
 
 interface IAddContact {
   companyId: number;
@@ -483,38 +484,23 @@ export const ActionsWebhookService = async (
             await SendMessage(whatsapp, {
               number: numberClient,
               body: "",
-              mediaPath:
-                process.env.BACKEND_URL.includes("http://localhost")
-                  ? `${__dirname.split("src")[0].split("\\").join("/")}public/${
-                      nodeSelected.data.elements.filter(
-                        item => item.number === elementNowSelected
-                      )[0].value
-                    }`
-                  : `${__dirname
-                      .split("dist")[0]
-                      .split("\\")
-                      .join("/")}public/${
-                      nodeSelected.data.elements.filter(
-                        item => item.number === elementNowSelected
-                      )[0].value
-                    }`
+              mediaPath: path.join(
+                uploadConfig.directory,
+                nodeSelected.data.elements.filter(
+                  item => item.number === elementNowSelected
+                )[0].value
+              )
             });
             await intervalWhats("1");
           }
 
           if (elementNowSelected.includes("audio")) {
-            const mediaDirectory =
-              process.env.BACKEND_URL === "http://localhost:8090"
-                ? `${__dirname.split("src")[0].split("\\").join("/")}public/${
-                    nodeSelected.data.elements.filter(
-                      item => item.number === elementNowSelected
-                    )[0].value
-                  }`
-                : `${__dirname.split("dist")[0].split("\\").join("/")}public/${
-                    nodeSelected.data.elements.filter(
-                      item => item.number === elementNowSelected
-                    )[0].value
-                  }`;
+            const mediaDirectory = path.join(
+              uploadConfig.directory,
+              nodeSelected.data.elements.filter(
+                item => item.number === elementNowSelected
+              )[0].value
+            );
             const ticketInt = await Ticket.findOne({
               where: { id: ticket.id }
             });
@@ -532,18 +518,12 @@ export const ActionsWebhookService = async (
             await intervalWhats("1");
           }
           if (elementNowSelected.includes("video")) {
-            const mediaDirectory =
-              process.env.BACKEND_URL === "http://localhost:8090"
-                ? `${__dirname.split("src")[0].split("\\").join("/")}public/${
-                    nodeSelected.data.elements.filter(
-                      item => item.number === elementNowSelected
-                    )[0].value
-                  }`
-                : `${__dirname.split("dist")[0].split("\\").join("/")}public/${
-                    nodeSelected.data.elements.filter(
-                      item => item.number === elementNowSelected
-                    )[0].value
-                  }`;
+            const mediaDirectory = path.join(
+              uploadConfig.directory,
+              nodeSelected.data.elements.filter(
+                item => item.number === elementNowSelected
+              )[0].value
+            );
             const ticketInt = await Ticket.findOne({
               where: { id: ticket.id }
             });
