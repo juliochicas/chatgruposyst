@@ -323,7 +323,7 @@ export const rate = async (req: Request, res: Response): Promise<Response> => {
     throw new AppError("Ticket no encontrado.", 404);
   }
 
-  if (ticket.userId !== req.user.id) {
+  if (Number(ticket.userId) !== Number(req.user.id)) {
     throw new AppError("Solo el creador del ticket puede calificar.", 403);
   }
 
