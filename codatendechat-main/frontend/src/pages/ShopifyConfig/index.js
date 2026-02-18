@@ -11,7 +11,6 @@ import {
   CircularProgress,
   Chip,
   Box,
-  Divider,
   Card,
   CardContent,
   IconButton,
@@ -24,17 +23,20 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  InputAdornment,
 } from "@material-ui/core";
 import {
   CheckCircle as CheckCircleIcon,
   Error as ErrorIcon,
   Sync as SyncIcon,
   Save as SaveIcon,
-  Delete as DeleteIcon,
   Store as StoreIcon,
   Add as AddIcon,
   Link as LinkIcon,
   LinkOff as LinkOffIcon,
+  Edit as EditIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon,
 } from "@material-ui/icons";
 
 import MainContainer from "../../components/MainContainer";
@@ -86,6 +88,10 @@ const useStyles = makeStyles((theme) => ({
     objectFit: "cover",
     borderRadius: 4,
   },
+  credentialChip: {
+    fontFamily: "monospace",
+    fontSize: 12,
+  },
 }));
 
 const ShopifyConfig = () => {
@@ -101,6 +107,17 @@ const ShopifyConfig = () => {
   // New connection form
   const [showNewForm, setShowNewForm] = useState(false);
   const [newShopDomain, setNewShopDomain] = useState("");
+  const [newApiKey, setNewApiKey] = useState("");
+  const [newApiSecret, setNewApiSecret] = useState("");
+  const [showNewSecret, setShowNewSecret] = useState(false);
+
+  // Edit credentials dialog
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editingConn, setEditingConn] = useState(null);
+  const [editApiKey, setEditApiKey] = useState("");
+  const [editApiSecret, setEditApiSecret] = useState("");
+  const [showEditSecret, setShowEditSecret] = useState(false);
+  const [editSaving, setEditSaving] = useState(false);
 
   // Products
   const [products, setProducts] = useState([]);
@@ -170,14 +187,22 @@ const ShopifyConfig = () => {
       toast.error("Ingresa el dominio de tu tienda Shopify");
       return;
     }
+    if (!newApiKey.trim() || !newApiSecret.trim()) {
+      toast.error("Ingresa el API Key y API Secret de tu app Shopify");
+      return;
+    }
 
     try {
       setSaving(true);
       await api.post("/shopify-connections/", {
         shopDomain: newShopDomain.trim(),
+        apiKey: newApiKey.trim(),
+        apiSecret: newApiSecret.trim(),
       });
-      toast.success("Conexion creada. Ahora conecta con OAuth.");
+      toast.success("Conexion creada. Ahora haz clic en 'Conectar' para autorizar con Shopify.");
       setNewShopDomain("");
+      setNewApiKey("");
+      setNewApiSecret("");
       setShowNewForm(false);
       await loadConnections();
     } catch (err) {
@@ -220,6 +245,48 @@ const ShopifyConfig = () => {
     } finally {
       setSyncing(false);
     }
+  };
+
+  const handleOpenEditDialog = (conn) => {
+    setEditingConn(conn);
+    setEditApiKey(conn.apiKey || "");
+    setEditApiSecret(conn.apiSecret || "");
+    setShowEditSecret(false);
+    setEditDialogOpen(true);
+  };
+
+  const handleCloseEditDialog = () => {
+    setEditDialogOpen(false);
+    setEditingConn(null);
+    setEditApiKey("");
+    setEditApiSecret("");
+  };
+
+  const handleSaveCredentials = async () => {
+    if (!editApiKey.trim() || !editApiSecret.trim()) {
+      toast.error("Ambos campos son obligatorios");
+      return;
+    }
+    try {
+      setEditSaving(true);
+      await api.put(`/shopify-connections/${editingConn.id}`, {
+        apiKey: editApiKey.trim(),
+        apiSecret: editApiSecret.trim(),
+      });
+      toast.success("Credenciales actualizadas");
+      handleCloseEditDialog();
+      await loadConnections();
+    } catch (err) {
+      toastError(err);
+    } finally {
+      setEditSaving(false);
+    }
+  };
+
+  const maskSecret = (secret) => {
+    if (!secret) return "-";
+    if (secret.length <= 8) return "****";
+    return secret.substring(0, 4) + "****" + secret.substring(secret.length - 4);
   };
 
   const getStatusChip = (status) => {
@@ -285,7 +352,11 @@ const ShopifyConfig = () => {
               <Typography variant="subtitle1" gutterBottom>
                 Conectar nueva tienda Shopify
               </Typography>
-              <Grid container spacing={2} alignItems="flex-end">
+              <Typography variant="body2" color="textSecondary" gutterBottom>
+                Obtén tus credenciales en{" "}
+                <strong>partners.shopify.com &gt; Apps &gt; Tu App &gt; Client credentials</strong>
+              </Typography>
+              <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
@@ -298,23 +369,58 @@ const ShopifyConfig = () => {
                     size="small"
                   />
                 </Grid>
-                <Grid item>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={handleCreateConnection}
-                    disabled={saving}
-                    startIcon={
-                      saving ? <CircularProgress size={20} /> : <SaveIcon />
-                    }
-                  >
-                    Crear
-                  </Button>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="API Key (Client ID)"
+                    placeholder="ej: a1b2c3d4e5f6..."
+                    value={newApiKey}
+                    onChange={(e) => setNewApiKey(e.target.value)}
+                    variant="outlined"
+                    size="small"
+                  />
                 </Grid>
-                <Grid item>
-                  <Button onClick={() => setShowNewForm(false)}>
-                    Cancelar
-                  </Button>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    label="API Secret (Client Secret)"
+                    placeholder="ej: shpss_..."
+                    value={newApiSecret}
+                    onChange={(e) => setNewApiSecret(e.target.value)}
+                    type={showNewSecret ? "text" : "password"}
+                    variant="outlined"
+                    size="small"
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            size="small"
+                            onClick={() => setShowNewSecret(!showNewSecret)}
+                          >
+                            {showNewSecret ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                          </IconButton>
+                        </InputAdornment>
+                      ),
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12}>
+                  <Box display="flex" gap={1}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={handleCreateConnection}
+                      disabled={saving}
+                      startIcon={
+                        saving ? <CircularProgress size={20} /> : <SaveIcon />
+                      }
+                    >
+                      Crear Conexion
+                    </Button>
+                    <Button onClick={() => { setShowNewForm(false); setNewShopDomain(""); setNewApiKey(""); setNewApiSecret(""); }}>
+                      Cancelar
+                    </Button>
+                  </Box>
                 </Grid>
               </Grid>
             </CardContent>
@@ -337,6 +443,7 @@ const ShopifyConfig = () => {
               <TableRow>
                 <TableCell>Tienda</TableCell>
                 <TableCell>Dominio</TableCell>
+                <TableCell>API Key</TableCell>
                 <TableCell>Estado</TableCell>
                 <TableCell>Moneda</TableCell>
                 <TableCell>Ultima Sync</TableCell>
@@ -348,6 +455,11 @@ const ShopifyConfig = () => {
                 <TableRow key={conn.id}>
                   <TableCell>{conn.shopName || "-"}</TableCell>
                   <TableCell>{conn.shopDomain}</TableCell>
+                  <TableCell>
+                    <Typography variant="caption" className={classes.credentialChip}>
+                      {conn.apiKey ? maskSecret(conn.apiKey) : <em style={{ color: "#f44336" }}>Sin configurar</em>}
+                    </Typography>
+                  </TableCell>
                   <TableCell>{getStatusChip(conn.status)}</TableCell>
                   <TableCell>{conn.currency || "USD"}</TableCell>
                   <TableCell>
@@ -356,6 +468,13 @@ const ShopifyConfig = () => {
                       : "Nunca"}
                   </TableCell>
                   <TableCell align="right">
+                    <IconButton
+                      size="small"
+                      title="Editar credenciales"
+                      onClick={() => handleOpenEditDialog(conn)}
+                    >
+                      <EditIcon fontSize="small" />
+                    </IconButton>
                     {conn.status === "disconnected" ? (
                       <Button
                         size="small"
@@ -363,6 +482,7 @@ const ShopifyConfig = () => {
                         color="primary"
                         startIcon={<LinkIcon />}
                         onClick={() => handleConnect(conn.id)}
+                        disabled={!conn.apiKey}
                       >
                         Conectar
                       </Button>
@@ -392,6 +512,62 @@ const ShopifyConfig = () => {
           </Table>
         )}
       </Paper>
+
+      {/* Edit Credentials Dialog */}
+      <Dialog open={editDialogOpen} onClose={handleCloseEditDialog} maxWidth="sm" fullWidth>
+        <DialogTitle>
+          Credenciales Shopify - {editingConn?.shopDomain}
+        </DialogTitle>
+        <DialogContent>
+          <Typography variant="body2" color="textSecondary" gutterBottom>
+            Obtén estas credenciales en{" "}
+            <strong>partners.shopify.com &gt; Apps &gt; Tu App &gt; Client credentials</strong>
+          </Typography>
+          <TextField
+            fullWidth
+            label="API Key (Client ID)"
+            value={editApiKey}
+            onChange={(e) => setEditApiKey(e.target.value)}
+            variant="outlined"
+            margin="dense"
+          />
+          <TextField
+            fullWidth
+            label="API Secret (Client Secret)"
+            value={editApiSecret}
+            onChange={(e) => setEditApiSecret(e.target.value)}
+            type={showEditSecret ? "text" : "password"}
+            variant="outlined"
+            margin="dense"
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    size="small"
+                    onClick={() => setShowEditSecret(!showEditSecret)}
+                  >
+                    {showEditSecret ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseEditDialog} color="secondary">
+            Cancelar
+          </Button>
+          <Button
+            onClick={handleSaveCredentials}
+            color="primary"
+            variant="contained"
+            disabled={editSaving}
+            startIcon={editSaving ? <CircularProgress size={20} /> : <SaveIcon />}
+          >
+            Guardar
+          </Button>
+        </DialogActions>
+      </Dialog>
 
       {/* Products Section */}
       {connections.some((c) => c.status === "connected") && (

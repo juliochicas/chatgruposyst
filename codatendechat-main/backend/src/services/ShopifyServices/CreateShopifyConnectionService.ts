@@ -7,6 +7,8 @@ import Plan from "../../models/Plan";
 interface Request {
   shopDomain: string;
   companyId: number;
+  apiKey?: string;
+  apiSecret?: string;
   greetingMessage?: string;
   complationMessage?: string;
   outOfHoursMessage?: string;
@@ -22,6 +24,8 @@ interface Request {
 const CreateShopifyConnectionService = async ({
   shopDomain,
   companyId,
+  apiKey,
+  apiSecret,
   greetingMessage,
   complationMessage,
   outOfHoursMessage,
@@ -79,6 +83,8 @@ const CreateShopifyConnectionService = async ({
     shopDomain: normalizedDomain,
     status: "disconnected",
     companyId,
+    apiKey,
+    apiSecret,
     greetingMessage,
     complationMessage,
     outOfHoursMessage,

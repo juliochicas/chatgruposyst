@@ -30,6 +30,14 @@ class ShopifyConnection extends Model<ShopifyConnection> {
   shopDomain: string;
 
   @AllowNull
+  @Column(DataType.STRING)
+  apiKey: string;
+
+  @AllowNull
+  @Column(DataType.STRING)
+  apiSecret: string;
+
+  @AllowNull
   @Column(DataType.TEXT)
   accessToken: string;
 

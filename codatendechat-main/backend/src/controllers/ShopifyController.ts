@@ -28,6 +28,8 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 export const store = async (req: Request, res: Response): Promise<Response> => {
   const {
     shopDomain,
+    apiKey,
+    apiSecret,
     greetingMessage,
     complationMessage,
     outOfHoursMessage,
@@ -43,6 +45,8 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
 
   const connection = await CreateShopifyConnectionService({
     shopDomain,
+    apiKey,
+    apiSecret,
     companyId,
     greetingMessage,
     complationMessage,
@@ -138,7 +142,10 @@ export const getOAuthUrl = async (
 
   const connection = await ShowShopifyConnectionService(connectionId, companyId);
   const state = `${connectionId}_${companyId}`;
-  const url = ShopifyAuthService.getOAuthUrl(connection.shopDomain, state);
+  const credentials = connection.apiKey && connection.apiSecret
+    ? { apiKey: connection.apiKey, apiSecret: connection.apiSecret }
+    : undefined;
+  const url = ShopifyAuthService.getOAuthUrl(connection.shopDomain, state, credentials);
 
   return res.status(200).json({ url });
 };
@@ -157,11 +164,18 @@ export const oauthCallback = async (
   const companyId = parseInt(companyIdStr, 10);
 
   try {
+    // Load connection to get per-connection credentials
+    const connection = await ShowShopifyConnectionService(connectionId, companyId);
+    const credentials = connection.apiKey && connection.apiSecret
+      ? { apiKey: connection.apiKey, apiSecret: connection.apiSecret }
+      : undefined;
+
     // Exchange code for token
     const shopDomain = shop || "";
     const { access_token } = await ShopifyAuthService.exchangeCodeForToken(
       shopDomain,
-      code
+      code,
+      credentials
     );
 
     // Get shop info

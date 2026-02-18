@@ -17,11 +17,30 @@ interface ShopifyShopInfo {
   };
 }
 
+interface ShopifyCredentials {
+  apiKey: string;
+  apiSecret: string;
+}
+
+/**
+ * Resolve credentials: use provided values, fall back to env vars
+ */
+const resolveCredentials = (credentials?: ShopifyCredentials): ShopifyCredentials => {
+  return {
+    apiKey: credentials?.apiKey || process.env.SHOPIFY_API_KEY || "",
+    apiSecret: credentials?.apiSecret || process.env.SHOPIFY_API_SECRET || ""
+  };
+};
+
 /**
  * Generate the Shopify OAuth authorization URL
  */
-export const getOAuthUrl = (shopDomain: string, state: string): string => {
-  const apiKey = process.env.SHOPIFY_API_KEY;
+export const getOAuthUrl = (
+  shopDomain: string,
+  state: string,
+  credentials?: ShopifyCredentials
+): string => {
+  const { apiKey } = resolveCredentials(credentials);
   const scopes = process.env.SHOPIFY_SCOPES ||
     "read_products,write_draft_orders,write_orders,read_orders,read_inventory";
   const redirectUri = `${process.env.BACKEND_URL}/shopify/callback`;
@@ -40,10 +59,10 @@ export const getOAuthUrl = (shopDomain: string, state: string): string => {
  */
 export const exchangeCodeForToken = async (
   shopDomain: string,
-  code: string
+  code: string,
+  credentials?: ShopifyCredentials
 ): Promise<ShopifyTokenResponse> => {
-  const apiKey = process.env.SHOPIFY_API_KEY;
-  const apiSecret = process.env.SHOPIFY_API_SECRET;
+  const { apiKey, apiSecret } = resolveCredentials(credentials);
 
   const response = await axios.post(
     `https://${shopDomain}/admin/oauth/access_token`,
@@ -79,13 +98,14 @@ export const getShopInfo = async (
  */
 export const verifyWebhookHmac = (
   body: string,
-  hmacHeader: string
+  hmacHeader: string,
+  secret?: string
 ): boolean => {
-  const secret = process.env.SHOPIFY_API_SECRET;
-  if (!secret) return false;
+  const resolvedSecret = secret || process.env.SHOPIFY_API_SECRET;
+  if (!resolvedSecret) return false;
 
   const hash = crypto
-    .createHmac("sha256", secret)
+    .createHmac("sha256", resolvedSecret)
     .update(body, "utf8")
     .digest("base64");
 
