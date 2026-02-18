@@ -16,7 +16,8 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
   const { companyId } = req.user;
   const { status, priority, page = "1" } = req.query as any;
 
-  const user = await User.findByPk(req.user.id);
+  const userId = Number(req.user.id);
+  const user = !isNaN(userId) ? await User.findByPk(userId) : null;
   const isSuper = user?.super === true;
 
   const where: any = {};
