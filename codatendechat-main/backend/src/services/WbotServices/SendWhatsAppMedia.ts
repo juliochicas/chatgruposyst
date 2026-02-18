@@ -23,9 +23,9 @@ const processAudio = async (audio: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     exec(
       `${ffmpegPath.path} -i ${audio} -vn -ab 128k -ar 44100 -f ipod ${outputAudio} -y`,
-      (error, _stdout, _stderr) => {
+      async (error, _stdout, _stderr) => {
         if (error) reject(error);
-        fs.unlinkSync(audio);
+        await fs.promises.unlink(audio);
         resolve(outputAudio);
       }
     );
@@ -37,9 +37,9 @@ const processAudioFile = async (audio: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     exec(
       `${ffmpegPath.path} -i ${audio} -vn -ar 44100 -ac 2 -b:a 192k ${outputAudio}`,
-      (error, _stdout, _stderr) => {
+      async (error, _stdout, _stderr) => {
         if (error) reject(error);
-        fs.unlinkSync(audio);
+        await fs.promises.unlink(audio);
         resolve(outputAudio);
       }
     );
@@ -62,7 +62,7 @@ export const getMessageOptions = async (
 
     if (typeMessage === "video") {
       options = {
-        video: fs.readFileSync(pathMedia),
+        video: await fs.promises.readFile(pathMedia),
         caption: body ? body : "",
         fileName: fileName
         // gifPlayback: true
@@ -72,14 +72,14 @@ export const getMessageOptions = async (
       const convert = await processAudio(pathMedia);
       if (typeAudio) {
         options = {
-          audio: fs.readFileSync(convert),
+          audio: await fs.promises.readFile(convert),
           mimetype: typeAudio ? "audio/mp4" : mimeType,
           caption: body ? body : null,
           ptt: true
         };
       } else {
         options = {
-          audio: fs.readFileSync(convert),
+          audio: await fs.promises.readFile(convert),
           mimetype: typeAudio ? "audio/mp4" : mimeType,
           caption: body ? body : null,
           ptt: true
@@ -87,21 +87,21 @@ export const getMessageOptions = async (
       }
     } else if (typeMessage === "document") {
       options = {
-        document: fs.readFileSync(pathMedia),
+        document: await fs.promises.readFile(pathMedia),
         caption: body ? body : null,
         fileName: fileName,
         mimetype: mimeType
       };
     } else if (typeMessage === "application") {
       options = {
-        document: fs.readFileSync(pathMedia),
+        document: await fs.promises.readFile(pathMedia),
         caption: body ? body : null,
         fileName: fileName,
         mimetype: mimeType
       };
     } else {
       options = {
-        image: fs.readFileSync(pathMedia),
+        image: await fs.promises.readFile(pathMedia),
         caption: body ? body : null
       };
     }
@@ -129,7 +129,7 @@ const SendWhatsAppMedia = async ({
 
     if (typeMessage === "video") {
       options = {
-        video: fs.readFileSync(pathMedia),
+        video: await fs.promises.readFile(pathMedia),
         caption: bodyMessage,
         fileName: media.originalname
         // gifPlayback: true
@@ -139,34 +139,34 @@ const SendWhatsAppMedia = async ({
       if (typeAudio) {
         const convert = await processAudio(media.path);
         options = {
-          audio: fs.readFileSync(convert),
+          audio: await fs.promises.readFile(convert),
           mimetype: typeAudio ? "audio/mp4" : media.mimetype,
           ptt: true
         };
       } else {
         const convert = await processAudioFile(media.path);
         options = {
-          audio: fs.readFileSync(convert),
+          audio: await fs.promises.readFile(convert),
           mimetype: typeAudio ? "audio/mp4" : media.mimetype
         };
       }
     } else if (typeMessage === "document" || typeMessage === "text") {
       options = {
-        document: fs.readFileSync(pathMedia),
+        document: await fs.promises.readFile(pathMedia),
         caption: bodyMessage,
         fileName: media.originalname,
         mimetype: media.mimetype
       };
     } else if (typeMessage === "application") {
       options = {
-        document: fs.readFileSync(pathMedia),
+        document: await fs.promises.readFile(pathMedia),
         caption: bodyMessage,
         fileName: media.originalname,
         mimetype: media.mimetype
       };
     } else {
       options = {
-        image: fs.readFileSync(pathMedia),
+        image: await fs.promises.readFile(pathMedia),
         caption: bodyMessage
       };
     }
