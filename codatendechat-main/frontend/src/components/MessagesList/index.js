@@ -295,7 +295,7 @@ const useStyles = makeStyles((theme) => ({
     overflowWrap: "break-word",
     padding: "3px 80px 6px 6px",
   },
-  
+
   textContentItemEdited: {
     overflowWrap: "break-word",
     padding: "3px 120px 6px 6px",
@@ -476,7 +476,7 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
     const companyId = localStorage.getItem("companyId");
     const socket = socketManager.getSocket(companyId);
 
-    socket.on("ready", () => socket.emit("joinChatBox", `${ticket.id}`));
+    socket.on("ready", () => socket.emit("joinChatBox", `${ticketId}`));
 
     socket.on(`company-${companyId}-appMessage`, (data) => {
       if (data.action === "create" && data.message.ticketId === currentTicketId.current) {
@@ -492,7 +492,7 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
     return () => {
       socket.disconnect();
     };
-  }, [ticketId, ticket, socketManager]);
+  }, [ticketId, socketManager]);
 
   const loadMore = () => {
     setPageNumber((prevPageNumber) => prevPageNumber + 1);
@@ -601,7 +601,7 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
               {i18n.t("messagesList.header.buttons.download")}
             </Button>
           </div>
-          <div style={{marginBottom: message.body === "" ? 8 : 0}}>
+          <div style={{ marginBottom: message.body === "" ? 8 : 0 }}>
             <Divider />
           </div>
         </>
@@ -753,8 +753,8 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
 
           {message.quotedMsg.mediaType === "contactMessage"
             && (
-                <span>{message.quotedMsg.body}</span>
-              )
+              <span>{message.quotedMsg.body}</span>
+            )
           }
         </div>
       </div>
@@ -841,7 +841,7 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
                   {message.quotedMsg && renderQuotedMessage(message)}
                   <MarkdownWrapper>{message.mediaType === "locationMessage" ? null : message.body}</MarkdownWrapper>
                   <span className={classes.timestamp}>
-				    {message.isEdited && <span>Editada </span>}
+                    {message.isEdited && <span>Editada </span>}
                     {format(parseISO(message.createdAt), "HH:mm")}
                   </span>
                 </div>
@@ -871,7 +871,7 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
                 <div
                   className={clsx(classes.textContentItem, {
                     [classes.textContentItemDeleted]: message.isDeleted,
-					[classes.textContentItemEdited]: message.isEdited,
+                    [classes.textContentItemEdited]: message.isEdited,
                   })}
                 >
                   {message.isDeleted && (
@@ -884,7 +884,7 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
                   {message.quotedMsg && renderQuotedMessage(message)}
                   <MarkdownWrapper>{message.mediaType === "locationMessage" ? null : message.body}</MarkdownWrapper>
                   <span className={classes.timestamp}>
-				    {message.isEdited && <span>{i18n.t("messagesList.edited")}</span>}
+                    {message.isEdited && <span>{i18n.t("messagesList.edited")}</span>}
                     {format(parseISO(message.createdAt), "HH:mm")}
                     {renderMessageAck(message)}
                   </span>

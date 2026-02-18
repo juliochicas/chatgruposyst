@@ -183,8 +183,8 @@ const useStyles = makeStyles((theme) => ({
 
   }
 }));
-  {/*PLW DESIGN INSERIDO O dentro do const handleChangeTab*/}
-  const TicketListItemCustom = ({ ticket }) => {
+{/*PLW DESIGN INSERIDO O dentro do const handleChangeTab*/ }
+const TicketListItemCustom = ({ ticket }) => {
   const classes = useStyles();
   const history = useHistory();
   const [loading, setLoading] = useState(false);
@@ -220,7 +220,7 @@ const useStyles = makeStyles((theme) => ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  {/*CÓDIGO NOVO SAUDAÇÃO*/}
+  {/*CÓDIGO NOVO SAUDAÇÃO*/ }
   const handleCloseTicket = async (id) => {
     setTag(ticket?.tags);
     setLoading(true);
@@ -261,62 +261,62 @@ const useStyles = makeStyles((theme) => ({
     history.push(`/tickets/${ticket.uuid}`);
   };
 
-    const handleAcepptTicket = async (id) => {
-        setLoading(true);
-        try {
-            await api.put(`/tickets/${id}`, {
-                status: "open",
-                userId: user?.id,
-            });
-            
-            let settingIndex;
+  const handleAcepptTicket = async (id) => {
+    setLoading(true);
+    try {
+      await api.put(`/tickets/${id}`, {
+        status: "open",
+        userId: user?.id,
+      });
 
-            try {
-                const { data } = await api.get("/settings/");
-                
-                settingIndex = data.filter((s) => s.key === "sendGreetingAccepted");
-                
-            } catch (err) {
-                toastError(err);
-                   
-            }
-            
-            if (settingIndex[0].value === "enabled" && !ticket.isGroup) {
-                handleSendMessage(ticket.id);
-                
-            }
+      let settingIndex;
 
-        } catch (err) {
-            setLoading(false);
-            
-            toastError(err);
-        }
-        if (isMounted.current) {
-            setLoading(false);
-        }
+      try {
+        const { data } = await api.get("/settings/");
 
-        // handleChangeTab(null, "tickets");
-        // handleChangeTab(null, "open");
-        history.push(`/tickets/${ticket.uuid}`);
+        settingIndex = data.filter((s) => s.key === "sendGreetingAccepted");
+
+      } catch (err) {
+        toastError(err);
+
+      }
+
+      if (settingIndex[0].value === "enabled" && !ticket.isGroup) {
+        handleSendMessage(ticket.id);
+
+      }
+
+    } catch (err) {
+      setLoading(false);
+
+      toastError(err);
+    }
+    if (isMounted.current) {
+      setLoading(false);
+    }
+
+    // handleChangeTab(null, "tickets");
+    // handleChangeTab(null, "open");
+    history.push(`/tickets/${ticket.uuid}`);
+  };
+
+  const handleSendMessage = async (id) => {
+
+    const msg = `{{ms}} *{{name}}*, mi nombre es *${user?.name}* y ahora voy a continuar con su atención!`;
+    const message = {
+      read: 1,
+      fromMe: true,
+      mediaUrl: "",
+      body: `*Mensaje Automático:*\n${msg.trim()}`,
     };
-	
-	    const handleSendMessage = async (id) => {
-        
-        const msg = `{{ms}} *{{name}}*, meu nome é *${user?.name}* e agora vou prosseguir com seu atendimento!`;
-        const message = {
-            read: 1,
-            fromMe: true,
-            mediaUrl: "",
-            body: `*Mensagem Automática:*\n${msg.trim()}`,
-        };
-        try {
-            await api.post(`/messages/${id}`, message);
-        } catch (err) {
-            toastError(err);
-            
-        }
-    };
-	{/*CÓDIGO NOVO SAUDAÇÃO*/}
+    try {
+      await api.post(`/messages/${id}`, message);
+    } catch (err) {
+      toastError(err);
+
+    }
+  };
+  {/*CÓDIGO NOVO SAUDAÇÃO*/ }
 
   const handleSelectTicket = (ticket) => {
     const code = uuidv4();
@@ -504,7 +504,7 @@ const useStyles = makeStyles((theme) => ({
               className={classes.acceptButton}
               size="small"
               loading={loading}
-			  //PLW DESIGN INSERIDO O handleChangeTab
+              //PLW DESIGN INSERIDO O handleChangeTab
               onClick={e => handleAcepptTicket(ticket.id)}
             >
               {i18n.t("ticketsList.buttons.accept")}
