@@ -36,7 +36,7 @@ export const RefreshTokenService = async (
       const isProduction = process.env.NODE_ENV === "production";
       res.clearCookie("jrt", {
         httpOnly: true,
-        sameSite: isProduction ? "strict" : "lax",
+        sameSite: isProduction ? "none" : "lax",
         secure: isProduction,
         path: "/"
       });
@@ -51,7 +51,7 @@ export const RefreshTokenService = async (
     const isProduction = process.env.NODE_ENV === "production";
     res.clearCookie("jrt", {
       httpOnly: true,
-      sameSite: isProduction ? "strict" : "lax",
+      sameSite: isProduction ? "none" : "lax",
       secure: isProduction,
       path: "/"
     });

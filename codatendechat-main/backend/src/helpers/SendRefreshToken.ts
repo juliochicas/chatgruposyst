@@ -4,7 +4,7 @@ export const SendRefreshToken = (res: Response, token: string): void => {
   const isProduction = process.env.NODE_ENV === "production";
   res.cookie("jrt", token, {
     httpOnly: true,
-    sameSite: isProduction ? "strict" : "lax",
+    sameSite: isProduction ? "none" : "lax",
     secure: isProduction,
     path: "/"
   });
