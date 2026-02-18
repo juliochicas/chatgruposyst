@@ -43,7 +43,7 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const NotificationsPopOver = (volume) => {
+const NotificationsPopOver = ({ volume }) => {
 	const classes = useStyles();
 
 	const history = useHistory();
@@ -65,7 +65,7 @@ const NotificationsPopOver = (volume) => {
 
 	const historyRef = useRef(history);
 
-  const socketManager = useContext(SocketContext);
+	const socketManager = useContext(SocketContext);
 
 	useEffect(() => {
 		const fetchSettings = async () => {
@@ -75,10 +75,10 @@ const NotificationsPopOver = (volume) => {
 					setShowPendingTickets(true);
 				}
 			} catch (err) {
-			  	toastError(err);
+				toastError(err);
 			}
 		}
-	  
+
 		fetchSettings();
 	}, []);
 
@@ -121,7 +121,7 @@ const NotificationsPopOver = (volume) => {
 	}, [ticketIdUrl]);
 
 	useEffect(() => {
-    const socket = socketManager.getSocket(user.companyId);
+		const socket = socketManager.getSocket(user.companyId);
 
 		socket.on("ready", () => socket.emit("joinNotification"));
 
@@ -248,7 +248,7 @@ const NotificationsPopOver = (volume) => {
 				ref={anchorEl}
 				aria-label="Open Notifications"
 				color="inherit"
-				style={{color:"white"}}
+				style={{ color: "white" }}
 			>
 				<Badge overlap="rectangular" badgeContent={notifications.length} color="secondary">
 					<ChatIcon />

@@ -1,0 +1,50 @@
+#!/usr/bin/expect
+
+set timeout 300
+set ip "62.72.7.2"
+set user "root"
+set password ".3+ml3&LKxGw6N1DbZd5"
+set project_dir "/root/chatgruposyst/codatendechat-main"
+set branch "claude/analyze-codebase-tQ9jj"
+
+spawn ssh $user@$ip
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send "$password\r" }
+}
+
+expect "#"
+send "cd $project_dir\r"
+
+# Fetch and checkout the correct branch
+expect "#"
+send "git fetch origin\r"
+expect "#"
+send "git checkout $branch || git checkout -b $branch origin/$branch\r"
+expect "#"
+send "git pull origin $branch\r"
+
+# Restart Backend (Install deps just in case)
+expect "#"
+send "cd backend\r"
+expect "#"
+send "npm install\r"
+expect "#"
+send "pm2 restart all\r" 
+# We assume PM2 is used. If not, this might fail, but it's standard.
+
+# Rebuild Frontend
+expect "#"
+send "cd ../frontend\r"
+expect "#"
+send "npm install\r"
+expect "#"
+send "npm run build\r"
+
+# Restart Nginx if needed (optional, assuming static serve or proxy)
+# usually 'pm2 restart all' covers the serving if using a node server, 
+# but if serving via nginx directly, build is enough.
+
+expect "#"
+send "exit\r"
+expect eof
