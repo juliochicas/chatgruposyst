@@ -58,7 +58,7 @@ const deleteFileSync = (path: string): void => {
   try {
     fs.unlinkSync(path);
   } catch (error) {
-    console.error("Erro ao deletar o arquivo:", error);
+    logger.error(error, "Erro ao deletar o arquivo");
   }
 };
 
@@ -84,7 +84,6 @@ export const handleOpenAi = async (
 
   const bodyMessage = getBodyMessage(msg);
   if (!bodyMessage) return;
-  // console.log("GETTING WHATSAPP HANDLE OPENAI", ticket.whatsappId, ticket.id)
 
   if (!openAiSettings) return;
 
@@ -129,7 +128,6 @@ export const handleOpenAi = async (
   let messagesOpenAi = [];
 
   if (msg.message?.conversation || msg.message?.extendedTextMessage?.text) {
-    console.log(135, "OpenAiService");
     messagesOpenAi = [];
     messagesOpenAi.push({ role: "system", content: promptSystem });
     for (
@@ -151,8 +149,6 @@ export const handleOpenAi = async (
     }
     messagesOpenAi.push({ role: "user", content: bodyMessage! });
 
-    console.log(156, "OpenAiService");
-
     const chat = await openai.createChatCompletion({
       model: "gpt-3.5-turbo-1106",
       messages: messagesOpenAi,
@@ -163,7 +159,6 @@ export const handleOpenAi = async (
     let response = chat.data.choices[0].message?.content;
 
     if (response?.includes("Ação: Transferir para o setor de atendimento")) {
-      console.log(166, "OpenAiService");
       await transferQueue(openAiSettings.queueId, ticket, contact);
       response = response
         .replace("Ação: Transferir para o setor de atendimento", "")
@@ -171,7 +166,6 @@ export const handleOpenAi = async (
     }
 
     if (openAiSettings.voice === "texto") {
-      console.log(173, "OpenAiService");
       logger.info(chat.data.choices[0].message);
       logger.info(response);
       const sentMessage = await wbot.sendMessage(msg.key.remoteJid!, {
@@ -179,7 +173,6 @@ export const handleOpenAi = async (
       });
       await verifyMessage(sentMessage!, ticket, contact);
     } else {
-      console.log(179, "OpenAiService");
       const fileNameWithOutExtension = `${ticket.id}_${Date.now()}`;
       convertTextToSpeechAndSaveToFile(
         keepOnlySpecifiedChars(response!),
@@ -190,7 +183,6 @@ export const handleOpenAi = async (
         "mp3"
       ).then(async () => {
         try {
-          console.log(194, "OpenAiService");
           const sendMessage = await wbot.sendMessage(msg.key.remoteJid!, {
             audio: { url: `${publicFolder}/${fileNameWithOutExtension}.mp3` },
             mimetype: "audio/mpeg",
@@ -208,12 +200,11 @@ export const handleOpenAi = async (
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.wav`);
         } catch (error) {
-          console.log(`Erro para responder com audio: ${error}`);
+          logger.error(error, "Erro para responder com audio");
         }
       });
     }
   } else if (msg.message?.audioMessage) {
-    console.log(201, "OpenAiService");
     const mediaUrl = mediaSent!.mediaUrl!.split("/").pop();
     const file = fs.createReadStream(`${publicFolder}/${mediaUrl}`) as any;
 
@@ -234,8 +225,6 @@ export const handleOpenAi = async (
         message.mediaType === "conversation" ||
         message.mediaType === "extendedTextMessage"
       ) {
-        console.log(238, "OpenAiService");
-
         if (message.fromMe) {
           messagesOpenAi.push({ role: "assistant", content: message.body });
         } else {
@@ -291,7 +280,7 @@ export const handleOpenAi = async (
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
           deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.wav`);
         } catch (error) {
-          console.log(`Erro para responder com audio: ${error}`);
+          logger.error(error, "Erro para responder com audio");
         }
       });
     }
