@@ -11,9 +11,10 @@ import Badge from "@material-ui/core/Badge";
 import MoveToInboxIcon from "@material-ui/icons/MoveToInbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
+import MoreVertIcon from "@material-ui/icons/MoreVert";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import { Switch, IconButton, Tooltip } from "@material-ui/core";
+import { Switch, IconButton, Tooltip, Menu, MenuItem } from "@material-ui/core";
 
 import NewTicketModal from "../NewTicketModal";
 import TicketsList from "../TicketsListCustom";
@@ -140,6 +141,13 @@ const useStyles = makeStyles(theme => ({
     '& .MuiInputLabel-outlined': {
       marginTop: "-6px"
     }
+  },
+  menuItem: {
+    display: "flex",
+    alignItems: "center",
+    "& svg": {
+      marginRight: theme.spacing(1)
+    }
   }
 }));
 
@@ -164,6 +172,16 @@ const TicketsManagerTabs = () => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
   const [cleaningOrphans, setCleaningOrphans] = useState(false);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const menuOpen = Boolean(anchorEl);
+
+  const handleMenuOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   useEffect(() => {
     if (user.profile.toUpperCase() === "ADMIN") {
@@ -301,14 +319,39 @@ const TicketsManagerTabs = () => {
               {i18n.t("ticketsManager.buttons.newTicket")}
             </Button>
             {user.profile === "admin" && (
-              <Tooltip title={i18n.t("tickets.cleanOrphans")}>
-                <IconButton
-                  onClick={handleCleanOrphans}
-                  color="primary"
+              <>
+                <Tooltip title={i18n.t("mainDrawer.listItems.administration")}>
+                  <IconButton
+                    onClick={handleMenuOpen}
+                    color="primary"
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                </Tooltip>
+                <Menu
+                  id="menu-appbar"
+                  anchorEl={anchorEl}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "right",
+                  }}
+                  transformOrigin={{
+                    vertical: "top",
+                    horizontal: "right",
+                  }}
+                  open={menuOpen}
+                  onClose={handleMenuClose}
                 >
-                  <DeleteSweepIcon />
-                </IconButton>
-              </Tooltip>
+                  <MenuItem onClick={() => {
+                    handleCleanOrphans();
+                    handleMenuClose();
+                  }}>
+                    <DeleteSweepIcon fontSize="small" style={{ marginRight: 8 }} />
+                    {i18n.t("ticketsManager.buttons.cleanOrphans")}
+                  </MenuItem>
+                </Menu>
+              </>
             )}
             <Can
               role={user.profile}
