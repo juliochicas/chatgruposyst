@@ -244,6 +244,9 @@ const Users = () => {
               </TableCell>
               <TableCell align="center">{i18n.t("users.table.name")}</TableCell>
               <TableCell align="center">
+                {i18n.t("users.table.nickname")}
+              </TableCell>
+              <TableCell align="center">
                 {i18n.t("users.table.email")}
               </TableCell>
               <TableCell align="center">
@@ -260,6 +263,7 @@ const Users = () => {
                 <TableRow key={user.id}>
 				  <TableCell align="center">{user.id}</TableCell>
                   <TableCell align="center">{user.name}</TableCell>
+                  <TableCell align="center">{user.nickname || "—"}</TableCell>
                   <TableCell align="center">{user.email}</TableCell>
                   <TableCell align="center">{user.profile}</TableCell>
                   <TableCell align="center">
@@ -282,7 +286,7 @@ const Users = () => {
                   </TableCell>
                 </TableRow>
               ))}
-              {loading && <TableRowSkeleton columns={4} />}
+              {loading && <TableRowSkeleton columns={5} />}
             </>
           </TableBody>
         </Table>

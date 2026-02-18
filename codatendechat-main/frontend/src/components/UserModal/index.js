@@ -71,6 +71,7 @@ const UserModal = ({ open, onClose, userId }) => {
 
 	const initialState = {
 		name: "",
+		nickname: "",
 		email: "",
 		password: "",
 		profile: "user",
@@ -173,6 +174,17 @@ const UserModal = ({ open, onClose, userId }) => {
 										variant="outlined"
 										margin="dense"
 										fullWidth
+									/>
+								</div>
+								<div className={classes.multFieldLine}>
+									<Field
+										as={TextField}
+										label={i18n.t("userModal.form.nickname")}
+										name="nickname"
+										variant="outlined"
+										margin="dense"
+										fullWidth
+										placeholder={i18n.t("userModal.form.nicknamePlaceholder")}
 									/>
 								</div>
 								<div className={classes.multFieldLine}>

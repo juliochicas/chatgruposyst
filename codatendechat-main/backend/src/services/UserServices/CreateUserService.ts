@@ -10,6 +10,7 @@ interface Request {
   email: string;
   password: string;
   name: string;
+  nickname?: string;
   queueIds?: number[];
   companyId?: number;
   profile?: string;
@@ -28,6 +29,7 @@ const CreateUserService = async ({
   email,
   password,
   name,
+  nickname,
   queueIds = [],
   companyId,
   profile = "admin",
@@ -87,6 +89,7 @@ const CreateUserService = async ({
       email,
       password,
       name,
+      nickname: nickname || null,
       companyId,
       profile,
       whatsappId: whatsappId || null,

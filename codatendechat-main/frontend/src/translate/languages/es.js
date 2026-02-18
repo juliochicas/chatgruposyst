@@ -672,6 +672,8 @@ const messages = {
           password: "Contraseña",
           profile: "Perfil",
           whatsapp: "Conexión Predeterminada",
+          nickname: "Sobrenombre",
+          nicknamePlaceholder: "Nombre visible para clientes (opcional)",
           allTicket: "Ticket Sin Cola [Invisible]",
           allTicketEnabled: "Habilitado",
           allTicketDesabled: "Deshabilitado",
@@ -1357,6 +1359,7 @@ const messages = {
         table: {
           id: "ID",
           name: "Nombre",
+          nickname: "Sobrenombre",
           email: "Email",
           profile: "Perfil",
           actions: "Acciones",

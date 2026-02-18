@@ -21,10 +21,11 @@ const TicketInfo = ({ contact, ticket, onClick }) => {
 		}
 
 		if (user && contact) {
-			setUserName(`${i18n.t("messagesList.header.assignedTo")} ${user.name}`);
+			const displayName = user.nickname || user.name;
+			setUserName(`${i18n.t("messagesList.header.assignedTo")} ${displayName}`);
 
 			if(document.body.offsetWidth < 600) {
-				setUserName(`${user.name}`);
+				setUserName(`${displayName}`);
 			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
