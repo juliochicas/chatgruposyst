@@ -57,8 +57,6 @@ interface DispatchCampaignData {
 
 export const userMonitor = new BullQueue("UserMonitor", connection);
 
-export const queueMonitor = new BullQueue("QueueMonitor", connection);
-
 export const messageQueue = new BullQueue("MessageQueue", connection, {
   limiter: {
     max: limiterMax as number,
@@ -94,109 +92,6 @@ async function handleSendMessage(job) {
   }
 }
 
-{/*async function handleVerifyQueue(job) {
-  logger.info("Buscando atendimentos perdidos nas filas");
-  try {
-    const companies = await Company.findAll({
-      attributes: ['id', 'name'],
-      where: {
-        status: true,
-        dueDate: {
-          [Op.gt]: Sequelize.literal('CURRENT_DATE')
-        }
-      },
-      include: [
-        {
-          model: Whatsapp, attributes: ["id", "name", "status", "timeSendQueue", "sendIdQueue"], where: {
-            timeSendQueue: {
-              [Op.gt]: 0
-            }
-          }
-        },
-      ]
-    }); */}
-
-{/*    companies.map(async c => {
-      c.whatsapps.map(async w => {
-
-        if (w.status === "CONNECTED") {
-
-          var companyId = c.id;
-
-          const moveQueue = w.timeSendQueue ? w.timeSendQueue : 0;
-          const moveQueueId = w.sendIdQueue;
-          const moveQueueTime = moveQueue;
-          const idQueue = moveQueueId;
-          const timeQueue = moveQueueTime;
-
-          if (moveQueue > 0) {
-
-            if (!isNaN(idQueue) && Number.isInteger(idQueue) && !isNaN(timeQueue) && Number.isInteger(timeQueue)) {
-
-              const tempoPassado = moment().subtract(timeQueue, "minutes").utc().format();
-              // const tempoAgora = moment().utc().format();
-
-              const { count, rows: tickets } = await Ticket.findAndCountAll({
-                where: {
-                  status: "pending",
-                  queueId: null,
-                  companyId: companyId,
-                  whatsappId: w.id,
-                  updatedAt: {
-                    [Op.lt]: tempoPassado
-                  }
-                },
-                include: [
-                  {
-                    model: Contact,
-                    as: "contact",
-                    attributes: ["id", "name", "number", "email", "profilePicUrl"],
-                    include: ["extraInfo"]
-                  }
-                ]
-              });
-
-              if (count > 0) {
-                tickets.map(async ticket => {
-                  await ticket.update({
-                    queueId: idQueue
-                  });
-
-                  await ticket.reload();
-
-                  const io = getIO();
-                  io.to(ticket.status)
-                    .to("notification")
-                    .to(ticket.id.toString())
-                    .emit(`company-${companyId}-ticket`, {
-                      action: "update",
-                      ticket,
-                      ticketId: ticket.id
-                    });
-
-                  // io.to("pending").emit(`company-${companyId}-ticket`, {
-                  //   action: "update",
-                  //   ticket,
-                  // });
-
-                  logger.info(`Atendimento Perdido: ${ticket.id} - Empresa: ${companyId}`);
-                });
-              } else {
-                logger.info(`Nenhum atendimento perdido encontrado - Empresa: ${companyId}`);
-              }
-            } else {
-              logger.info(`Condição não respeitada - Empresa: ${companyId}`);
-            }
-          }
-        }
-      });
-    });
-  } catch (e: any) {
-    Sentry.captureException(e);
-    logger.error("SearchForQueue -> VerifyQueue: error", e.message);
-    throw e;
-  }
-}; */}
 
 async function handleCloseTicketsAutomatic() {
   const job = new CronJob('*/1 * * * *', async () => {
@@ -860,9 +755,6 @@ export async function startQueueProcess() {
 
   campaignQueue.process("DispatchCampaign", 1, handleDispatchCampaign);
 
-
-  //queueMonitor.process("VerifyQueueStatus", handleVerifyQueue);
-
   async function cleanupCampaignQueue() {
     try {
       await campaignQueue.clean(12 * 3600 * 1000, 'completed');
@@ -920,15 +812,6 @@ export async function startQueueProcess() {
     {},
     {
       repeat: { cron: "* * * * *", key: "verify-login" },
-      removeOnComplete: true
-    }
-  );
-
-  queueMonitor.add(
-    "VerifyQueueStatus",
-    {},
-    {
-      repeat: { cron: "*/20 * * * * *" },
       removeOnComplete: true
     }
   );
