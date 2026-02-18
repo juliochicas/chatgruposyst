@@ -355,7 +355,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
   };
 
   const handleRefreshPage = () => {
-    window.location.reload(false);
+    window.location.reload();
   }
 
   const handleMenuItemClick = () => {

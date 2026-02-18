@@ -10,6 +10,7 @@ import Tab from "@material-ui/core/Tab";
 import Badge from "@material-ui/core/Badge";
 import MoveToInboxIcon from "@material-ui/icons/MoveToInbox";
 import CheckBoxIcon from "@material-ui/icons/CheckBox";
+import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
@@ -25,6 +26,9 @@ import TicketsQueueSelect from "../TicketsQueueSelect";
 import { Button } from "@material-ui/core";
 import { TagsFilter } from "../TagsFilter";
 import { UsersFilter } from "../UsersFilter";
+import api from "../../services/api";
+import toastError from "../../errors/toastError";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles(theme => ({
 	ticketsWrapper: {
@@ -159,6 +163,7 @@ const TicketsManagerTabs = () => {
   const [selectedQueueIds, setSelectedQueueIds] = useState(userQueueIds || []);
   const [selectedTags, setSelectedTags] = useState([]);
   const [selectedUsers, setSelectedUsers] = useState([]);
+  const [closingNoCompany, setClosingNoCompany] = useState(false);
 
   useEffect(() => {
     if (user.profile.toUpperCase() === "ADMIN") {
@@ -222,6 +227,18 @@ const TicketsManagerTabs = () => {
     setSelectedUsers(users);
   };
 
+  const handleCloseTicketsWithoutCompany = async () => {
+    if (!window.confirm(i18n.t("ticketsManager.buttons.confirmCloseNoCompany"))) return;
+    setClosingNoCompany(true);
+    try {
+      const { data } = await api.post("/tickets/close-no-company");
+      toast.success(`${data.count} tickets cerrados exitosamente`);
+    } catch (err) {
+      toastError(err);
+    }
+    setClosingNoCompany(false);
+  };
+
   return (
     <Paper elevation={0} variant="outlined" className={classes.ticketsWrapper}>
       <NewTicketModal
@@ -281,6 +298,24 @@ const TicketsManagerTabs = () => {
             >
               {i18n.t("ticketsManager.buttons.newTicket")}
             </Button>
+            <Can
+              role={user.profile}
+              perform="tickets-manager:showall"
+              yes={() => (
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  size="small"
+                  disabled={closingNoCompany}
+                  onClick={handleCloseTicketsWithoutCompany}
+                  startIcon={<DeleteSweepIcon />}
+                >
+                  {closingNoCompany
+                    ? "Cerrando..."
+                    : i18n.t("ticketsManager.buttons.closeNoCompany")}
+                </Button>
+              )}
+            />
             <Can
               role={user.profile}
               perform="tickets-manager:showall"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { BrowserRouter, Switch } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
@@ -51,17 +51,6 @@ import EmbedPage from "../pages/Embed";
 import EmbedConfigPage from "../pages/EmbedConfig";
 
 const Routes = () => {
-  const [showCampaigns, setShowCampaigns] = useState(false);
-
-  useEffect(() => {
-    const companyId = localStorage.getItem("companyId");
-    if (companyId) {
-      const cshow = localStorage.getItem(`cshow_${companyId}`);
-      if (cshow !== undefined && cshow !== null) {
-        setShowCampaigns(true);
-      }
-    }
-  }, []);
 
   return (
     <BrowserRouter>
@@ -151,83 +140,78 @@ const Routes = () => {
                 <Route exact path="/support-tickets/admin" component={SupportAdminDashboard} isPrivate />
                 <Route exact path="/support-tickets/:id" component={TicketDetail} isPrivate />
                 <Route exact path="/chats/:id?" component={Chat} isPrivate />
-                {showCampaigns && (
-                  <>
-                    <Route
-                      exact
-                      path="/contact-lists"
-                      component={ContactLists}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/contact-lists/:contactListId/contacts"
-                      component={ContactListItems}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/campaigns"
-                      component={Campaigns}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/campaign/:campaignId/report"
-                      component={CampaignReport}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/campaigns-config"
-                      component={CampaignsConfig}
-                      isPrivate
-                    />
-
-                    <Route
-                      exact
-                      path="/phrase-lists"
-                      component={CampaignsPhrase}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/flowbuilders"
-                      component={FlowBuilder}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/flowbuilder/:id?"
-                      component={FlowBuilderConfig}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/ultramsg-config"
-                      component={UltraMsgConfig}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/email-config"
-                      component={EmailConfig}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/email-campaigns"
-                      component={EmailCampaigns}
-                      isPrivate
-                    />
-                    <Route
-                      exact
-                      path="/shopify-config"
-                      component={ShopifyConfig}
-                      isPrivate
-                    />
-                  </>
-                )}
+                <Route
+                  exact
+                  path="/contact-lists"
+                  component={ContactLists}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/contact-lists/:contactListId/contacts"
+                  component={ContactListItems}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/campaigns"
+                  component={Campaigns}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/campaign/:campaignId/report"
+                  component={CampaignReport}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/campaigns-config"
+                  component={CampaignsConfig}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/phrase-lists"
+                  component={CampaignsPhrase}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/flowbuilders"
+                  component={FlowBuilder}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/flowbuilder/:id?"
+                  component={FlowBuilderConfig}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/ultramsg-config"
+                  component={UltraMsgConfig}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/email-config"
+                  component={EmailConfig}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/email-campaigns"
+                  component={EmailCampaigns}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/shopify-config"
+                  component={ShopifyConfig}
+                  isPrivate
+                />
               </LoggedInLayout>
             </WhatsAppsProvider>
           </Switch>
