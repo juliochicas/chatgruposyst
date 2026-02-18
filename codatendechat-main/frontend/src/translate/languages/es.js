@@ -66,7 +66,7 @@ const messages = {
           newPassword: {
             required: "La nueva contraseña es obligatoria",
             matches:
-                "Tu contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una minúscula y un número.",
+              "Tu contraseña debe tener al menos 8 caracteres, incluyendo una letra mayúscula, una minúscula y un número.",
           },
           confirmPassword: {
             required: "La confirmación de contraseña es obligatoria",
@@ -88,66 +88,66 @@ const messages = {
       dashboard: {
         toasts: {
           selectFilterError: "Parametrice el filtro",
-              userChartError: "Error al obtener información de la conversación",
-              dateChartError: "Error al obtener información de la conversación",
+          userChartError: "Error al obtener información de la conversación",
+          dateChartError: "Error al obtener información de la conversación",
         },
         filters: {
           initialDate: "Fecha Inicial",
-              finalDate: "Fecha Final",
-              filterType: {
+          finalDate: "Fecha Final",
+          filterType: {
             title: "Tipo de Filtro",
-                options: {
+            options: {
               perDate: "Filtro por Fecha",
-                  perPeriod: "Filtro por Período",
+              perPeriod: "Filtro por Período",
             },
             helper: "Seleccione el tipo de filtro deseado",
           },
         },
         periodSelect: {
           title: "Período",
-              options: {
+          options: {
             none: "Ninguno seleccionado",
-                last3: "Últimos 3 días",
-                last7: "Últimos 7 días",
-                last15: "Últimos 15 días",
-                last30: "Últimos 30 días",
-                last60: "Últimos 60 días",
-                last90: "Últimos 90 días",
+            last3: "Últimos 3 días",
+            last7: "Últimos 7 días",
+            last15: "Últimos 15 días",
+            last30: "Últimos 30 días",
+            last60: "Últimos 60 días",
+            last90: "Últimos 90 días",
           },
           helper: "Seleccione el período deseado",
         },
         counters: {
           inTalk: "En conversación",
-              waiting: "En espera",
-              finished: "Finalizados",
-              newContacts: "Nuevos contactos",
-              averageTalkTime: "T.M. de Conversación",
-              averageWaitTime: "T.M. de Espera",
+          waiting: "En espera",
+          finished: "Finalizados",
+          newContacts: "Nuevos contactos",
+          averageTalkTime: "T.M. de Conversación",
+          averageWaitTime: "T.M. de Espera",
         },
         buttons: {
           filter: "Filtrar",
         },
         onlineTable: {
           ratingLabel: "1 - Insatisfecho, 2 - Satisfecho, 3 - Muy Satisfecho",
-              name: "Nombre",
-              ratings: "Evaluaciones",
-              avgSupportTime: "T.M. de Atención",
-              status: "Estado (Actual)",
+          name: "Nombre",
+          ratings: "Evaluaciones",
+          avgSupportTime: "T.M. de Atención",
+          status: "Estado (Actual)",
         },
         charts: {
           user: {
             label: "Gráfico de Conversaciones",
-                title: "Total de Conversaciones por Usuarios",
-                start: "Inicio",
-                end: "Fin",
-                filter: "Filtrar",
+            title: "Total de Conversaciones por Usuarios",
+            start: "Inicio",
+            end: "Fin",
+            filter: "Filtrar",
           },
           date: {
             label: "Gráfico de Conversaciones",
-                title: "Total",
-                start: "Inicio",
-                end: "Fin",
-                filter: "Filtrar",
+            title: "Total",
+            start: "Inicio",
+            end: "Fin",
+            filter: "Filtrar",
           },
         },
       },
@@ -385,7 +385,7 @@ const messages = {
           queueRedirection: "Redirección de Cola",
           outOfHoursMessage: "Mensaje fuera de horario",
           queueRedirectionDesc:
-              "Seleccione una cola para redirigir los contactos que no tienen cola asignada",
+            "Seleccione una cola para redirigir los contactos que no tienen cola asignada",
           prompt: "Prompt",
           queue: "Cola de Transferencia",
           timeToTransfer: "Transferir después de x (minutos)",
@@ -412,7 +412,7 @@ const messages = {
             partThree: "en iPhone",
           },
           three:
-              "3 - Toque en Dispositivos vinculados y luego en Vincular un dispositivo",
+            "3 - Toque en Dispositivos vinculados y luego en Vincular un dispositivo",
           four: "4 - Apunte su teléfono a esta pantalla para capturar el código QR",
         },
         waiting: "Esperando lectura del código QR",
@@ -436,9 +436,9 @@ const messages = {
           importTitlte: "Importar contactos",
           bulkDeleteTitle: "Eliminar contactos seleccionados",
           deleteMessage:
-              "¿Está seguro que desea eliminar este contacto? Todos los tickets relacionados se perderán.",
+            "¿Está seguro que desea eliminar este contacto? Todos los tickets relacionados se perderán.",
           deleteAllMessage:
-              "¿Está seguro que desea eliminar todos los contactos? Todos los tickets relacionados se perderán.",
+            "¿Está seguro que desea eliminar todos los contactos? Todos los tickets relacionados se perderán.",
           bulkDeleteMessage: "¿Está seguro que desea eliminar {{count}} contactos seleccionados? Todos los tickets relacionados se perderán.",
           importMessage: "¿Desea importar todos los contactos del teléfono?",
         },
@@ -784,8 +784,6 @@ const messages = {
       ticketsManager: {
         buttons: {
           newTicket: "Nuevo",
-          closeNoCompany: "Limpiar sin empresa",
-          confirmCloseNoCompany: "¿Está seguro que desea cerrar todos los tickets sin empresa asignada?",
         },
       },
       ticketsQueueSelect: {
@@ -831,7 +829,7 @@ const messages = {
         assignedHeader: "En atención",
         noTicketsTitle: "¡Nada aquí!",
         noTicketsMessage:
-            "Ninguna atención encontrada con ese estado o término buscado",
+          "Ninguna atención encontrada con ese estado o término buscado",
         buttons: {
           accept: "Aceptar",
           closed: "Finalizar",
@@ -856,7 +854,7 @@ const messages = {
         fieldLabel: "Escriba para buscar el contacto",
         add: "Agregar",
         searchQueueError:
-            "Ocurrió un error inesperado al intentar buscar las colas",
+          "Ocurrió un error inesperado al intentar buscar las colas",
         selectQueue: "Seleccione una cola",
         selectConection: "Seleccione una conexión",
         buttons: {
@@ -935,7 +933,7 @@ const messages = {
         confirmationModal: {
           deleteTitle: "Eliminar",
           deleteMessage:
-              "¿Está seguro? ¡Esta acción no puede ser revertida! y será eliminada de las colas y conexiones vinculadas",
+            "¿Está seguro? ¡Esta acción no puede ser revertida! y será eliminada de las colas y conexiones vinculadas",
         },
       },
       files: {

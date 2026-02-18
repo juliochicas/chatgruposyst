@@ -197,7 +197,7 @@ const TicketListItem = ({ ticket }) => {
                   color="primary"
                 />
               )}
-{/*               {ticket.lastMessage && (
+              {/*               {ticket.lastMessage && (
                 <Typography
                   className={classes.lastMessageTime}
                   component="span"
@@ -213,31 +213,31 @@ const TicketListItem = ({ ticket }) => {
               )} */}
             </span>
           }
-/*           secondary={
-            <span className={classes.contactNameWrapper}>
-              <Typography
-                className={classes.contactLastMessage}
-                noWrap
-                component="span"
-                variant="body2"
-                color="textSecondary"
-              >
-                {ticket.lastMessage ? (
-                  <MarkdownWrapper>{ticket.lastMessage}</MarkdownWrapper>
-                ) : (
-                  <MarkdownWrapper></MarkdownWrapper>
-                )}
-              </Typography>
-
-              <Badge
-                className={classes.newMessagesCount}
-                badgeContent={ticket.unreadMessages}
-                classes={{
-                  badge: classes.badgeStyle,
-                }}
-              />
-            </span>
-          } */
+        /*           secondary={
+                    <span className={classes.contactNameWrapper}>
+                      <Typography
+                        className={classes.contactLastMessage}
+                        noWrap
+                        component="span"
+                        variant="body2"
+                        color="textSecondary"
+                      >
+                        {ticket.lastMessage ? (
+                          <MarkdownWrapper>{ticket.lastMessage}</MarkdownWrapper>
+                        ) : (
+                          <MarkdownWrapper></MarkdownWrapper>
+                        )}
+                      </Typography>
+        
+                      <Badge
+                        className={classes.newMessagesCount}
+                        badgeContent={ticket.unreadMessages}
+                        classes={{
+                          badge: classes.badgeStyle,
+                        }}
+                      />
+                    </span>
+                  } */
         />
         {ticket.status === "pending" && (
           <>
@@ -251,21 +251,6 @@ const TicketListItem = ({ ticket }) => {
             >
               {i18n.t("ticketsList.buttons.accept")}
             </ButtonWithSpinner>
-            {!ticket.companyId && (
-              <ButtonWithSpinner
-                color="secondary"
-                variant="contained"
-                size="small"
-                loading={loading}
-                style={{ position: "absolute", left: "73%" }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleCloseTicket(ticket);
-                }}
-              >
-                {i18n.t("ticketsList.buttons.close")}
-              </ButtonWithSpinner>
-            )}
           </>
         )}
       </ListItem>

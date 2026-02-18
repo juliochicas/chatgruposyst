@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
+import { Op } from "sequelize";
 import { getIO } from "../libs/socket";
+import Ticket from "../models/Ticket";
+import { logger } from "../utils/logger";
 import { removeWbot } from "../libs/wbot";
 import { StartWhatsAppSession } from "../services/WbotServices/StartWhatsAppSession";
 
@@ -156,10 +159,40 @@ export const remove = async (
 
   await ShowWhatsAppService(whatsappId, companyId);
 
+  // Close all open/pending tickets before deleting the connection
+  const [closedCount] = await Ticket.update(
+    { status: "closed" },
+    {
+      where: {
+        whatsappId: +whatsappId,
+        companyId,
+        status: { [Op.in]: ["open", "pending"] },
+      },
+    }
+  );
+
+  if (closedCount > 0) {
+    logger.info(
+      `WhatsAppController.remove: closed ${closedCount} orphaned tickets for whatsappId=${whatsappId}, companyId=${companyId}`
+    );
+  }
+
   await DeleteWhatsAppService(whatsappId);
   removeWbot(+whatsappId);
 
   const io = getIO();
+
+  // Notify frontend to remove closed tickets from the list
+  if (closedCount > 0) {
+    io.to(`company-${companyId}-mainchannel`).emit(
+      `company-${companyId}-ticket`,
+      {
+        action: "removeAll",
+        whatsappId: +whatsappId,
+      }
+    );
+  }
+
   io.to(`company-${companyId}-mainchannel`).emit(`company-${companyId}-whatsapp`, {
     action: "delete",
     whatsappId: +whatsappId
