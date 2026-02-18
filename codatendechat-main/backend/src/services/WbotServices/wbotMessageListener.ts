@@ -1,6 +1,5 @@
+import fs from "fs";
 import path, { join } from "path";
-import { promisify } from "util";
-import { readFile, writeFile } from "fs";
 import * as Sentry from "@sentry/node";
 import { isNil, isNull, head } from "lodash";
 import { extension as mimeExtension } from "mime-types";
@@ -72,8 +71,6 @@ import Whatsapp from "../../models/Whatsapp";
 
 const request = require("request");
 
-const fs = require("fs");
-
 type Session = WASocket & {
   id?: number;
   store?: Store;
@@ -101,7 +98,7 @@ interface IMessage {
 
 export const isNumeric = (value: string) => /^-?\d+$/.test(value);
 
-const writeFileAsync = promisify(writeFile);
+const writeFileAsync = fs.promises.writeFile;
 
 const getTypeMessage = (msg: proto.IWebMessageInfo): string => {
   return getContentType(msg.message);
@@ -255,7 +252,7 @@ export const sendMessageImage = async (
       {
         image: url
           ? { url }
-          : fs.readFileSync(`public/temp/${caption}-${makeid(10)}`),
+          : await fs.promises.readFile(`public/temp/${caption}-${makeid(10)}`),
         fileName: caption,
         caption: caption,
         mimetype: "image/jpeg"
@@ -289,7 +286,7 @@ export const sendMessageLink = async (
       {
         document: url
           ? { url }
-          : fs.readFileSync(`public/temp/${caption}-${makeid(10)}`),
+          : await fs.promises.readFile(`public/temp/${caption}-${makeid(10)}`),
         fileName: caption,
         caption: caption,
         mimetype: "application/pdf"
