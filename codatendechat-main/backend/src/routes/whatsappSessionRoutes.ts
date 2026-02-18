@@ -23,4 +23,10 @@ whatsappSessionRoutes.delete(
   WhatsAppSessionController.remove
 );
 
+whatsappSessionRoutes.post(
+  "/whatsappsession/:whatsappId/cleanup-tickets",
+  isAuth,
+  WhatsAppSessionController.cleanupTickets
+);
+
 export default whatsappSessionRoutes;

@@ -315,6 +315,7 @@ const messages = {
         title: "Conexiones",
         toasts: {
           deleted: "¡Conexión con WhatsApp eliminada con éxito!",
+          cleanupSuccess: "{{count}} tickets pendientes cerrados con éxito",
         },
         confirmationModal: {
           deleteTitle: "Eliminar",
@@ -329,6 +330,7 @@ const messages = {
           qrcode: "CÓDIGO QR",
           newQr: "Nuevo CÓDIGO QR",
           connecting: "Conectando",
+          cleanupTickets: "Limpiar tickets",
         },
         toolTips: {
           disconnected: {

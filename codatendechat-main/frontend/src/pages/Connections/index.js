@@ -248,6 +248,15 @@ const Connections = () => {
 		}
 	};
 
+	const handleCleanupTickets = async (whatsAppId) => {
+		try {
+			const { data } = await api.post(`/whatsappsession/${whatsAppId}/cleanup-tickets`);
+			toast.success(i18n.t("connections.toasts.cleanupSuccess", { count: data.closedTickets }));
+		} catch (err) {
+			toastError(err);
+		}
+	};
+
 	const handleOpenConfirmationModal = (action, whatsAppId) => {
 		if (action === "disconnect") {
 			setConfirmModalInfo({
@@ -334,6 +343,13 @@ const Connections = () => {
 							onClick={() => handleRequestNewQrCode(whatsApp.id)}
 						>
 							{i18n.t("connections.buttons.newQr")}
+						</Button>{" "}
+						<Button
+							size="small"
+							variant="outlined"
+							onClick={() => handleCleanupTickets(whatsApp.id)}
+						>
+							{i18n.t("connections.buttons.cleanupTickets")}
 						</Button>
 					</>
 				)}
