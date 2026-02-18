@@ -13,9 +13,10 @@ interface Request {
   nickname?: string;
   queueIds?: number[];
   companyId?: number;
+  companyIds?: number[];
   profile?: string;
   whatsappId?: number;
-  allTicket?:string;
+  allTicket?: string;
 }
 
 interface Response {
@@ -32,6 +33,7 @@ const CreateUserService = async ({
   nickname,
   queueIds = [],
   companyId,
+  companyIds = [],
   profile = "admin",
   whatsappId,
   allTicket
@@ -93,12 +95,19 @@ const CreateUserService = async ({
       companyId,
       profile,
       whatsappId: whatsappId || null,
-	  allTicket
+      allTicket
     },
     { include: ["queues", "company"] }
   );
 
   await user.$set("queues", queueIds);
+
+  if (companyIds.length > 0) {
+    await user.$set("companies", companyIds);
+  } else if (companyId) {
+    // If no explicit companyIds, at least add the main companyId to the N:M table
+    await user.$set("companies", [companyId]);
+  }
 
   await user.reload();
 

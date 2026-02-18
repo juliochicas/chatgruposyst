@@ -16,6 +16,7 @@ interface SerializedUser {
   profile: string;
   queues: Queue[];
   companyId: number;
+  companies?: Company[];
 }
 
 interface Request {
@@ -35,7 +36,11 @@ const AuthUserService = async ({
 }: Request): Promise<Response> => {
   const user = await User.findOne({
     where: { email },
-    include: ["queues", { model: Company, include: [{ model: Setting }] }]
+    include: [
+      "queues",
+      { model: Company, include: [{ model: Setting }] },
+      { model: Company, as: "companies", attributes: ["id", "name"] }
+    ]
   });
 
   if (!user) {
@@ -50,9 +55,11 @@ const AuthUserService = async ({
   const refreshToken = createRefreshToken(user);
 
   const serializedUser = await SerializeUser(user);
+  // Add companies to serializedUser manually since SerializeUser might not include it
+  const userWithCompanies = { ...serializedUser, companies: user.companies };
 
   return {
-    serializedUser,
+    serializedUser: userWithCompanies,
     token,
     refreshToken
   };

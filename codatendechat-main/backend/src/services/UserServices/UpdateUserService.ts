@@ -13,6 +13,7 @@ interface UserData {
   profile?: string;
   companyId?: number;
   queueIds?: number[];
+  companyIds?: number[];
   whatsappId?: number;
   allTicket?: string;
 }
@@ -50,10 +51,10 @@ const UpdateUserService = async ({
     email: Yup.string().email(),
     profile: Yup.string(),
     password: Yup.string(),
-	allTicket: Yup.string()
+    allTicket: Yup.string()
   });
 
-  const { email, password, profile, name, nickname, queueIds = [], whatsappId, allTicket } = userData;
+  const { email, password, profile, name, nickname, queueIds = [], companyIds = [], whatsappId, allTicket } = userData;
 
   try {
     await schema.validate({ email, password, profile, name, allTicket });
@@ -68,10 +69,14 @@ const UpdateUserService = async ({
     name,
     nickname: nickname !== undefined ? (nickname || null) : user.nickname,
     whatsappId: whatsappId || null,
-	allTicket
+    allTicket
   });
 
   await user.$set("queues", queueIds);
+
+  if (companyIds.length > 0) {
+    await user.$set("companies", companyIds);
+  }
 
   await user.reload();
 
@@ -84,7 +89,8 @@ const UpdateUserService = async ({
     profile: user.profile,
     companyId: user.companyId,
     company,
-    queues: user.queues
+    queues: user.queues,
+    companies: user.companies
   };
 
   return serializedUser;

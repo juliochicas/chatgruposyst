@@ -46,7 +46,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     companyId: bodyCompanyId,
     queueIds,
     whatsappId,
-	allTicket
+    allTicket
   } = req.body;
   let userCompanyId: number | null = null;
 
@@ -77,9 +77,10 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     nickname,
     profile,
     companyId: newUserCompanyId,
+    companyIds: req.body.companyIds,
     queueIds,
     whatsappId,
-	allTicket
+    allTicket
   });
 
   const io = getIO();
@@ -162,12 +163,12 @@ export const list = async (req: Request, res: Response): Promise<Response> => {
 
 export const setLanguage = async (req: Request, res: Response): Promise<Response> => {
   const { companyId } = req.user;
-  const {newLanguage} = req.params;
+  const { newLanguage } = req.params;
 
-  if( newLanguage !== "pt" && newLanguage !== "en" && newLanguage !== "es" )
+  if (newLanguage !== "pt" && newLanguage !== "en" && newLanguage !== "es")
     throw new AppError("ERR_INTERNAL_SERVER_ERROR", 500);
 
-  await SetLanguageCompanyService( companyId, newLanguage );
+  await SetLanguageCompanyService(companyId, newLanguage);
 
-  return res.status(200).json({message: "Language updated successfully"});
+  return res.status(200).json({ message: "Language updated successfully" });
 }
