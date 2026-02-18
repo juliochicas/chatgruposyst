@@ -120,6 +120,7 @@ const Kanban = () => {
       title: ticket.contact.name,
       draggable: true,
       href: "/tickets/" + ticket.uuid,
+      style: { borderRadius: 8, boxShadow: "0 1px 3px rgba(0,0,0,0.12)" }, // Modern card style
     }));
   };
 
@@ -294,7 +295,9 @@ const Kanban = () => {
         <Board
           data={file}
           onCardMoveAcrossLanes={handleCardMove}
-          style={{ backgroundColor: "rgba(252, 252, 252, 0.03)", width: "100%" }}
+          style={{ backgroundColor: "transparent", height: "100%" }} // Transparent to let MainContainer bg show
+          laneStyle={{ backgroundColor: "rgba(255, 255, 255, 0.5)", borderRadius: 8, maxHeight: "95%" }} // Semi-transparent lanes
+          cardStyle={{ borderRadius: 8, boxShadow: "0 1px 2px rgba(0,0,0,0.1)" }}
         />
       )}
     </div>

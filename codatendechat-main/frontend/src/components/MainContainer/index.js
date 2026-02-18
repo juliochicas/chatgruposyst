@@ -8,6 +8,7 @@ const useStyles = makeStyles(theme => ({
 		flex: 1,
 		padding: theme.spacing(2),
 		height: `calc(100% - 48px)`,
+		backgroundColor: theme.palette.background.default,
 	},
 
 	contentWrapper: {

@@ -1,0 +1,34 @@
+#!/usr/bin/expect
+
+set timeout 60
+set ip "62.72.7.2"
+set user "root"
+set password ".3+ml3&LKxGw6N1DbZd5"
+
+spawn ssh $user@$ip
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send "$password\r" }
+}
+
+expect "#"
+# Try to load environment
+send "export PATH=\$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin\r"
+send "source ~/.bashrc\r"
+send "source ~/.profile\r"
+send "[ -s \"$HOME/.nvm/nvm.sh\" ] && \\. \"$HOME/.nvm/nvm.sh\"\r"
+
+expect "#"
+send "echo '--- CHECKING NODE ---'\r"
+send "which node\r"
+send "which npm\r"
+send "which pm2\r"
+
+expect "#"
+send "echo '--- CHECKING DOCKER ---'\r"
+send "which docker\r"
+send "docker ps --format '{{.Names}}'\r"
+
+expect "#"
+send "exit\r"
+expect eof

@@ -49,6 +49,7 @@ import TicketDetail from "../pages/SupportTickets/TicketDetail";
 import SupportAdminDashboard from "../pages/SupportTickets/AdminDashboard";
 import EmbedPage from "../pages/Embed";
 import EmbedConfigPage from "../pages/EmbedConfig";
+import Addons from "../pages/Addons";
 
 const Routes = () => {
 
@@ -133,6 +134,12 @@ const Routes = () => {
                   exact
                   path="/subscription"
                   component={Subscription}
+                  isPrivate
+                />
+                <Route
+                  exact
+                  path="/addons"
+                  component={Addons}
                   isPrivate
                 />
                 <Route exact path="/embed-config" component={EmbedConfigPage} isPrivate />

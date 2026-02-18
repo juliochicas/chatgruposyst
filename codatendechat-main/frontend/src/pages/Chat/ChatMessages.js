@@ -26,46 +26,58 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 0,
     height: "100%",
     borderLeft: "1px solid rgba(0, 0, 0, 0.12)",
+    backgroundColor: theme.palette.background.default, // Ensure background matches theme
   },
   messageList: {
     position: "relative",
     overflowY: "auto",
     height: "100%",
     ...theme.scrollbarStyles,
-    backgroundColor: theme.palette.chatlist, //DARK MODE PLW DESIGN//
+    backgroundColor: "transparent",
+    display: "flex",
+    flexDirection: "column",
+    padding: theme.spacing(2),
   },
   inputArea: {
     position: "relative",
     height: "auto",
+    padding: theme.spacing(2),
+    backgroundColor: theme.palette.background.paper,
   },
   input: {
-    padding: "20px",
+    padding: "12px 20px",
+    borderRadius: 24,
+    backgroundColor: theme.palette.mode === 'light' ? '#f1f5f9' : '#334155', // Slate 100 / 700
+    border: "none",
+    "& .MuiInputBase-input": {
+      fontSize: "0.95rem",
+    }
   },
   buttonSend: {
     margin: theme.spacing(1),
   },
   boxLeft: {
-    padding: "10px 10px 5px",
-    margin: "10px",
+    padding: "12px 16px",
+    margin: "4px 0",
     position: "relative",
-    backgroundColor: "#E8EAF6",
-    color: "#1a1a2e",
-    maxWidth: 300,
-    borderRadius: 10,
-    borderBottomLeftRadius: 0,
-    border: "1px solid rgba(0, 0, 0, 0.08)",
+    backgroundColor: theme.palette.mode === 'light' ? "#FFFFFF" : "#1E293B", // White / Slate 800
+    color: theme.palette.text.primary,
+    maxWidth: "70%",
+    borderRadius: "18px 18px 18px 0px",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+    alignSelf: "flex-start",
   },
   boxRight: {
-    padding: "10px 10px 5px",
-    margin: "10px 10px 10px auto",
+    padding: "12px 16px",
+    margin: "4px 0",
     position: "relative",
-    backgroundColor: "#5B8DEF",
-    color: "#fff",
-    textAlign: "right",
-    maxWidth: 300,
-    borderRadius: 10,
-    borderBottomRightRadius: 0,
-    border: "1px solid rgba(0, 0, 0, 0.08)",
+    backgroundColor: theme.palette.primary.main, // Indigo
+    color: "#ffffff",
+    textAlign: "left",
+    maxWidth: "70%",
+    borderRadius: "18px 18px 0px 18px",
+    boxShadow: "0 1px 2px rgba(0,0,0,0.1)",
+    alignSelf: "flex-end",
   },
 }));
 
@@ -103,7 +115,7 @@ export default function ChatMessages({
     if (unreadMessages(chat) > 0) {
       try {
         api.post(`/chats/${chat.id}/read`, { userId: user.id });
-      } catch (err) {}
+      } catch (err) { }
     }
     scrollToBottomRef.current = scrollToBottom;
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -151,9 +163,11 @@ export default function ChatMessages({
         <div ref={baseRef}></div>
       </div>
       <div className={classes.inputArea}>
-        <FormControl variant="outlined" fullWidth>
+        <FormControl variant="standard" fullWidth>
           <Input
+            disableUnderline
             multiline
+            placeholder={i18n.t("chat.inputPlaceholder") || "Type a message"}
             value={contentMessage}
             onKeyUp={(e) => {
               if (e.key === "Enter" && contentMessage.trim() !== "") {
@@ -173,6 +187,7 @@ export default function ChatMessages({
                     }
                   }}
                   className={classes.buttonSend}
+                  color="primary"
                 >
                   <SendIcon />
                 </IconButton>

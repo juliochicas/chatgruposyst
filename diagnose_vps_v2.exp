@@ -1,0 +1,34 @@
+#!/usr/bin/expect
+
+set timeout 30
+set ip "62.72.7.2"
+set user "root"
+set password ".3+ml3&LKxGw6N1DbZd5"
+
+spawn ssh $user@$ip
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send "$password\r" }
+}
+
+expect "#"
+send "export PATH=\$PATH:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin\r"
+send "source ~/.bashrc\r"
+send "source ~/.profile\r"
+# Try to source NVM if it exists, ignoring errors
+send "[ -f ~/.nvm/nvm.sh ] && source ~/.nvm/nvm.sh\r"
+
+expect "#"
+send "echo '--- CHECKING NODE ---'\r"
+send "node -v\r"
+send "npm -v\r"
+send "pm2 -v\r"
+
+expect "#"
+send "echo '--- CHECKING DOCKER ---'\r"
+send "docker -v\r"
+send "docker ps --format '{{.Names}}'\r"
+
+expect "#"
+send "exit\r"
+expect eof

@@ -1,0 +1,33 @@
+#!/usr/bin/expect
+
+set timeout 120
+set ip "62.72.7.2"
+set user "root"
+set password ".3+ml3&LKxGw6N1DbZd5"
+set project_dir "/root/chatgruposyst"
+
+spawn ssh $user@$ip
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send "$password\r" }
+}
+
+expect "#"
+send "cd $project_dir\r"
+
+# Pull latest changes
+expect "#"
+send "git pull origin main\r"
+
+# Rebuild frontend
+expect "#"
+send "cd codatendechat-main\r"
+expect "#"
+send "docker compose build frontend\r"
+
+expect "#"
+send "docker compose up -d --force-recreate frontend\r"
+
+expect "#"
+send "exit\r"
+expect eof

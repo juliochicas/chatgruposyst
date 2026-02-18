@@ -1,0 +1,43 @@
+#!/usr/bin/expect
+
+set timeout 30
+set ip "62.72.7.2"
+set user "root"
+set password ".3+ml3&LKxGw6N1DbZd5"
+set project_dir "/root/chatgruposyst/codatendechat-main"
+
+spawn ssh $user@$ip
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send "$password\r" }
+}
+
+expect "#"
+send "cd $project_dir/backend\r"
+
+# Check if .env exists, if not copy example
+expect "#"
+send "test -f .env || cp .env.example .env\r"
+
+# Update URLs
+expect "#"
+send "sed -i 's|BACKEND_URL=http://localhost:8080|BACKEND_URL=https://app.chateaya.app|g' .env\r"
+expect "#"
+send "sed -i 's|FRONTEND_URL=http://localhost:3000|FRONTEND_URL=https://app.chateaya.app|g' .env\r"
+
+# Ensure Shopify keys are present (append if missing, but avoid duplicates if possible)
+# Simple check: grep, if fail, append.
+expect "#"
+send "grep -q 'SHOPIFY_API_KEY' .env || echo 'SHOPIFY_API_KEY=66191d4a5ecd2a848b548a4ad4e89519' >> .env\r"
+expect "#"
+send "grep -q 'SHOPIFY_API_SECRET' .env || echo 'SHOPIFY_API_SECRET=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' >> .env\r"
+
+# Restart Backend
+expect "#"
+send "cd ..\r"
+expect "#"
+send "docker restart codatendechat-main-backend-1\r"
+
+expect "#"
+send "exit\r"
+expect eof

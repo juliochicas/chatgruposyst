@@ -41,7 +41,7 @@ import BorderColorIcon from '@material-ui/icons/BorderColor';
 import ToDoList from "../pages/ToDoList/";
 import toastError from "../errors/toastError";
 import { makeStyles } from "@material-ui/core/styles";
-import { AccountTree, AllInclusive, AttachFile, BlurCircular, Business, Chat, DeviceHubOutlined, Email, Schedule, SendOutlined, Store as StoreIcon, HeadsetMic } from '@material-ui/icons';
+import { AccountTree, AllInclusive, AttachFile, BlurCircular, Business, Chat, DeviceHubOutlined, Email, Schedule, SendOutlined, Store as StoreIcon, HeadsetMic, Extension } from '@material-ui/icons';
 import usePlans from "../hooks/usePlans";
 import Typography from "@material-ui/core/Typography";
 import { ShapeLine } from "@mui/icons-material";
@@ -67,9 +67,19 @@ function ListItemLink(props) {
   );
 
   return (
-    <li>
-      <ListItem button dense component={renderLink} className={className}>
-        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+    <li style={{ display: 'block' }}>
+      <ListItem
+        button
+        dense
+        component={renderLink}
+        className={className}
+        style={{
+          margin: "4px 8px",
+          borderRadius: "8px",
+          width: "auto",
+        }}
+      >
+        {icon ? <ListItemIcon style={{ minWidth: 40 }}>{icon}</ListItemIcon> : null}
         <ListItemText primary={primary} />
       </ListItem>
     </li>
@@ -153,7 +163,7 @@ const MainListItems = (props) => {
   const [searchParam] = useState("");
   const [chats, dispatch] = useReducer(reducer, []);
   const { getPlanCompany } = usePlans();
-  
+
   const [openFlowsSubmenu, setOpenFlowsSubmenu] = useState(false);
 
   const socketManager = useContext(SocketContext);
@@ -161,7 +171,7 @@ const MainListItems = (props) => {
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
- 
+
 
   useEffect(() => {
     dispatch({ type: "RESET" });
@@ -294,14 +304,14 @@ const MainListItems = (props) => {
         primary={i18n.t("mainDrawer.listItems.tickets")}
         icon={<WhatsAppIcon />}
       />
-	  
-	{showKanban && (  
-	  <ListItemLink
-        to="/kanban"
-        primary={`Kanban`}
-        icon={<TableChartIcon />}
-      />
-	  )}
+
+      {showKanban && (
+        <ListItemLink
+          to="/kanban"
+          primary={`Kanban`}
+          icon={<TableChartIcon />}
+        />
+      )}
 
 
       <ListItemLink
@@ -309,8 +319,8 @@ const MainListItems = (props) => {
         primary={i18n.t("mainDrawer.listItems.quickMessages")}
         icon={<FlashOnIcon />}
       />
-	  
-	  <ListItemLink
+
+      <ListItemLink
         to="/todolist"
         primary={i18n.t("mainDrawer.listItems.tasks")}
         icon={<BorderColorIcon />}
@@ -374,7 +384,7 @@ const MainListItems = (props) => {
               color="inherit">
               {i18n.t("mainDrawer.listItems.administration")}
             </ListSubheader>
-			
+
             {showCampaigns && (
               <>
                 <ListItem
@@ -464,32 +474,32 @@ const MainListItems = (props) => {
                 </Collapse>
                 {/* Flow builder */}
                 <ListItem
-                    button
-                    onClick={() => setOpenFlowsSubmenu((prev) => !prev)}
+                  button
+                  onClick={() => setOpenFlowsSubmenu((prev) => !prev)}
                 >
                   <ListItemIcon>
                     <AccountTree />
                   </ListItemIcon>
                   <ListItemText
-                      primary={i18n.t("mainDrawer.listItems.flows")}
+                    primary={i18n.t("mainDrawer.listItems.flows")}
                   />
                   {openFlowsSubmenu ? (
-                      <ExpandLessIcon />
+                    <ExpandLessIcon />
                   ) : (
-                      <ExpandMoreIcon />
+                    <ExpandMoreIcon />
                   )}
                 </ListItem>
 
                 <Collapse
-                    style={{ paddingLeft: 15 }}
-                    in={openFlowsSubmenu}
-                    timeout="auto"
-                    unmountOnExit
+                  style={{ paddingLeft: 15 }}
+                  in={openFlowsSubmenu}
+                  timeout="auto"
+                  unmountOnExit
                 >
                   <List component="div" disablePadding>
                     <ListItem
-                        onClick={() => history.push("/phrase-lists")}
-                        button
+                      onClick={() => history.push("/phrase-lists")}
+                      button
                     >
                       <ListItemIcon>
                         <EventAvailableIcon />
@@ -498,8 +508,8 @@ const MainListItems = (props) => {
                     </ListItem>
 
                     <ListItem
-                        onClick={() => history.push("/flowbuilders")}
-                        button
+                      onClick={() => history.push("/flowbuilders")}
+                      button
                     >
                       <ListItemIcon>
                         <ShapeLine />
@@ -572,6 +582,11 @@ const MainListItems = (props) => {
               icon={<LocalAtmIcon />}
             />
             <ListItemLink
+              to="/addons"
+              primary={i18n.t("mainDrawer.listItems.addons") || "Add-ons"}
+              icon={<Extension />}
+            />
+            <ListItemLink
               to="/embed-config"
               primary={i18n.t("mainDrawer.listItems.embedConfig")}
               icon={<CodeRoundedIcon />}
@@ -615,8 +630,8 @@ const MainListItems = (props) => {
               primary={i18n.t("mainDrawer.listItems.settings")}
               icon={<SettingsOutlinedIcon />}
             />
-			
-			
+
+
             {!collapsed && <React.Fragment>
               <Divider />
               {/* 
@@ -630,7 +645,7 @@ const MainListItems = (props) => {
               </Typography>
             </React.Fragment>
             }
-			
+
           </>
         )}
       />

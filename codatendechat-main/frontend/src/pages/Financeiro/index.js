@@ -13,6 +13,7 @@ import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 import TextField from "@material-ui/core/TextField";
 import InputAdornment from "@material-ui/core/InputAdornment";
+import { useHistory } from "react-router-dom";
 
 import DeleteOutlineIcon from "@material-ui/icons/DeleteOutline";
 import EditIcon from "@material-ui/icons/Edit";
@@ -86,6 +87,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Invoices = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   const [loading, setLoading] = useState(false);
   const [pageNumber, setPageNumber] = useState(1);
@@ -162,7 +164,7 @@ const Invoices = () => {
     const hoje = moment(moment()).format("DD/MM/yyyy");
     const vencimento = moment(record.dueDate).format("DD/MM/yyyy");
     var diff = moment(vencimento, "DD/MM/yyyy").diff(moment(hoje, "DD/MM/yyyy"));
-    var dias = moment.duration(diff).asDays();    
+    var dias = moment.duration(diff).asDays();
     if (dias < 0 && record.status !== "paid") {
       return { backgroundColor: "#ffbcbc9c" };
     }
@@ -172,7 +174,7 @@ const Invoices = () => {
     const hoje = moment(moment()).format("DD/MM/yyyy");
     const vencimento = moment(record.dueDate).format("DD/MM/yyyy");
     var diff = moment(vencimento, "DD/MM/yyyy").diff(moment(hoje, "DD/MM/yyyy"));
-    var dias = moment.duration(diff).asDays();    
+    var dias = moment.duration(diff).asDays();
     const status = record.status;
     if (status === "paid") {
       return i18n.t("invoices.paid");
@@ -205,6 +207,22 @@ const Invoices = () => {
             disabled={portalLoading}
           >
             {portalLoading ? "..." : (i18n.t("invoices.manageBilling") || "Gestionar Suscripción")}
+          </Button>
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={handleOpenPortal}
+            disabled={portalLoading}
+          >
+            {portalLoading ? "..." : (i18n.t("invoices.manageBilling") || "Gestionar Suscripción")}
+          </Button>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => history.push("/addons")}
+            style={{ marginLeft: 10 }}
+          >
+            {i18n.t("invoices.buyAddons") || "Comprar Add-ons"}
           </Button>
         </MainHeaderButtonsWrapper>
       </MainHeader>
@@ -245,9 +263,9 @@ const Invoices = () => {
                       </Button> :
                       <Button
                         size="small"
-                        variant="outlined" 
-                        /* color="secondary"
-                        disabled */
+                        variant="outlined"
+                      /* color="secondary"
+                      disabled */
                       >
                         {i18n.t("invoices.PAID")}
                       </Button>}

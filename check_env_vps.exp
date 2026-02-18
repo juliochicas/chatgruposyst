@@ -1,0 +1,19 @@
+#!/usr/bin/expect
+
+set timeout 30
+set ip "62.72.7.2"
+set user "root"
+set password ".3+ml3&LKxGw6N1DbZd5"
+
+spawn ssh $user@$ip
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send "$password\r" }
+}
+
+expect "#"
+send "docker exec codatendechat-main-backend-1 env | grep BACKEND_URL\r"
+
+expect "#"
+send "exit\r"
+expect eof

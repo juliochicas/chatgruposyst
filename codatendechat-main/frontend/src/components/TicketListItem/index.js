@@ -26,6 +26,12 @@ import toastError from "../../errors/toastError";
 const useStyles = makeStyles((theme) => ({
   ticket: {
     position: "relative",
+    borderRadius: 8,
+    margin: "4px 8px",
+    width: "auto",
+    "&:hover": {
+      backgroundColor: theme.palette.action.hover,
+    }
   },
 
   pendingTicket: {
@@ -58,6 +64,7 @@ const useStyles = makeStyles((theme) => ({
   contactNameWrapper: {
     display: "flex",
     justifyContent: "space-between",
+    alignItems: "center",
   },
 
   lastMessageTime: {
@@ -89,15 +96,19 @@ const useStyles = makeStyles((theme) => ({
   acceptButton: {
     position: "absolute",
     left: "50%",
+    transform: "translateX(-50%)", // Center properly
+    borderRadius: 20,
   },
 
   ticketQueueColor: {
     flex: "none",
-    width: "8px",
-    height: "100%",
+    width: "6px", // Thinner
+    height: "24px", // Pill shape
+    borderRadius: "4px",
     position: "absolute",
-    top: "0%",
-    left: "0%",
+    top: "50%",
+    left: "4px",
+    transform: "translateY(-50%)",
   },
 }));
 

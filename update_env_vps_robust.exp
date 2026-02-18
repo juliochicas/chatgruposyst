@@ -1,0 +1,37 @@
+#!/usr/bin/expect
+
+set timeout 30
+set ip "62.72.7.2"
+set user "root"
+set password ".3+ml3&LKxGw6N1DbZd5"
+set project_dir "/root/chatgruposyst/codatendechat-main"
+
+spawn ssh $user@$ip
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send "$password\r" }
+}
+
+expect "#"
+send "cd $project_dir/backend\r"
+
+# Update URLs using regex to match any previous value
+# Replace BACKEND_URL=anything with BACKEND_URL=https://app.chateaya.app
+expect "#"
+send "sed -i 's|^BACKEND_URL=.*|BACKEND_URL=https://app.chateaya.app|g' .env\r"
+expect "#"
+send "sed -i 's|^FRONTEND_URL=.*|FRONTEND_URL=https://app.chateaya.app|g' .env\r"
+
+# Verify the change by printing the file
+expect "#"
+send "grep 'BACKEND_URL' .env\r"
+
+# Restart Backend
+expect "#"
+send "cd ..\r"
+expect "#"
+send "docker compose up -d --force-recreate backend || docker-compose up -d --force-recreate backend\r"
+
+expect "#"
+send "exit\r"
+expect eof

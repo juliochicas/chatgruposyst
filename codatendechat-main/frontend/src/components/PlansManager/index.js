@@ -13,13 +13,15 @@ import {
     FormControl,
     InputLabel,
     MenuItem,
-    Select
+    Select,
+    Chip,
+    InputAdornment
 } from "@material-ui/core";
 import { Formik, Form, Field } from 'formik';
 import ButtonWithSpinner from "../ButtonWithSpinner";
 import ConfirmationModal from "../ConfirmationModal";
 
-import { Edit as EditIcon } from "@material-ui/icons";
+import { Edit as EditIcon, AddCircleOutline } from "@material-ui/icons";
 
 import { toast } from "react-toastify";
 import usePlans from "../../hooks/usePlans";
@@ -79,8 +81,23 @@ export function PlanManagerForm(props) {
         useExternalApi: true,
         useKanban: true,
         useOpenAi: true,
+        useOpenAi: true,
         useIntegrations: true,
+        features: []
     });
+
+    const [newFeature, setNewFeature] = useState("");
+
+    const handleAddFeature = () => {
+        if (newFeature) {
+            setRecord(prev => ({ ...prev, features: [...(prev.features || []), newFeature] }));
+            setNewFeature("");
+        }
+    }
+
+    const handleDeleteFeature = (featureToDelete) => {
+        setRecord(prev => ({ ...prev, features: (prev.features || []).filter(f => f !== featureToDelete) }));
+    }
 
     useEffect(() => {
         setRecord(initialValue)
@@ -297,6 +314,42 @@ export function PlanManagerForm(props) {
                             </FormControl>
                         </Grid>
                     </Grid>
+
+                    {/* FEATURES */}
+                    <Grid spacing={1} justifyContent="flex-start" container>
+                        <Grid xs={12} md={12} item>
+                            <Field
+                                as={TextField}
+                                label={i18n.t("plans.form.features")}
+                                name="newFeature"
+                                value={newFeature}
+                                onChange={(e) => setNewFeature(e.target.value)}
+                                variant="outlined"
+                                className={classes.fullWidth}
+                                margin="dense"
+                                InputProps={{
+                                    endAdornment: (
+                                        <InputAdornment position="end">
+                                            <IconButton onClick={handleAddFeature}>
+                                                <AddCircleOutline />
+                                            </IconButton>
+                                        </InputAdornment>
+                                    ),
+                                }}
+                            />
+                            <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', marginTop: 8 }}>
+                                {(record.features || []).map((feature, index) => (
+                                    <Chip
+                                        key={index}
+                                        label={feature}
+                                        onDelete={() => handleDeleteFeature(feature)}
+                                        style={{ margin: 2 }}
+                                    />
+                                ))}
+                            </div>
+                        </Grid>
+                    </Grid>
+
                     <Grid spacing={2} justifyContent="flex-end" container>
 
                         <Grid sm={3} md={2} item>
@@ -326,7 +379,7 @@ export function PlanManagerForm(props) {
 export function PlansManagerGrid(props) {
     const { records, onSelect } = props
     const classes = useStyles()
-    
+
     const renderCampaigns = (row) => {
         return row.useCampaigns === false ? `${i18n.t("plans.form.no")}` : `${i18n.t("plans.form.yes")}`;
     };
@@ -428,6 +481,7 @@ export default function PlansManager() {
         useKanban: true,
         useOpenAi: true,
         useIntegrations: true,
+        features: []
     })
 
     useEffect(() => {
@@ -525,7 +579,8 @@ export default function PlansManager() {
             useExternalApi,
             useKanban,
             useOpenAi,
-            useIntegrations
+            useIntegrations,
+            features: data.features || []
         })
     }
 

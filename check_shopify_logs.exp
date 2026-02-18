@@ -1,0 +1,24 @@
+#!/usr/bin/expect
+
+set timeout 30
+set ip "62.72.7.2"
+set user "root"
+set password ".3+ml3&LKxGw6N1DbZd5"
+
+spawn ssh $user@$ip
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send "$password\r" }
+}
+
+# Check what BACKEND_URL is inside the running container
+expect "#"
+send "docker exec codatendechat-main-backend-1 env | grep -E 'BACKEND_URL|FRONTEND_URL|SHOPIFY'\r"
+
+# Check last backend logs for any shopify-related errors
+expect "#"
+send "docker logs codatendechat-main-backend-1 --tail 50 2>&1 | grep -i shopify\r"
+
+expect "#"
+send "exit\r"
+expect eof

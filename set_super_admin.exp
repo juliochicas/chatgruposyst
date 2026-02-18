@@ -1,0 +1,15 @@
+#!/usr/bin/expect -f
+
+set timeout 120
+
+spawn ssh -o StrictHostKeyChecking=no -o ConnectTimeout=60 root@62.72.7.2
+
+expect "password:"
+send ".3+ml3&LKxGw6N1DbZd5\r"
+
+expect "#"
+send "docker exec codatendechat-main-postgres-1 psql -U atendechat -d atendechat -c \"UPDATE \\\"Users\\\" SET \\\"super\\\" = true WHERE email = 'julio.chicas@gruposyst.com'; SELECT id, name, email, profile, \\\"super\\\" FROM \\\"Users\\\" ORDER BY id;\"\r"
+
+expect "#"
+send "exit\r"
+expect eof

@@ -21,6 +21,7 @@ import QueueSelectSingle from "../../components/QueueSelectSingle";
 
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
+import { promptTemplates } from "../../helpers/promptTemplates";
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -100,9 +101,9 @@ const PromptModal = ({ open, onClose, promptId, refreshPrompts }) => {
                 setPrompt(prevState => {
                     return { ...prevState, ...data };
                 });
-                
+
                 setSelectedModel(data.model);
-            } catch (err) { 
+            } catch (err) {
                 toastError(err);
             }
         };
@@ -134,11 +135,27 @@ const PromptModal = ({ open, onClose, promptId, refreshPrompts }) => {
                 await api.post("/prompt", promptData);
             }
             toast.success(i18n.t("promptModal.success"));
-            refreshPrompts(  )
+            refreshPrompts()
         } catch (err) {
             toastError(err);
         }
         handleClose();
+    };
+
+    const handleTemplateChange = (e, setValues) => {
+        const templateId = e.target.value;
+        const template = promptTemplates.find(t => t.id === templateId);
+        if (template) {
+            setValues(prev => ({
+                ...prev,
+                name: template.name,
+                prompt: template.prompt,
+                model: "gpt-4o", // Default or from template if added
+                maxTokens: template.maxTokens,
+                temperature: template.temperature,
+                maxMessages: template.maxMessages
+            }));
+        }
     };
 
     return (
@@ -166,9 +183,25 @@ const PromptModal = ({ open, onClose, promptId, refreshPrompts }) => {
                         }, 400);
                     }}
                 >
-                    {({ touched, errors, isSubmitting, values }) => (
+                    {({ touched, errors, isSubmitting, values, setValues }) => (
                         <Form style={{ width: "100%" }}>
-                            <DialogContent dividers>
+                                <FormControl fullWidth margin="dense" variant="outlined">
+                                    <InputLabel>Cargar Plantilla (Opcional)</InputLabel>
+                                    <Select
+                                        label="Cargar Plantilla (Opcional)"
+                                        value=""
+                                        onChange={(e) => handleTemplateChange(e, setValues)}
+                                    >
+                                        <MenuItem value="" disabled>
+                                            Seleccione una plantilla
+                                        </MenuItem>
+                                        {promptTemplates.map((t) => (
+                                            <MenuItem key={t.id} value={t.id}>
+                                                {t.name}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
                                 <Field
                                     as={TextField}
                                     label={i18n.t("promptModal.form.name")}
@@ -179,148 +212,148 @@ const PromptModal = ({ open, onClose, promptId, refreshPrompts }) => {
                                     margin="dense"
                                     fullWidth
                                 />
-                                <FormControl fullWidth margin="dense" variant="outlined">
-                                    <Field
-                                        as={TextField}
-                                        label={i18n.t("promptModal.form.apikey")}
-                                        name="apiKey"
-                                        type={showApiKey ? 'text' : 'password'}
-                                        error={touched.apiKey && Boolean(errors.apiKey)}
-                                        helperText={touched.apiKey && errors.apiKey}
-                                        variant="outlined"
-                                        margin="dense"
-                                        fullWidth
-                                        InputProps={{
-                                            endAdornment: (
-                                                <InputAdornment position="end">
-                                                    <IconButton onClick={handleToggleApiKey}>
-                                                        {showApiKey ? <VisibilityOff /> : <Visibility />}
-                                                    </IconButton>
-                                                </InputAdornment>
-                                            ),
-                                        }}
-                                    />
-                                </FormControl>
-                                <Field
-                                    as={TextField}
-                                    label={i18n.t("promptModal.form.prompt")}
-                                    name="prompt"
-                                    error={touched.prompt && Boolean(errors.prompt)}
-                                    helperText={touched.prompt && errors.prompt}
-                                    variant="outlined"
-                                    margin="dense"
-                                    fullWidth
-                                    rows={10}
-                                    multiline={true}
-                                />
-                                <QueueSelectSingle touched={touched} errors={errors}/>
-                                <div className={classes.multFieldLine}>
-                                    <FormControl fullWidth margin="dense" variant="outlined">
-                                    <InputLabel>{i18n.t("promptModal.form.model")}</InputLabel>
-                                        <Select
-                                            id="type-select"
-                                            labelWidth={60}
-                                            name="model"
-                                            value={selectedModel}
-                                            onChange={handleChangeModel}
-                                            multiple={false}
-                                        >
-                                            <MenuItem key={"gpt-4o"} value={"gpt-4o"}>
-                                                GPT-4o (Recomendado)
-                                            </MenuItem>
-                                            <MenuItem key={"gpt-4o-mini"} value={"gpt-4o-mini"}>
-                                                GPT-4o Mini
-                                            </MenuItem>
-                                            <MenuItem key={"gpt-4-turbo"} value={"gpt-4-turbo"}>
-                                                GPT-4 Turbo
-                                            </MenuItem>
-                                            <MenuItem key={"o3-mini"} value={"o3-mini"}>
-                                                O3 Mini (Razonamiento)
-                                            </MenuItem>
-                                            <MenuItem key={"o1"} value={"o1"}>
-                                                O1 (Razonamiento avanzado)
-                                            </MenuItem>
-                                            <MenuItem key={"o1-mini"} value={"o1-mini"}>
-                                                O1 Mini
-                                            </MenuItem>
-                                            <MenuItem key={"gpt-3.5-turbo"} value={"gpt-3.5-turbo"}>
-                                                GPT-3.5 Turbo (Legacy)
-                                            </MenuItem>
-                                        </Select>
-                                    </FormControl>
-                                    <Field
-                                        as={TextField}
-                                        label={i18n.t("promptModal.form.temperature")}
-                                        name="temperature"
-                                        error={touched.temperature && Boolean(errors.temperature)}
-                                        helperText={touched.temperature && errors.temperature}
-                                        variant="outlined"
-                                        margin="dense"
-                                        fullWidth
-                                        type="number"
-                                        inputProps={{
-                                            step: "0.1",
-                                            min: "0",
-                                            max: "1"
-                                        }}
-                                    />
-                                </div>
-                                
-                                <div className={classes.multFieldLine}>
-                                    <Field
-                                        as={TextField}
-                                        label={i18n.t("promptModal.form.max_tokens")}
-                                        name="maxTokens"
-                                        error={touched.maxTokens && Boolean(errors.maxTokens)}
-                                        helperText={touched.maxTokens && errors.maxTokens}
-                                        variant="outlined"
-                                        margin="dense"
-                                        fullWidth
-                                    />
-                                    <Field
-                                        as={TextField}
-                                        label={i18n.t("promptModal.form.max_messages")}
-                                        name="maxMessages"
-                                        error={touched.maxMessages && Boolean(errors.maxMessages)}
-                                        helperText={touched.maxMessages && errors.maxMessages}
-                                        variant="outlined"
-                                        margin="dense"
-                                        fullWidth
-                                    />
-                                </div>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button
-                                    onClick={handleClose}
-                                    color="secondary"
-                                    disabled={isSubmitting}
-                                    variant="outlined"
-                                >
-                                    {i18n.t("promptModal.buttons.cancel")}
-                                </Button>
-                                <Button
-                                    type="submit"
-                                    color="primary"
-                                    disabled={isSubmitting}
-                                    variant="contained"
-                                    className={classes.btnWrapper}
-                                >
-                                    {promptId
-                                        ? `${i18n.t("promptModal.buttons.okEdit")}`
-                                        : `${i18n.t("promptModal.buttons.okAdd")}`}
-                                    {isSubmitting && (
-                                        <CircularProgress
-                                            size={24}
-                                            className={classes.buttonProgress}
+                                        <FormControl fullWidth margin="dense" variant="outlined">
+                                            <Field
+                                                as={TextField}
+                                                label={i18n.t("promptModal.form.apikey")}
+                                                name="apiKey"
+                                                type={showApiKey ? 'text' : 'password'}
+                                                error={touched.apiKey && Boolean(errors.apiKey)}
+                                                helperText={touched.apiKey && errors.apiKey}
+                                                variant="outlined"
+                                                margin="dense"
+                                                fullWidth
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <IconButton onClick={handleToggleApiKey}>
+                                                                {showApiKey ? <VisibilityOff /> : <Visibility />}
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                        </FormControl>
+                                        <Field
+                                            as={TextField}
+                                            label={i18n.t("promptModal.form.prompt")}
+                                            name="prompt"
+                                            error={touched.prompt && Boolean(errors.prompt)}
+                                            helperText={touched.prompt && errors.prompt}
+                                            variant="outlined"
+                                            margin="dense"
+                                            fullWidth
+                                            rows={10}
+                                            multiline={true}
                                         />
-                                    )}
-                                </Button>
-                            </DialogActions>
-                        </Form>
-                    )}
-                </Formik>
-            </Dialog>
-        </div>
+                                        <QueueSelectSingle touched={touched} errors={errors} />
+                                        <div className={classes.multFieldLine}>
+                                            <FormControl fullWidth margin="dense" variant="outlined">
+                                                <InputLabel>{i18n.t("promptModal.form.model")}</InputLabel>
+                                                <Select
+                                                    id="type-select"
+                                                    labelWidth={60}
+                                                    name="model"
+                                                    value={selectedModel}
+                                                    onChange={handleChangeModel}
+                                                    multiple={false}
+                                                >
+                                                    <MenuItem key={"gpt-4o"} value={"gpt-4o"}>
+                                                        GPT-4o (Recomendado)
+                                                    </MenuItem>
+                                                    <MenuItem key={"gpt-4o-mini"} value={"gpt-4o-mini"}>
+                                                        GPT-4o Mini
+                                                    </MenuItem>
+                                                    <MenuItem key={"gpt-4-turbo"} value={"gpt-4-turbo"}>
+                                                        GPT-4 Turbo
+                                                    </MenuItem>
+                                                    <MenuItem key={"o3-mini"} value={"o3-mini"}>
+                                                        O3 Mini (Razonamiento)
+                                                    </MenuItem>
+                                                    <MenuItem key={"o1"} value={"o1"}>
+                                                        O1 (Razonamiento avanzado)
+                                                    </MenuItem>
+                                                    <MenuItem key={"o1-mini"} value={"o1-mini"}>
+                                                        O1 Mini
+                                                    </MenuItem>
+                                                    <MenuItem key={"gpt-3.5-turbo"} value={"gpt-3.5-turbo"}>
+                                                        GPT-3.5 Turbo (Legacy)
+                                                    </MenuItem>
+                                                </Select>
+                                            </FormControl>
+                                            <Field
+                                                as={TextField}
+                                                label={i18n.t("promptModal.form.temperature")}
+                                                name="temperature"
+                                                error={touched.temperature && Boolean(errors.temperature)}
+                                                helperText={touched.temperature && errors.temperature}
+                                                variant="outlined"
+                                                margin="dense"
+                                                fullWidth
+                                                type="number"
+                                                inputProps={{
+                                                    step: "0.1",
+                                                    min: "0",
+                                                    max: "1"
+                                                }}
+                                            />
+                                        </div>
+
+                                        <div className={classes.multFieldLine}>
+                                            <Field
+                                                as={TextField}
+                                                label={i18n.t("promptModal.form.max_tokens")}
+                                                name="maxTokens"
+                                                error={touched.maxTokens && Boolean(errors.maxTokens)}
+                                                helperText={touched.maxTokens && errors.maxTokens}
+                                                variant="outlined"
+                                                margin="dense"
+                                                fullWidth
+                                            />
+                                            <Field
+                                                as={TextField}
+                                                label={i18n.t("promptModal.form.max_messages")}
+                                                name="maxMessages"
+                                                error={touched.maxMessages && Boolean(errors.maxMessages)}
+                                                helperText={touched.maxMessages && errors.maxMessages}
+                                                variant="outlined"
+                                                margin="dense"
+                                                fullWidth
+                                            />
+                                        </div>
+                                    </DialogContent>
+                                    <DialogActions>
+                                        <Button
+                                            onClick={handleClose}
+                                            color="secondary"
+                                            disabled={isSubmitting}
+                                            variant="outlined"
+                                        >
+                                            {i18n.t("promptModal.buttons.cancel")}
+                                        </Button>
+                                        <Button
+                                            type="submit"
+                                            color="primary"
+                                            disabled={isSubmitting}
+                                            variant="contained"
+                                            className={classes.btnWrapper}
+                                        >
+                                            {promptId
+                                                ? `${i18n.t("promptModal.buttons.okEdit")}`
+                                                : `${i18n.t("promptModal.buttons.okAdd")}`}
+                                            {isSubmitting && (
+                                                <CircularProgress
+                                                    size={24}
+                                                    className={classes.buttonProgress}
+                                                />
+                                            )}
+                                        </Button>
+                                    </DialogActions>
+                                </Form>
+                            )}
+            </Formik>
+        </Dialog>
+        </div >
     );
 };
 

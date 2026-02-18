@@ -56,8 +56,8 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.fancyBackground,
     '& .MuiButton-outlinedPrimary': {
       color: theme.mode === 'light' ? '#FFF' : '#FFF',
-	  //backgroundColor: theme.mode === 'light' ? '#682ee2' : '#682ee2',
-	backgroundColor: theme.mode === 'light' ? theme.palette.primary.main : '#1c1c1c',
+      //backgroundColor: theme.mode === 'light' ? '#682ee2' : '#682ee2',
+      backgroundColor: theme.mode === 'light' ? theme.palette.primary.main : '#1c1c1c',
       //border: theme.mode === 'light' ? '1px solid rgba(0 124 102)' : '1px solid rgba(255, 255, 255, 0.5)',
     },
     '& .MuiTab-textColorPrimary.Mui-selected': {
@@ -108,8 +108,9 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-    fontSize: 14,
-    color: "white",
+    fontSize: 16,
+    fontWeight: 600,
+    color: theme.palette.text.primary, // Use theme text color
   },
   drawerPaper: {
     position: "relative",
@@ -119,6 +120,8 @@ const useStyles = makeStyles((theme) => ({
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.enteringScreen,
     }),
+    borderRight: "none", // Remove border
+    backgroundColor: theme.palette.background.paper, // Ensure clean background
     [theme.breakpoints.down("sm")]: {
       width: "100%"
     },
@@ -136,7 +139,8 @@ const useStyles = makeStyles((theme) => ({
     },
     [theme.breakpoints.down("sm")]: {
       width: "100%"
-    }
+    },
+    borderRight: "none",
   },
   appBarSpacer: {
     minHeight: "48px",
@@ -323,9 +327,9 @@ const LoggedInLayout = ({ children, themeToggle }) => {
     setMenuOpen(true);
   };
 
-  const handlemenuLanguage = ( event ) => {
+  const handlemenuLanguage = (event) => {
     setAnchorElLanguage(event.currentTarget);
-    setMenuLanguageOpen( true );
+    setMenuLanguageOpen(true);
   }
 
   const handleCloseMenu = () => {
@@ -333,7 +337,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
     setMenuOpen(false);
   };
 
-  const handleCloseMenuLanguage = (  ) => {
+  const handleCloseMenuLanguage = () => {
     setAnchorElLanguage(null);
     setMenuLanguageOpen(false);
   }
@@ -440,7 +444,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
               </>
             )}
           </Typography>
-          
+
           <div>
             <IconButton edge="start">
               <LanguageOutlined
@@ -449,7 +453,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
                 aria-haspopup="true"
                 onClick={handlemenuLanguage}
                 variant="contained"
-                style={{ color: "white",marginRight:10 }}
+                style={{ color: theme.palette.text.primary, marginRight: 10 }}
               />
             </IconButton>
             <Menu
@@ -471,10 +475,10 @@ const LoggedInLayout = ({ children, themeToggle }) => {
                 <LanguageControl />
               </MenuItem>
             </Menu>
-          </div>          
+          </div>
 
           <IconButton edge="start" onClick={toggleColorMode}>
-            {theme.mode === 'dark' ? <Brightness7Icon style={{ color: "white" }} /> : <Brightness4Icon style={{ color: "white" }} />}
+            {theme.mode === 'dark' ? <Brightness7Icon style={{ color: theme.palette.text.primary }} /> : <Brightness4Icon style={{ color: theme.palette.text.primary }} />}
           </IconButton>
 
           <NotificationsVolume
@@ -487,7 +491,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
             aria-label={i18n.t("mainDrawer.appBar.refresh")}
             color="inherit"
           >
-            <CachedIcon style={{ color: "white" }} />
+            <CachedIcon style={{ color: theme.palette.text.primary }} />
           </IconButton>
 
           {user.id && <NotificationsPopOver volume={volume} />}
@@ -503,7 +507,7 @@ const LoggedInLayout = ({ children, themeToggle }) => {
               aria-haspopup="true"
               onClick={handleMenu}
               variant="contained"
-              style={{ color: "white" }}
+              style={{ color: theme.palette.text.primary }}
             >
               <AccountCircle />
             </IconButton>

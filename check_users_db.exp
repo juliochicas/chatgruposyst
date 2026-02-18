@@ -1,0 +1,20 @@
+#!/usr/bin/expect -f
+
+set timeout 120
+
+spawn ssh -o StrictHostKeyChecking=no -o ConnectTimeout=60 root@62.72.7.2
+
+expect "password:"
+send ".3+ml3&LKxGw6N1DbZd5\r"
+
+expect "#"
+# Get DB credentials from the actual .env on VPS
+send "grep -E 'DB_USER|DB_PASS|DB_NAME' /root/chatgruposyst/codatendechat-main/backend/.env\r"
+
+expect "#"
+# List users in the DB using the env vars
+send "source <(grep -E 'DB_USER|DB_PASS|DB_NAME' /root/chatgruposyst/codatendechat-main/backend/.env | sed 's/^/export /') && docker exec codatendechat-main-postgres-1 psql -U \$DB_USER -d \$DB_NAME -c \"SELECT id, name, email, profile, \\\"super\\\" FROM \\\"Users\\\" ORDER BY id LIMIT 20;\"\r"
+
+expect "#"
+send "exit\r"
+expect eof

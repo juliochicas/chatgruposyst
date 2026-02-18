@@ -1,0 +1,34 @@
+#!/usr/bin/expect
+
+set timeout 300
+set ip "62.72.7.2"
+set user "root"
+set password ".3+ml3&LKxGw6N1DbZd5"
+set project_dir "/root/chatgruposyst/codatendechat-main"
+set branch "claude/analyze-codebase-tQ9jj"
+
+spawn ssh $user@$ip
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send "$password\r" }
+}
+
+expect "#"
+send "cd $project_dir\r"
+
+expect "#"
+send "git fetch origin\r"
+# Force checkout to the branch
+expect "#"
+send "git checkout $branch || git checkout -b $branch origin/$branch\r"
+expect "#"
+send "git pull origin $branch\r"
+
+expect "#"
+send "echo '--- REBUILDING CONTAINERS ---'\r"
+# Try 'docker compose' first, fall back to 'docker-compose'
+send "docker compose up -d --build frontend backend nginx-proxy || docker-compose up -d --build frontend backend nginx-proxy\r"
+
+expect "#"
+send "exit\r"
+expect eof

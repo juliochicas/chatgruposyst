@@ -1,0 +1,38 @@
+#!/usr/bin/expect -f
+
+set timeout 300
+
+spawn ssh -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=10 root@62.72.7.2
+
+expect {
+  "password:" {
+    send ".3+ml3&LKxGw6N1DbZd5\r"
+  }
+  timeout {
+    puts "Timeout connecting"
+    exit 1
+  }
+}
+
+expect {
+  "#" {}
+  timeout {
+    puts "Timeout after login"
+    exit 1
+  }
+}
+
+send "cd /root/chatgruposyst && git pull origin main\r"
+expect -timeout 30 "#"
+
+send "cd codatendechat-main && docker compose build backend\r"
+expect -timeout 180 "#"
+
+send "docker compose up -d --force-recreate backend\r"
+expect -timeout 60 "#"
+
+send "echo 'DEPLOY_DONE'\r"
+expect "DEPLOY_DONE"
+
+send "exit\r"
+expect eof
