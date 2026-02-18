@@ -1,6 +1,6 @@
-import { head } from "lodash";
+import { head, has, uniqBy } from "lodash";
 import XLSX from "xlsx";
-import { has } from "lodash";
+import { Op } from "sequelize";
 import ContactListItem from "../../models/ContactListItem";
 import CheckContactNumber from "../WbotServices/CheckNumber";
 import { logger } from "../../utils/logger";
@@ -47,17 +47,27 @@ export async function ImportContacts(
 
   const contactList: ContactListItem[] = [];
 
-  for (const contact of contacts) {
-    const [newContact, created] = await ContactListItem.findOrCreate({
+  if (contacts.length > 0) {
+    const uniqueInputContacts = uniqBy(contacts, "number");
+    const numbers = uniqueInputContacts.map(c => c.number);
+
+    const existingContacts = await ContactListItem.findAll({
       where: {
-        number: `${contact.number}`,
-        contactListId: contact.contactListId,
-        companyId: contact.companyId
+        number: { [Op.in]: numbers },
+        contactListId,
+        companyId
       },
-      defaults: contact
+      raw: true
     });
-    if (created) {
-      contactList.push(newContact);
+
+    const existingNumbers = new Set(existingContacts.map((c: any) => c.number));
+    const newContactsData = uniqueInputContacts.filter(
+      c => !existingNumbers.has(c.number)
+    );
+
+    if (newContactsData.length > 0) {
+      const createdContacts = await ContactListItem.bulkCreate(newContactsData);
+      contactList.push(...createdContacts);
     }
   }
 
