@@ -10,6 +10,8 @@ interface TagData {
   color?: string;
   kanban?: number;
   parentId?: number;
+  promptId?: number;
+  shopifyConnectionId?: number;
 }
 
 interface Request {
@@ -27,7 +29,7 @@ const UpdateUserService = async ({
     name: Yup.string().min(3)
   });
 
-  const { name, color, kanban, parentId } = tagData;
+  const { name, color, kanban, parentId, promptId, shopifyConnectionId } = tagData;
 
   try {
     await schema.validate({ name });
@@ -39,7 +41,9 @@ const UpdateUserService = async ({
     name,
     color,
     kanban,
-    parentId: parentId || null
+    parentId: parentId || null,
+    promptId: promptId || null,
+    shopifyConnectionId: shopifyConnectionId || null
   });
 
   await tag.reload();

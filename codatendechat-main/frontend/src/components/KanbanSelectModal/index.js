@@ -8,6 +8,7 @@ import {
   List,
   ListItem,
   ListItemText,
+  ListItemSecondaryAction,
   ListSubheader,
   CircularProgress,
   Typography,
@@ -49,6 +50,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: "center",
     padding: theme.spacing(3),
   },
+  aiChip: {
+    marginLeft: 8,
+    height: 20,
+    fontSize: "0.7rem",
+  },
 }));
 
 const KanbanSelectModal = ({ open, onClose, ticketId }) => {
@@ -74,24 +80,74 @@ const KanbanSelectModal = ({ open, onClose, ticketId }) => {
     setSelectedTagId(null);
   }, [open]);
 
+  // Build a flat lookup of all tags (parents + children) for finding prompt info
+  const allTagsFlat = [];
+  tags.forEach((tag) => {
+    allTagsFlat.push(tag);
+    if (tag.children) {
+      tag.children.forEach((child) => allTagsFlat.push(child));
+    }
+  });
+
+  const getSelectedTag = () => {
+    return allTagsFlat.find((t) => t.id === selectedTagId);
+  };
+
   const handleConfirm = async () => {
     if (!selectedTagId || !ticketId) return;
     setSubmitting(true);
     try {
+      const selectedTag = getSelectedTag();
+
       // Assign the kanban tag to the ticket
       await api.put(`/ticket-tags/${ticketId}/${selectedTagId}`);
-      // Close the ticket
-      await api.put(`/tickets/${ticketId}`, {
+
+      // Close the ticket and optionally activate AI agent
+      const ticketUpdate = {
         status: "closed",
-        useIntegration: false,
-        promptId: null,
-        integrationId: null,
-      });
+      };
+
+      // If the kanban lane has an AI prompt, activate it
+      if (selectedTag && selectedTag.promptId) {
+        ticketUpdate.promptId = selectedTag.promptId;
+        ticketUpdate.useIntegration = true;
+      } else {
+        ticketUpdate.useIntegration = false;
+        ticketUpdate.promptId = null;
+        ticketUpdate.integrationId = null;
+      }
+
+      await api.put(`/tickets/${ticketId}`, ticketUpdate);
       onClose("moved");
     } catch (err) {
       toastError(err);
     }
     setSubmitting(false);
+  };
+
+  const renderTagLabel = (tag) => {
+    return (
+      <>
+        {tag.name}
+        {tag.prompt && (
+          <Chip
+            label={"IA: " + tag.prompt.name}
+            size="small"
+            color="secondary"
+            className={classes.aiChip}
+          />
+        )}
+        {tag.shopifyConnection && (
+          <Chip
+            label={"Shopify"}
+            size="small"
+            color="primary"
+            variant="outlined"
+            className={classes.aiChip}
+          />
+        )}
+      </>
+    );
   };
 
   // Organize tags: parent tags with children, standalone tags
@@ -134,7 +190,7 @@ const KanbanSelectModal = ({ open, onClose, ticketId }) => {
                       className={classes.colorDot}
                       style={{ backgroundColor: tag.color }}
                     />
-                    <ListItemText primary={tag.name} />
+                    <ListItemText primary={renderTagLabel(tag)} />
                   </ListItem>
                 ))}
               </>
@@ -147,6 +203,14 @@ const KanbanSelectModal = ({ open, onClose, ticketId }) => {
                     style={{ backgroundColor: parent.color }}
                   />
                   {parent.name}
+                  {parent.prompt && (
+                    <Chip
+                      label={"IA: " + parent.prompt.name}
+                      size="small"
+                      color="secondary"
+                      className={classes.aiChip}
+                    />
+                  )}
                 </ListSubheader>
                 <ListItem
                   button
@@ -177,7 +241,7 @@ const KanbanSelectModal = ({ open, onClose, ticketId }) => {
                           backgroundColor: child.color || parent.color,
                         }}
                       />
-                      <ListItemText primary={child.name} />
+                      <ListItemText primary={renderTagLabel(child)} />
                     </ListItem>
                   ))}
               </React.Fragment>

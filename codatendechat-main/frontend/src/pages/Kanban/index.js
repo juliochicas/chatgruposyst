@@ -120,6 +120,13 @@ const Kanban = () => {
     });
   };
 
+  const getAiIndicator = (tag) => {
+    let indicator = "";
+    if (tag.prompt) indicator += " [IA]";
+    if (tag.shopifyConnection) indicator += " [Shopify]";
+    return indicator;
+  };
+
   const popularCards = () => {
     const filteredTickets = tickets.filter(
       (ticket) => ticket.tags.length === 0
@@ -153,7 +160,7 @@ const Kanban = () => {
       const tagTickets = getTicketsForTag(tag.id);
       lanes.push({
         id: tag.id.toString(),
-        title: tag.name,
+        title: tag.name + getAiIndicator(tag),
         label: tagTickets.length.toString(),
         cards: buildTicketCards(tagTickets),
         style: { backgroundColor: tag.color, color: "white" },
@@ -166,7 +173,7 @@ const Kanban = () => {
       const parentTickets = getTicketsForTag(parent.id);
       lanes.push({
         id: parent.id.toString(),
-        title: "📁 " + parent.name,
+        title: "📁 " + parent.name + getAiIndicator(parent),
         label: parentTickets.length.toString(),
         cards: buildTicketCards(parentTickets),
         style: {
@@ -182,7 +189,7 @@ const Kanban = () => {
           const childTickets = getTicketsForTag(child.id);
           lanes.push({
             id: child.id.toString(),
-            title: parent.name + " › " + child.name,
+            title: parent.name + " › " + child.name + getAiIndicator(child),
             label: childTickets.length.toString(),
             cards: buildTicketCards(childTickets),
             style: {

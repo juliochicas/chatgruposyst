@@ -727,6 +727,11 @@ const messages = {
           color: "Color",
           parentTag: "Categoría padre (Kanban)",
           noParent: "Sin categoría padre",
+          aiAgentSection: "Agente IA",
+          prompt: "Prompt de IA",
+          noPrompt: "Sin agente IA",
+          shopifyConnection: "Conexión Shopify",
+          noShopify: "Sin conexión Shopify",
         },
         buttons: {
           okAdd: "Agregar",

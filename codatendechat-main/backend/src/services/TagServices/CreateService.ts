@@ -9,6 +9,8 @@ interface Request {
   kanban: number;
   companyId: number;
   parentId?: number;
+  promptId?: number;
+  shopifyConnectionId?: number;
 }
 
 const CreateService = async ({
@@ -16,7 +18,9 @@ const CreateService = async ({
   color = "#A4CCCC",
   kanban = 0,
   companyId,
-  parentId
+  parentId,
+  promptId,
+  shopifyConnectionId
 }: Request): Promise<Tag> => {
   const schema = Yup.object().shape({
     name: Yup.string().required().min(3)
@@ -30,7 +34,12 @@ const CreateService = async ({
 
   const [tag] = await Tag.findOrCreate({
     where: { name, color, companyId, kanban },
-    defaults: { name, color, companyId, kanban, parentId: parentId || null }
+    defaults: {
+      name, color, companyId, kanban,
+      parentId: parentId || null,
+      promptId: promptId || null,
+      shopifyConnectionId: shopifyConnectionId || null
+    }
   });
 
   await tag.reload();

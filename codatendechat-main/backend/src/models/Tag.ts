@@ -14,6 +14,8 @@ import {
 import Company from "./Company";
 import Ticket from "./Ticket";
 import TicketTag from "./TicketTag";
+import Prompt from "./Prompt";
+import ShopifyConnection from "./ShopifyConnection";
 
 @Table
 class Tag extends Model<Tag> {
@@ -50,6 +52,20 @@ class Tag extends Model<Tag> {
 
   @HasMany(() => Tag, "parentId")
   children: Tag[];
+
+  @ForeignKey(() => Prompt)
+  @Column
+  promptId: number;
+
+  @BelongsTo(() => Prompt)
+  prompt: Prompt;
+
+  @ForeignKey(() => ShopifyConnection)
+  @Column
+  shopifyConnectionId: number;
+
+  @BelongsTo(() => ShopifyConnection)
+  shopifyConnection: ShopifyConnection;
 
   @CreatedAt
   createdAt: Date;

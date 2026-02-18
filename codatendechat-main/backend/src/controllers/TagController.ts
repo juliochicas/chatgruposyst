@@ -32,7 +32,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export const store = async (req: Request, res: Response): Promise<Response> => {
-  const { name, color, kanban, parentId } = req.body;
+  const { name, color, kanban, parentId, promptId, shopifyConnectionId } = req.body;
   const { companyId } = req.user;
 
   const tag = await CreateService({
@@ -40,7 +40,9 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     color,
     companyId,
     kanban,
-    parentId
+    parentId,
+    promptId,
+    shopifyConnectionId
   });
 
   const io = getIO();

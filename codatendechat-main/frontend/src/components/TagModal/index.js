@@ -21,7 +21,7 @@ import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
 import { AuthContext } from "../../context/Auth/AuthContext";
-import { IconButton, InputAdornment, FormControl } from "@material-ui/core";
+import { IconButton, InputAdornment, FormControl, Typography, Divider } from "@material-ui/core";
 import { FormControlLabel, Switch } from '@material-ui/core';
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -83,19 +83,36 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
 	const [ kanban, setKanban] = useState(0);
 	const [parentId, setParentId] = useState("");
 	const [kanbanTags, setKanbanTags] = useState([]);
+	const [promptId, setPromptId] = useState("");
+	const [shopifyConnectionId, setShopifyConnectionId] = useState("");
+	const [prompts, setPrompts] = useState([]);
+	const [shopifyConnections, setShopifyConnections] = useState([]);
 
 	useEffect(() => {
-		const fetchKanbanTags = async () => {
+		if (!open) return;
+		const fetchData = async () => {
 			try {
 				const { data } = await api.get("/tags/kanban");
 				const fetchedTags = data.lista || [];
-				// Only show tags without a parent as potential parents
 				setKanbanTags(fetchedTags.filter(t => !t.parentId && (!tagId || t.id !== tagId)));
 			} catch (err) {
 				console.log(err);
 			}
+			try {
+				const { data } = await api.get("/prompt");
+				setPrompts(data.prompts || []);
+			} catch (err) {
+				console.log(err);
+			}
+			try {
+				const { data } = await api.get("/shopify/connections");
+				setShopifyConnections(data || []);
+			} catch (err) {
+				console.log(err);
+				setShopifyConnections([]);
+			}
 		};
-		if (open) fetchKanbanTags();
+		fetchData();
 	}, [open, tagId]);
 
 	useEffect(() => {
@@ -106,6 +123,8 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
 				const { data } = await api.get(`/tags/${tagId}`);
 				setKanban(data.kanban);
 				setParentId(data.parentId || "");
+				setPromptId(data.promptId || "");
+				setShopifyConnectionId(data.shopifyConnectionId || "");
 				setTag(prevState => {
 					return { ...prevState, ...data };
 				});
@@ -119,6 +138,8 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
 		setTag(initialState);
 		setColorPickerModalOpen(false);
 		setParentId("");
+		setPromptId("");
+		setShopifyConnectionId("");
 		setKanban(0);
 		onClose();
 	};
@@ -128,7 +149,14 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
 	};
 
 	const handleSaveTag = async values => {
-		const tagData = { ...values, userId: user.id, kanban, parentId: parentId || null };
+		const tagData = {
+			...values,
+			userId: user.id,
+			kanban,
+			parentId: parentId || null,
+			promptId: promptId || null,
+			shopifyConnectionId: shopifyConnectionId || null,
+		};
 		try {
 			if (tagId) {
 				await api.put(`/tags/${tagId}`, tagData);
@@ -234,6 +262,7 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
         							/>
       							</div>
 								{kanban === 1 && (
+								<>
 								<FormControl fullWidth margin="dense" variant="outlined">
 									<InputLabel>{i18n.t("tagModal.form.parentTag")}</InputLabel>
 									<Select
@@ -251,6 +280,48 @@ const TagModal = ({ open, onClose, tagId, reload }) => {
 										))}
 									</Select>
 								</FormControl>
+								<br />
+								<Divider style={{ margin: "8px 0" }} />
+								<Typography variant="subtitle2" color="textSecondary" style={{ marginTop: 8 }}>
+									{i18n.t("tagModal.form.aiAgentSection")}
+								</Typography>
+								<FormControl fullWidth margin="dense" variant="outlined">
+									<InputLabel>{i18n.t("tagModal.form.prompt")}</InputLabel>
+									<Select
+										value={promptId}
+										onChange={(e) => setPromptId(e.target.value)}
+										label={i18n.t("tagModal.form.prompt")}
+									>
+										<MenuItem value="">
+											{i18n.t("tagModal.form.noPrompt")}
+										</MenuItem>
+										{prompts.map((p) => (
+											<MenuItem key={p.id} value={p.id}>
+												{p.name}
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+								{shopifyConnections.length > 0 && (
+								<FormControl fullWidth margin="dense" variant="outlined">
+									<InputLabel>{i18n.t("tagModal.form.shopifyConnection")}</InputLabel>
+									<Select
+										value={shopifyConnectionId}
+										onChange={(e) => setShopifyConnectionId(e.target.value)}
+										label={i18n.t("tagModal.form.shopifyConnection")}
+									>
+										<MenuItem value="">
+											{i18n.t("tagModal.form.noShopify")}
+										</MenuItem>
+										{shopifyConnections.map((sc) => (
+											<MenuItem key={sc.id} value={sc.id}>
+												{sc.shopName || sc.shopDomain}
+											</MenuItem>
+										))}
+									</Select>
+								</FormControl>
+								)}
+								</>
 								)}
       							<br />
                                 </>
