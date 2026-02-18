@@ -1753,32 +1753,7 @@ const flowbuilderIntegration = async (
   isTranfered?: boolean
 ) => {
   const io = getIO();
-  const quotedMsg = await verifyQuotedMessage(msg);
   const body = getBodyMessage(msg);
-
-  /*
-  const messageData = {
-    wid: msg.key.id,
-    ticketId: ticket.id,
-    contactId: msg.key.fromMe ? undefined : contact.id,
-    body: body,
-    fromMe: msg.key.fromMe,
-    read: msg.key.fromMe,
-    quotedMsgId: quotedMsg?.id,
-    ack: Number(String(msg.status).replace('PENDING', '2').replace('NaN', '1')) || 2,
-    remoteJid: msg.key.remoteJid,
-    participant: msg.key.participant,
-    dataJson: JSON.stringify(msg),
-    createdAt: new Date(
-      Math.floor(getTimestampMessage(msg.messageTimestamp) * 1000)
-    ).toISOString(),
-    ticketImported: ticket.imported,
-  };
-
-
-  await CreateMessageService({ messageData, companyId: ticket.companyId });
-
-  */
 
   if (!msg.key.fromMe && ticket.status === "closed") {
 
