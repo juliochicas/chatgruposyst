@@ -17,7 +17,7 @@ send "cd $project_dir\r"
 
 # Pull latest changes
 expect "#"
-send "git pull origin main\r"
+send "git checkout main && git pull origin main\r"
 
 # Rebuild frontend
 expect "#"

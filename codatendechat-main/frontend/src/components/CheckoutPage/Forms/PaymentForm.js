@@ -194,111 +194,111 @@ export default function PaymentForm(props) {
         {plans
           .filter(p => p.isPublic !== false)
           .map((plan) => (
-          <Grid item key={plan.id} xs={12} sm={6} md={4}>
-            <Card className={currentPlanId === plan.id ? classes.selectedCard : ''}>
-              <CardHeader
-                title={plan.name}
-                subheader={plan.isFeatured ? "MÁS POPULAR" : (plan.isCustom ? "A tu medida" : "")}
-                titleTypographyProps={{ align: 'center' }}
-                subheaderTypographyProps={{ align: 'center', style: plan.isFeatured ? { color: '#fff' } : {} }}
-                action={plan.isFeatured ? <StarIcon style={{ color: '#fff' }} /> : null}
-                className={plan.isFeatured ? classes.featuredHeader : classes.cardHeader}
-              />
-              <CardContent>
-                <div className={classes.cardPricing}>
-                  <Typography component="h2" variant="h3" color="textPrimary">
-                    ${calculatePrice(plan).toLocaleString('en-US', { minimumFractionDigits: 0 })}
-                  </Typography>
-                  <Typography variant="h6" color="textSecondary">
-                    /{isAnnual ? "año" : "mes"}
-                  </Typography>
-                </div>
-
-                {plan.description && (
-                  <Typography variant="subtitle1" align="center" color="textSecondary" style={{ marginBottom: 8 }}>
-                    {plan.description}
-                  </Typography>
-                )}
-
-                {/* Custom plan +/- controls */}
-                {plan.isCustom && (
-                  <div style={{ marginBottom: 16 }}>
-                    <div className={classes.qtyControl}>
-                      <Typography className={classes.qtyLabel} variant="body2">
-                        Usuarios:
-                      </Typography>
-                      <IconButton size="small" onClick={() => handleUsersChange(-1)} disabled={customUsers <= 1}>
-                        <RemoveIcon />
-                      </IconButton>
-                      <Typography className={classes.qtyValue}>{customUsers}</Typography>
-                      <IconButton size="small" onClick={() => handleUsersChange(1)}>
-                        <AddIcon />
-                      </IconButton>
-                      <Typography variant="caption" color="textSecondary">
-                        (+$13/u)
-                      </Typography>
-                    </div>
-                    <div className={classes.qtyControl}>
-                      <Typography className={classes.qtyLabel} variant="body2">
-                        Conexiones:
-                      </Typography>
-                      <IconButton size="small" onClick={() => handleConnectionsChange(-1)} disabled={customConnections <= 1}>
-                        <RemoveIcon />
-                      </IconButton>
-                      <Typography className={classes.qtyValue}>{customConnections}</Typography>
-                      <IconButton size="small" onClick={() => handleConnectionsChange(1)}>
-                        <AddIcon />
-                      </IconButton>
-                      <Typography variant="caption" color="textSecondary">
-                        (+$20/c)
-                      </Typography>
-                    </div>
+            <Grid item key={plan.id} xs={12} sm={6} md={6}>
+              <Card className={currentPlanId === plan.id ? classes.selectedCard : ''}>
+                <CardHeader
+                  title={plan.name}
+                  subheader={plan.isFeatured ? "MÁS POPULAR" : (plan.isCustom ? "A tu medida" : "")}
+                  titleTypographyProps={{ align: 'center' }}
+                  subheaderTypographyProps={{ align: 'center', style: plan.isFeatured ? { color: '#fff' } : {} }}
+                  action={plan.isFeatured ? <StarIcon style={{ color: '#fff' }} /> : null}
+                  className={plan.isFeatured ? classes.featuredHeader : classes.cardHeader}
+                />
+                <CardContent>
+                  <div className={classes.cardPricing}>
+                    <Typography component="h2" variant="h3" color="textPrimary">
+                      ${calculatePrice(plan).toLocaleString('en-US', { minimumFractionDigits: 0 })}
+                    </Typography>
+                    <Typography variant="h6" color="textSecondary">
+                      /{isAnnual ? "año" : "mes"}
+                    </Typography>
                   </div>
-                )}
 
-                {/* Feature list */}
-                {plan.features && Array.isArray(plan.features) && (
-                  <ul>
-                    {plan.features.map((feature, idx) => (
-                      <Typography component="li" variant="subtitle1" align="center" key={idx}>
-                        {feature}
-                      </Typography>
-                    ))}
-                  </ul>
-                )}
+                  {plan.description && (
+                    <Typography variant="subtitle1" align="center" color="textSecondary" style={{ marginBottom: 8 }}>
+                      {plan.description}
+                    </Typography>
+                  )}
 
-                {(!plan.features || !Array.isArray(plan.features)) && (
-                  <ul>
-                    <Typography component="li" variant="subtitle1" align="center">
-                      {plan.users} {i18n.t("checkoutPage.pricing.users")}
-                    </Typography>
-                    <Typography component="li" variant="subtitle1" align="center">
-                      {plan.connections} {i18n.t("checkoutPage.pricing.connection")}
-                    </Typography>
-                    {plan.queues > 0 && (
+                  {/* Custom plan +/- controls */}
+                  {plan.isCustom && (
+                    <div style={{ marginBottom: 16 }}>
+                      <div className={classes.qtyControl}>
+                        <Typography className={classes.qtyLabel} variant="body2">
+                          Usuarios:
+                        </Typography>
+                        <IconButton size="small" onClick={() => handleUsersChange(-1)} disabled={customUsers <= 1}>
+                          <RemoveIcon />
+                        </IconButton>
+                        <Typography className={classes.qtyValue}>{customUsers}</Typography>
+                        <IconButton size="small" onClick={() => handleUsersChange(1)}>
+                          <AddIcon />
+                        </IconButton>
+                        <Typography variant="caption" color="textSecondary">
+                          (+$13/u)
+                        </Typography>
+                      </div>
+                      <div className={classes.qtyControl}>
+                        <Typography className={classes.qtyLabel} variant="body2">
+                          Conexiones:
+                        </Typography>
+                        <IconButton size="small" onClick={() => handleConnectionsChange(-1)} disabled={customConnections <= 1}>
+                          <RemoveIcon />
+                        </IconButton>
+                        <Typography className={classes.qtyValue}>{customConnections}</Typography>
+                        <IconButton size="small" onClick={() => handleConnectionsChange(1)}>
+                          <AddIcon />
+                        </IconButton>
+                        <Typography variant="caption" color="textSecondary">
+                          (+$20/c)
+                        </Typography>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Feature list */}
+                  {plan.features && Array.isArray(plan.features) && (
+                    <ul>
+                      {plan.features.map((feature, idx) => (
+                        <Typography component="li" variant="subtitle1" align="center" key={idx}>
+                          {feature}
+                        </Typography>
+                      ))}
+                    </ul>
+                  )}
+
+                  {(!plan.features || !Array.isArray(plan.features)) && (
+                    <ul>
                       <Typography component="li" variant="subtitle1" align="center">
-                        {plan.queues} {i18n.t("checkoutPage.pricing.queues")}
+                        {plan.users} {i18n.t("checkoutPage.pricing.users")}
                       </Typography>
-                    )}
-                  </ul>
-                )}
-              </CardContent>
-              <CardActions>
-                <Button
-                  fullWidth
-                  variant={plan.isFeatured ? "contained" : "outlined"}
-                  color="primary"
-                  onClick={() => handleSelectPlan(plan)}
-                >
-                  {currentPlanId === plan.id
-                    ? "Plan Actual"
-                    : (i18n.t("checkoutPage.pricing.SELECT") || "Seleccionar")
-                  }
-                </Button>
-              </CardActions>
-            </Card>
-          </Grid>
-        ))}
+                      <Typography component="li" variant="subtitle1" align="center">
+                        {plan.connections} {i18n.t("checkoutPage.pricing.connection")}
+                      </Typography>
+                      {plan.queues > 0 && (
+                        <Typography component="li" variant="subtitle1" align="center">
+                          {plan.queues} {i18n.t("checkoutPage.pricing.queues")}
+                        </Typography>
+                      )}
+                    </ul>
+                  )}
+                </CardContent>
+                <CardActions>
+                  <Button
+                    fullWidth
+                    variant={plan.isFeatured ? "contained" : "outlined"}
+                    color="primary"
+                    onClick={() => handleSelectPlan(plan)}
+                  >
+                    {currentPlanId === plan.id
+                      ? "Plan Actual"
+                      : (i18n.t("checkoutPage.pricing.SELECT") || "Seleccionar")
+                    }
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          ))}
       </Grid>
     </React.Fragment>
   );
