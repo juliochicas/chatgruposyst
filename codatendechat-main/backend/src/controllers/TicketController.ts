@@ -198,6 +198,33 @@ export const update = async (
   return res.status(200).json(ticket);
 };
 
+export const closeTicketsWithoutCompany = async (
+  req: Request,
+  res: Response
+): Promise<Response> => {
+  const { Op } = require("sequelize");
+
+  const [affectedCount] = await Ticket.update(
+    { status: "closed" },
+    {
+      where: {
+        companyId: { [Op.is]: null },
+        status: { [Op.ne]: "closed" }
+      }
+    }
+  );
+
+  const io = getIO();
+  io.emit("ticket", {
+    action: "updateAll"
+  });
+
+  return res.status(200).json({
+    message: `${affectedCount} tickets cerrados`,
+    count: affectedCount
+  });
+};
+
 export const remove = async (
   req: Request,
   res: Response

@@ -5,6 +5,8 @@ import * as TicketController from "../controllers/TicketController";
 
 const ticketRoutes = express.Router();
 
+ticketRoutes.post("/tickets/close-no-company", isAuth, TicketController.closeTicketsWithoutCompany);
+
 ticketRoutes.get("/tickets", isAuth, TicketController.index);
 
 ticketRoutes.get("/tickets/:ticketId", isAuth, TicketController.show);

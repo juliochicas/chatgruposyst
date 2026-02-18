@@ -784,6 +784,8 @@ const messages = {
       ticketsManager: {
         buttons: {
           newTicket: "Nuevo",
+          closeNoCompany: "Limpiar sin empresa",
+          confirmCloseNoCompany: "¿Está seguro que desea cerrar todos los tickets sin empresa asignada?",
         },
       },
       ticketsQueueSelect: {

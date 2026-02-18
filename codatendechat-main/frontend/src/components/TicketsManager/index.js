@@ -13,6 +13,7 @@ import {
 
 import {
   AllInboxRounded,
+  DeleteSweep,
   HourglassEmptyRounded,
   MoveToInbox,
   Search
@@ -27,6 +28,9 @@ import TicketsQueueSelect from "../TicketsQueueSelect";
 
 import { i18n } from "../../translate/i18n";
 import { AuthContext } from "../../context/Auth/AuthContext";
+import api from "../../services/api";
+import toastError from "../../errors/toastError";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   ticketsWrapper: {
@@ -117,8 +121,22 @@ const TicketsManager = () => {
   const [pendingCount, setPendingCount] = useState(0);
   const [selectedTags, setSelectedTags] = useState([]);
 
+  const [closingNoCompany, setClosingNoCompany] = useState(false);
+
   const userQueueIds = user.queues.map((q) => q.id);
   const [selectedQueueIds, setSelectedQueueIds] = useState(userQueueIds || []);
+
+  const handleCloseTicketsWithoutCompany = async () => {
+    if (!window.confirm(i18n.t("ticketsManager.buttons.confirmCloseNoCompany"))) return;
+    setClosingNoCompany(true);
+    try {
+      const { data } = await api.post("/tickets/close-no-company");
+      toast.success(`${data.count} tickets cerrados exitosamente`);
+    } catch (err) {
+      toastError(err);
+    }
+    setClosingNoCompany(false);
+  };
 
   useEffect(() => {
     if (user.profile.toUpperCase() === "ADMIN") {
@@ -226,6 +244,24 @@ const TicketsManager = () => {
         >
           {i18n.t("ticketsManager.buttons.newTicket")}
         </Button>
+        <Can
+          role={user.profile}
+          perform="tickets-manager:showall"
+          yes={() => (
+            <Button
+              variant="outlined"
+              color="secondary"
+              size="small"
+              disabled={closingNoCompany}
+              onClick={handleCloseTicketsWithoutCompany}
+              startIcon={<DeleteSweep />}
+            >
+              {closingNoCompany
+                ? "Cerrando..."
+                : i18n.t("ticketsManager.buttons.closeNoCompany")}
+            </Button>
+          )}
+        />
         <Can
           role={user.profile}
           perform="tickets-manager:showall"
