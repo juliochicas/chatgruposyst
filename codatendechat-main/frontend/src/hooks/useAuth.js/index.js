@@ -178,7 +178,22 @@ const useAuth = () => {
       }
 
       moment.locale("es");
-      const dueDate = data.user.company.dueDate;
+      const dueDate = data.user.company?.dueDate || data.user.company?.due_date;
+
+      // If no dueDate found, allow login (don't block on missing subscription data)
+      if (!dueDate) {
+        localStorage.setItem("token", JSON.stringify(data.token));
+        localStorage.setItem("companyId", companyId);
+        localStorage.setItem("userId", id);
+        api.defaults.headers.Authorization = `Bearer ${data.token}`;
+        setUser(data.user);
+        setIsAuth(true);
+        toast.success(i18n.t("auth.toasts.success"));
+        history.push("/tickets");
+        setLoading(false);
+        return;
+      }
+
       const hoje = moment(moment()).format("DD/MM/yyyy");
       const vencimiento = moment(dueDate).format("DD/MM/yyyy");
 
@@ -198,16 +213,14 @@ const useAuth = () => {
         toast.success(i18n.t("auth.toasts.success"));
         if (Math.round(dias) < 5) {
           toast.warn(
-            `Tu suscripción vence en ${Math.round(dias)} ${
-              Math.round(dias) === 1 ? "día" : "días"
+            `Tu suscripción vence en ${Math.round(dias)} ${Math.round(dias) === 1 ? "día" : "días"
             } `
           );
         }
         history.push("/tickets");
         setLoading(false);
       } else {
-        toastError(`¡Tu suscripción venció el ${vencimiento}!
-Contacta con Soporte para más información.`);
+        toastError(`¡Tu suscripción venció el ${vencimiento}!\nContacta con Soporte para más información.`);
         setLoading(false);
       }
 
