@@ -1,6 +1,4 @@
 import { FlowBuilderModel } from "../../models/FlowBuilder";
-import { WebhookModel } from "../../models/Webhook";
-import { randomString } from "../../utils/randomCode";
 
 interface Request {
   companyId: number;
@@ -22,9 +20,7 @@ const UpdateFlowBuilderService = async ({
       }
     })
 
-    console.log({ nameExist })
-    
-    if(nameExist){
+    if (nameExist && nameExist.id !== flowId) {
       return 'exist'
     }
 
