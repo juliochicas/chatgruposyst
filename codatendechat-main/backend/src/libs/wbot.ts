@@ -209,7 +209,7 @@ export const initWASocket = async (whatsapp: Whatsapp): Promise<Session> => {
                   qrcode: ""
                 });
                 await DeleteBaileysService(whatsappUpdate.id);
-                io.to(`company-${whatsapp.companyId}-mainchannel`).emit("whatsappSession", {
+                io.to(`company-${whatsapp.companyId}-mainchannel`).emit(`company-${whatsapp.companyId}-whatsappSession`, {
                   action: "update",
                   session: whatsappUpdate
                 });

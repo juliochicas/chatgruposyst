@@ -151,7 +151,7 @@ const CampaignsPhrase = () => {
         }
         open={confirmModalOpen}
         onClose={setConfirmModalOpen}
-        onConfirm={() => handleDeleteCampaign(deletingContact.id)}
+        onConfirm={() => handleDeleteCampaign(deletingCampaign.id)}
       >
         {i18n.t("campaigns.confirmationModal.deleteMessage")}
       </ConfirmationModal>

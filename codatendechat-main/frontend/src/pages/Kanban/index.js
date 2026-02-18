@@ -38,43 +38,21 @@ const useStyles = makeStyles((theme) => ({
 const Kanban = () => {
   const classes = useStyles();
   const history = useHistory();
+  const { user } = useContext(AuthContext);
+  const { profile, queues } = user;
 
   const [tags, setTags] = useState([]);
   const [loadingKanban, setLoadingKanban] = useState(true);
-
-  const fetchTags = async () => {
-    try {
-      const response = await api.get("/tags/kanban");
-      const fetchedTags = response.data.lista ?? [];
-
-      setTags(fetchedTags);
-
-      // Fetch tickets after fetching tags
-      await fetchTickets(jsonString);
-    } catch (error) {
-      console.log(error);
-    }
-    setLoadingKanban(false);
-  };
-
-  useEffect(() => {
-    fetchTags();
-  }, []);
-
-  const [file, setFile] = useState({
-    lanes: [],
-  });
-
+  const [file, setFile] = useState({ lanes: [] });
   const [tickets, setTickets] = useState([]);
-  const { user } = useContext(AuthContext);
-  const { profile, queues } = user;
+
   const jsonString = (user.queues || []).map((queue) => queue?.UserQueue?.queueId).filter(Boolean);
 
-  const fetchTickets = async (jsonString) => {
+  const fetchTickets = async (queueIds) => {
     try {
       const { data } = await api.get("/ticket/kanban", {
         params: {
-          queueIds: JSON.stringify(jsonString),
+          queueIds: JSON.stringify(queueIds),
           showAll: profile === "admin",
         },
       });
@@ -85,6 +63,25 @@ const Kanban = () => {
       setTickets([]);
     }
   };
+
+  const fetchTags = async () => {
+    try {
+      const response = await api.get("/tags/kanban");
+      const fetchedTags = response.data.lista ?? [];
+
+      setTags(fetchedTags);
+
+      await fetchTickets(jsonString);
+    } catch (error) {
+      console.log(error);
+    }
+    setLoadingKanban(false);
+  };
+
+  useEffect(() => {
+    fetchTags();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const buildTicketCards = (tagTickets) => {
     return tagTickets.map((ticket) => ({
