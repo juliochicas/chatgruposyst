@@ -8,6 +8,7 @@ import {
   AutoIncrement,
   ForeignKey,
   BelongsTo,
+  BelongsToMany,
   DataType,
   HasMany,
   AllowNull

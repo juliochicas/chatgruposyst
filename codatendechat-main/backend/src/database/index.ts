@@ -10,6 +10,7 @@ import Queue from "../models/Queue";
 import WhatsappQueue from "../models/WhatsappQueue";
 import UserQueue from "../models/UserQueue";
 import Company from "../models/Company";
+import UserCompany from "../models/UserCompany";
 import Plan from "../models/Plan";
 import TicketNote from "../models/TicketNote";
 import QuickMessage from "../models/QuickMessage";
@@ -127,6 +128,7 @@ const models = [
   SupportMessage,
   EmbedConfig,
   MessageVariable,
+  UserCompany,
 ];
 
 sequelize.addModels(models);
