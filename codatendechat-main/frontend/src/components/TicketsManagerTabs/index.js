@@ -13,7 +13,7 @@ import CheckBoxIcon from "@material-ui/icons/CheckBox";
 import DeleteSweepIcon from "@material-ui/icons/DeleteSweep";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Switch from "@material-ui/core/Switch";
+import { Switch, IconButton, Tooltip } from "@material-ui/core";
 
 import NewTicketModal from "../NewTicketModal";
 import TicketsList from "../TicketsListCustom";
@@ -300,24 +300,16 @@ const TicketsManagerTabs = () => {
             >
               {i18n.t("ticketsManager.buttons.newTicket")}
             </Button>
-            <Can
-              role={user.profile}
-              perform="tickets-manager:showall"
-              yes={() => (
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  size="small"
-                  disabled={cleaningOrphans}
+            {user.profile === "admin" && (
+              <Tooltip title={i18n.t("tickets.cleanOrphans")}>
+                <IconButton
                   onClick={handleCleanOrphans}
-                  startIcon={<DeleteSweepIcon />}
+                  color="primary"
                 >
-                  {cleaningOrphans
-                    ? "Limpiando..."
-                    : i18n.t("ticketsManager.buttons.cleanOrphans")}
-                </Button>
-              )}
-            />
+                  <DeleteSweepIcon />
+                </IconButton>
+              </Tooltip>
+            )}
             <Can
               role={user.profile}
               perform="tickets-manager:showall"
@@ -417,7 +409,7 @@ const TicketsManagerTabs = () => {
           selectedQueueIds={selectedQueueIds}
         />
       </TabPanel>
-    </Paper>
+    </Paper >
   );
 };
 
