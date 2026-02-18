@@ -4,6 +4,8 @@ import { useHistory } from "react-router-dom";
 import { makeStyles, createTheme, ThemeProvider } from "@material-ui/core/styles";
 import { IconButton } from "@material-ui/core";
 import { MoreVert, Replay } from "@material-ui/icons";
+import PauseCircleOutlineIcon from "@material-ui/icons/PauseCircleOutline";
+import PlayCircleOutlineIcon from "@material-ui/icons/PlayCircleOutline";
 
 import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
@@ -16,6 +18,7 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import UndoRoundedIcon from '@material-ui/icons/UndoRounded';
 import Tooltip from '@material-ui/core/Tooltip';
 import { green } from '@material-ui/core/colors';
+import { toast } from "react-toastify";
 
 
 const useStyles = makeStyles(theme => ({
@@ -30,11 +33,12 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const TicketActionButtonsCustom = ({ ticket }) => {
+const TicketActionButtonsCustom = ({ ticket, contact }) => {
 	const classes = useStyles();
 	const history = useHistory();
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [loading, setLoading] = useState(false);
+	const [togglingBot, setTogglingBot] = useState(false);
 	const ticketOptionsMenuOpen = Boolean(anchorEl);
 	const { user } = useContext(AuthContext);
 	const { setCurrentTicket } = useContext(TicketsContext);
@@ -77,6 +81,27 @@ const TicketActionButtonsCustom = ({ ticket }) => {
 		}
 	};
 
+	const handleToggleDisableBot = async () => {
+		const contactId = contact?.id || ticket?.contact?.id;
+		if (!contactId) return;
+		setTogglingBot(true);
+		try {
+			await api.put(`/contacts/toggleDisableBot/${contactId}`);
+			const isNowPaused = !(contact?.disableBot || ticket?.contact?.disableBot);
+			toast.success(
+				isNowPaused
+					? i18n.t("ticketActionButtons.aiPaused")
+					: i18n.t("ticketActionButtons.aiResumed")
+			);
+		} catch (err) {
+			toastError(err);
+		}
+		setTogglingBot(false);
+	};
+
+	const isBotDisabled = contact?.disableBot || ticket?.contact?.disableBot;
+	const hasAiIntegration = ticket?.useIntegration || ticket?.promptId;
+
 	return (
 		<div className={classes.actionButtons}>
 			{ticket.status === "closed" && (
@@ -91,6 +116,17 @@ const TicketActionButtonsCustom = ({ ticket }) => {
 			)}
 			{ticket.status === "open" && (
 				<>
+					{(hasAiIntegration || isBotDisabled) && (
+						<Tooltip title={isBotDisabled ? i18n.t("ticketActionButtons.resumeAI") : i18n.t("ticketActionButtons.pauseAI")}>
+							<IconButton
+								onClick={handleToggleDisableBot}
+								disabled={togglingBot}
+								style={{ color: isBotDisabled ? "#f44336" : "#4caf50" }}
+							>
+								{isBotDisabled ? <PlayCircleOutlineIcon /> : <PauseCircleOutlineIcon />}
+							</IconButton>
+						</Tooltip>
+					)}
 					<Tooltip title={i18n.t("messagesList.header.buttons.return")}>
 						<IconButton onClick={e => handleUpdateTicketStatus(e, "pending", null)}>
 							<UndoRoundedIcon />
@@ -103,23 +139,6 @@ const TicketActionButtonsCustom = ({ ticket }) => {
 							</IconButton>
 						</Tooltip>
 					</ThemeProvider>
-					{/* <ButtonWithSpinner
-						loading={loading}
-						startIcon={<Replay />}
-						size="small"
-						onClick={e => handleUpdateTicketStatus(e, "pending", null)}
-					>
-						{i18n.t("messagesList.header.buttons.return")}
-					</ButtonWithSpinner>
-					<ButtonWithSpinner
-						loading={loading}
-						size="small"
-						variant="contained"
-						color="primary"
-						onClick={e => handleUpdateTicketStatus(e, "closed", user?.id)}
-					>
-						{i18n.t("messagesList.header.buttons.resolve")}
-					</ButtonWithSpinner> */}
 					<IconButton onClick={handleOpenTicketOptionsMenu}>
 						<MoreVert />
 					</IconButton>

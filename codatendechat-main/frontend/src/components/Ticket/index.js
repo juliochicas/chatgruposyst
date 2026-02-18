@@ -177,7 +177,7 @@ const Ticket = () => {
       >
         <TicketHeader loading={loading}>
           {renderTicketInfo()}
-          <TicketActionButtons ticket={ticket} />
+          <TicketActionButtons ticket={ticket} contact={contact} />
         </TicketHeader>
         <Paper>
           <TagsContainer ticket={ticket} />

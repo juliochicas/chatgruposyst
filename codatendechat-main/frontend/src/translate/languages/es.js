@@ -1638,6 +1638,12 @@ const messages = {
         },
         success: "¡Lista de archivos guardada con éxito!",
       },
+      ticketActionButtons: {
+        pauseAI: "Pausar agente IA",
+        resumeAI: "Reanudar agente IA",
+        aiPaused: "Agente IA pausado para este contacto",
+        aiResumed: "Agente IA reanudado para este contacto",
+      },
       ticketOptionsMenu: {
         schedule: "Programación",
         delete: "Eliminar",
