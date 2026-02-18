@@ -834,6 +834,7 @@ const messages = {
           accept: "Aceptar",
           closed: "Finalizar",
           reopen: "Reabrir",
+          close: "Cerrar",
         },
       },
       ticketsListItem: {

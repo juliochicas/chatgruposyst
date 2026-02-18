@@ -131,7 +131,21 @@ const TicketListItem = ({ ticket }) => {
     }
     history.push(`/tickets/${ticket.uuid}`);
   };
-  console.log("🚀 Console Log : ticket.lastMessage", ticket.lastMessage);
+
+  const handleCloseTicket = async (ticket) => {
+    setLoading(true);
+    try {
+      await api.put(`/tickets/${ticket.id}`, {
+        status: "closed",
+        userId: user?.id,
+      });
+    } catch (err) {
+      toastError(err);
+    }
+    if (isMounted.current) {
+      setLoading(false);
+    }
+  };
 
   const handleSelectTicket = (ticket) => {
     history.push(`/tickets/${ticket.uuid}`);
@@ -226,16 +240,33 @@ const TicketListItem = ({ ticket }) => {
           } */
         />
         {ticket.status === "pending" && (
-          <ButtonWithSpinner
-            color="primary"
-            variant="contained"
-            className={classes.acceptButton}
-            size="small"
-            loading={loading}
-            onClick={(e) => handleAcepptTicket(ticket)}
-          >
-            {i18n.t("ticketsList.buttons.accept")}
-          </ButtonWithSpinner>
+          <>
+            <ButtonWithSpinner
+              color="primary"
+              variant="contained"
+              className={classes.acceptButton}
+              size="small"
+              loading={loading}
+              onClick={(e) => handleAcepptTicket(ticket)}
+            >
+              {i18n.t("ticketsList.buttons.accept")}
+            </ButtonWithSpinner>
+            {!ticket.companyId && (
+              <ButtonWithSpinner
+                color="secondary"
+                variant="contained"
+                size="small"
+                loading={loading}
+                style={{ position: "absolute", left: "73%" }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleCloseTicket(ticket);
+                }}
+              >
+                {i18n.t("ticketsList.buttons.close")}
+              </ButtonWithSpinner>
+            )}
+          </>
         )}
       </ListItem>
       <Divider variant="inset" component="li" />
