@@ -764,8 +764,20 @@ async function handleInvoiceCreate() {
   logger.info("Iniciando geração de boletos");
   const job = new CronJob('*/5 * * * * *', async () => {
 
+    const companies = await Company.findAll({
+      where: {
+        dueDate: {
+          [Op.lt]: moment().add(20, "days").format("YYYY-MM-DD")
+        }
+      },
+      include: [
+        {
+          model: Plan,
+          as: "plan"
+        }
+      ]
+    });
 
-    const companies = await Company.findAll();
     companies.map(async c => {
       var dueDate = c.dueDate;
       const date = moment(dueDate).format();
@@ -777,7 +789,7 @@ async function handleInvoiceCreate() {
       var dias = moment.duration(diff).asDays();
 
       if (dias < 20) {
-        const plan = await Plan.findByPk(c.planId);
+        const plan = c.plan;
 
         const sql = `SELECT COUNT(*) mycount FROM "Invoices" WHERE "companyId" = ${c.id} AND "dueDate"::text LIKE '${moment(dueDate).format("yyyy-MM-DD")}%';`
         const invoice = await sequelize.query(sql,
