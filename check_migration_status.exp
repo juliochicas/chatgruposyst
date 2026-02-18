@@ -1,0 +1,31 @@
+#!/usr/bin/expect -f
+
+set timeout 300
+spawn ssh -o StrictHostKeyChecking=no -o ConnectTimeout=60 -o ServerAliveInterval=15 -o ServerAliveCountMax=10 root@62.72.7.2
+
+expect {
+  "password:" {
+    send ".3+ml3&LKxGw6N1DbZd5\r"
+  }
+  timeout {
+    puts "Timeout connecting"
+    exit 1
+  }
+}
+
+expect {
+  "#" {}
+  timeout {
+    puts "Timeout after login"
+    exit 1
+  }
+}
+
+send "cd /root/chatgruposyst/codatendechat-main\r"
+expect "#"
+
+send "docker compose exec backend npx sequelize db:migrate:status\r"
+expect -timeout 120 "#"
+
+send "exit\r"
+expect eof

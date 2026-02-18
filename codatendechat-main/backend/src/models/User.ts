@@ -22,6 +22,7 @@ import UserQueue from "./UserQueue";
 import Company from "./Company";
 import QuickMessage from "./QuickMessage";
 import Whatsapp from "./Whatsapp";
+import UserCompany from "./UserCompany";
 
 @Table
 class User extends Model<User> {
@@ -38,7 +39,7 @@ class User extends Model<User> {
 
   @Column
   email: string;
-  
+
   @Column
   allTicket: string;
 
@@ -106,6 +107,8 @@ class User extends Model<User> {
   public checkPassword = async (password: string): Promise<boolean> => {
     return compare(password, this.getDataValue("passwordHash"));
   };
+  @BelongsToMany(() => Company, () => UserCompany)
+  companies: Company[];
 }
 
 export default User;

@@ -15,6 +15,7 @@ import {
 import Contact from "./Contact";
 import CompanyAddon from "./CompanyAddon";
 import Message from "./Message";
+import UserCompany from "./UserCompany";
 
 import Plan from "./Plan";
 import Queue from "./Queue";
@@ -152,6 +153,9 @@ class Company extends Model<Company> {
     hooks: true
   })
   companyAddons: CompanyAddon[];
+
+  @BelongsToMany(() => User, () => UserCompany)
+  members: User[];
 }
 
 export default Company;
