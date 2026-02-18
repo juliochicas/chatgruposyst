@@ -34,6 +34,110 @@ import toastError from "../../errors/toastError";
 import { SocketContext } from "../../context/Socket/SocketContext";
 import { i18n } from "../../translate/i18n";
 
+// Helper to extract filename from a /public/ media URL
+const getMediaFilename = (mediaUrl) => {
+  if (!mediaUrl) return null;
+  const parts = mediaUrl.split("/public/");
+  return parts.length > 1 ? parts[parts.length - 1] : null;
+};
+
+// Fetches media as blob trying multiple strategies
+const fetchMediaBlob = async (mediaUrl) => {
+  // Strategy 1: Use the dedicated /messages/media/:filename endpoint
+  const filename = getMediaFilename(mediaUrl);
+  if (filename) {
+    try {
+      const { data, headers } = await api.get(`/messages/media/${filename}`, {
+        responseType: "blob",
+      });
+      return window.URL.createObjectURL(new Blob([data], { type: headers["content-type"] }));
+    } catch (err) { /* fallthrough */ }
+  }
+  // Strategy 2: Fetch via api with full URL (auth headers included)
+  try {
+    const { data, headers } = await api.get(mediaUrl, { responseType: "blob" });
+    return window.URL.createObjectURL(new Blob([data], { type: headers["content-type"] }));
+  } catch (err) { /* fallthrough */ }
+  // Strategy 3: Direct fetch without auth
+  try {
+    const response = await fetch(mediaUrl);
+    if (response.ok) {
+      const blob = await response.blob();
+      return window.URL.createObjectURL(blob);
+    }
+  } catch (err) { /* fallthrough */ }
+  return null;
+};
+
+// Audio player with fallback: tries direct URL first, falls back to blob via API
+const AudioPlayerWithFallback = ({ mediaUrl }) => {
+  const [blobUrl, setBlobUrl] = React.useState(null);
+  const [directFailed, setDirectFailed] = React.useState(false);
+  const [allFailed, setAllFailed] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!directFailed || !mediaUrl) return;
+    let cancelled = false;
+    fetchMediaBlob(mediaUrl).then(url => {
+      if (cancelled) return;
+      if (url) setBlobUrl(url);
+      else setAllFailed(true);
+    });
+    return () => { cancelled = true; };
+  }, [directFailed, mediaUrl]);
+
+  if (allFailed) {
+    return (
+      <div style={{ padding: 8, color: "#999", fontSize: 13 }}>
+        Audio no disponible
+      </div>
+    );
+  }
+
+  return (
+    <audio
+      controls
+      src={blobUrl || mediaUrl}
+      onError={() => { if (!directFailed && !blobUrl) setDirectFailed(true); }}
+    />
+  );
+};
+
+// Video player with fallback: tries direct URL first, falls back to blob via API
+const VideoPlayerWithFallback = ({ mediaUrl, classes }) => {
+  const [blobUrl, setBlobUrl] = React.useState(null);
+  const [directFailed, setDirectFailed] = React.useState(false);
+  const [allFailed, setAllFailed] = React.useState(false);
+
+  React.useEffect(() => {
+    if (!directFailed || !mediaUrl) return;
+    let cancelled = false;
+    fetchMediaBlob(mediaUrl).then(url => {
+      if (cancelled) return;
+      if (url) setBlobUrl(url);
+      else setAllFailed(true);
+    });
+    return () => { cancelled = true; };
+  }, [directFailed, mediaUrl]);
+
+  if (allFailed) {
+    return (
+      <div style={{ padding: 8, color: "#999", fontSize: 13 }}>
+        Video no disponible
+      </div>
+    );
+  }
+
+  return (
+    <video
+      className={classes?.messageMedia}
+      src={blobUrl || mediaUrl}
+      controls
+      onError={() => { if (!directFailed && !blobUrl) setDirectFailed(true); }}
+    />
+  );
+};
+
 const useStyles = makeStyles((theme) => ({
   messagesListWrapper: {
     overflow: "hidden",
@@ -478,20 +582,12 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
     else if (message.mediaType === "image") {
       return <ModalImageCors imageUrl={message.mediaUrl} />;
     } else if (message.mediaType === "audio") {
-      return (
-        <audio controls>
-          <source src={message.mediaUrl} type="audio/ogg"></source>
-        </audio>
-      );
+      return <AudioPlayerWithFallback mediaUrl={message.mediaUrl} />;
     } else if (message.mediaType === "video") {
-      return (
-        <video
-          className={classes.messageMedia}
-          src={message.mediaUrl}
-          controls
-        />
-      );
+      return <VideoPlayerWithFallback mediaUrl={message.mediaUrl} classes={classes} />;
     } else {
+      const filename = message.mediaUrl ? message.mediaUrl.split("/public/").pop() : null;
+      const downloadUrl = filename ? `${process.env.REACT_APP_BACKEND_URL}/messages/media/${filename}` : message.mediaUrl;
       return (
         <>
           <div className={classes.downloadMedia}>
@@ -500,7 +596,7 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
               color="primary"
               variant="outlined"
               target="_blank"
-              href={message.mediaUrl}
+              href={downloadUrl || message.mediaUrl}
             >
               {i18n.t("messagesList.header.buttons.download")}
             </Button>
@@ -627,19 +723,13 @@ const MessagesList = ({ ticket, ticketId, isGroup }) => {
           {message.quotedMsg.mediaType === "audio"
             && (
               <div className={classes.downloadMedia}>
-                <audio controls>
-                  <source src={message.quotedMsg.mediaUrl} type="audio/ogg"></source>
-                </audio>
+                <AudioPlayerWithFallback mediaUrl={message.quotedMsg.mediaUrl} />
               </div>
             )
           }
           {message.quotedMsg.mediaType === "video"
             && (
-              <video
-                className={classes.messageMedia}
-                src={message.quotedMsg.mediaUrl}
-                controls
-              />
+              <VideoPlayerWithFallback mediaUrl={message.quotedMsg.mediaUrl} classes={classes} />
             )
           }
           {message.quotedMsg.mediaType === "application"

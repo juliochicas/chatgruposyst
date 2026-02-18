@@ -486,8 +486,21 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
     buffer = await downloadMediaMessage(msg as WAMessage, "buffer", {});
   } catch (err) {
     console.error("Error al descargar media:", err);
+  }
 
-    // Trate el error de acuerdo con sus necesidades
+  if (!buffer) {
+    // Retry once after a short delay
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500));
+      buffer = await downloadMediaMessage(msg as WAMessage, "buffer", {});
+    } catch (err) {
+      console.error("Error al descargar media (reintento):", err);
+    }
+  }
+
+  if (!buffer) {
+    logger.warn("downloadMedia: no se pudo descargar el archivo multimedia");
+    return null;
   }
 
   let filename = msg.message?.documentMessage?.fileName || "";
@@ -503,7 +516,10 @@ const downloadMedia = async (msg: proto.IWebMessageInfo) => {
       ?.imageMessage ||
     msg.message?.extendedTextMessage?.contextInfo?.quotedMessage?.videoMessage;
 
-  if (!mineType) console.log(msg);
+  if (!mineType) {
+    console.log(msg);
+    return null;
+  }
 
   if (!filename) {
     const ext = mimeExtension(mineType.mimetype);
@@ -890,14 +906,25 @@ export const verifyMediaMessage = async (
     media.filename = `${new Date().getTime()}.${ext}`;
   }
 
+  const mediaPath = join(__dirname, "..", "..", "..", "public", media.filename);
   try {
     await writeFileAsync(
-      join(__dirname, "..", "..", "..", "public", media.filename),
-      Buffer.from(media.data, 'base64')
+      mediaPath,
+      media.data
     );
   } catch (err) {
     Sentry.captureException(err);
-    logger.error(err);
+    logger.error(`verifyMediaMessage: error escribiendo archivo ${mediaPath}: ${err}`);
+  }
+
+  // Verify the file was actually written
+  try {
+    const fs = require("fs");
+    if (!fs.existsSync(mediaPath)) {
+      logger.error(`verifyMediaMessage: archivo no existe después de escribir: ${mediaPath}`);
+    }
+  } catch (err) {
+    logger.error(`verifyMediaMessage: error verificando archivo: ${err}`);
   }
 
   const body = getBodyMessage(msg);
