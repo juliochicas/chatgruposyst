@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 
+import { logger } from "../utils/logger";
 import AppError from "../errors/AppError";
 
 type TokenPayload = {
@@ -23,7 +24,7 @@ const envTokenAuth = (
       return next();
     }
   } catch (e) {
-    console.log(e);
+    logger.error(e);
   }
 
   throw new AppError("Token inválido", 403);
