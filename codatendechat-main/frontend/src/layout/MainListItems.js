@@ -231,7 +231,8 @@ const MainListItems = (props) => {
   }, [chats, user.id]);
 
   useEffect(() => {
-    if (localStorage.getItem("cshow")) {
+    const companyId = localStorage.getItem("companyId");
+    if (companyId && localStorage.getItem(`cshow_${companyId}`)) {
       setShowCampaigns(true);
     }
   }, []);

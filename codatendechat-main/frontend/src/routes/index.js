@@ -54,9 +54,12 @@ const Routes = () => {
   const [showCampaigns, setShowCampaigns] = useState(false);
 
   useEffect(() => {
-    const cshow = localStorage.getItem("cshow");
-    if (cshow !== undefined) {
-      setShowCampaigns(true);
+    const companyId = localStorage.getItem("companyId");
+    if (companyId) {
+      const cshow = localStorage.getItem(`cshow_${companyId}`);
+      if (cshow !== undefined && cshow !== null) {
+        setShowCampaigns(true);
+      }
     }
   }, []);
 

@@ -146,9 +146,9 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
     ]
   });
 
-  // Notify super admins via socket
+  // Notify company channel via socket
   const io = getIO();
-  io.emit("support-ticket", {
+  io.to(`company-${companyId}-mainchannel`).emit(`company-${companyId}-support-ticket`, {
     action: "create",
     ticket: fullTicket
   });
@@ -226,13 +226,7 @@ export const sendMessage = async (req: Request, res: Response): Promise<Response
   });
 
   // Notify company channel for ticket status update
-  io.to(`company-${ticket.companyId}-mainchannel`).emit("support-ticket", {
-    action: "update",
-    ticket: { ...ticket.toJSON(), ...updates }
-  });
-
-  // Notify admin channel
-  io.emit("support-ticket", {
+  io.to(`company-${ticket.companyId}-mainchannel`).emit(`company-${ticket.companyId}-support-ticket`, {
     action: "update",
     ticket: { ...ticket.toJSON(), ...updates }
   });
@@ -294,11 +288,11 @@ export const update = async (req: Request, res: Response): Promise<Response> => 
 
   // Notify via socket
   const io = getIO();
-  io.to(`support-ticket-${ticket.id}`).emit("support-ticket", {
+  io.to(`support-ticket-${ticket.id}`).emit(`company-${ticket.companyId}-support-ticket`, {
     action: "update",
     ticket: fullTicket
   });
-  io.to(`company-${ticket.companyId}-mainchannel`).emit("support-ticket", {
+  io.to(`company-${ticket.companyId}-mainchannel`).emit(`company-${ticket.companyId}-support-ticket`, {
     action: "update",
     ticket: fullTicket
   });

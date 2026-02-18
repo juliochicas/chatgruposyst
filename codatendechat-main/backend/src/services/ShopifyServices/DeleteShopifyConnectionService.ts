@@ -4,9 +4,12 @@ import ShopifyCart from "../../models/ShopifyCart";
 import AppError from "../../errors/AppError";
 
 const DeleteShopifyConnectionService = async (
-  id: string | number
+  id: string | number,
+  companyId: number
 ): Promise<void> => {
-  const connection = await ShopifyConnection.findByPk(+id);
+  const connection = await ShopifyConnection.findOne({
+    where: { id: +id, companyId }
+  });
 
   if (!connection) {
     throw new AppError("ERR_SHOPIFY_CONNECTION_NOT_FOUND", 404);

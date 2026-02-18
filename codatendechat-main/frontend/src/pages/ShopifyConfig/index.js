@@ -44,6 +44,7 @@ import MainHeader from "../../components/MainHeader";
 import Title from "../../components/Title";
 import api from "../../services/api";
 import toastError from "../../errors/toastError";
+import { i18n } from "../../translate/i18n";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -131,11 +132,11 @@ const ShopifyConfig = () => {
     const params = new URLSearchParams(location.search);
     if (params.get("status") === "success") {
       toast.success(
-        `Tienda ${params.get("shop") || ""} conectada exitosamente`
+        i18n.t("shopifyConfig.toasts.storeConnectedSuccess", { shop: params.get("shop") || "" })
       );
       history.replace("/shopify-config");
     } else if (params.get("error")) {
-      toast.error("Error al conectar con Shopify. Intenta nuevamente.");
+      toast.error(i18n.t("shopifyConfig.toasts.connectionError"));
       history.replace("/shopify-config");
     }
   }, [location, history]);
@@ -184,11 +185,11 @@ const ShopifyConfig = () => {
 
   const handleCreateConnection = async () => {
     if (!newShopDomain.trim()) {
-      toast.error("Ingresa el dominio de tu tienda Shopify");
+      toast.error(i18n.t("shopifyConfig.toasts.enterDomain"));
       return;
     }
     if (!newApiKey.trim() || !newApiSecret.trim()) {
-      toast.error("Ingresa el API Key y API Secret de tu app Shopify");
+      toast.error(i18n.t("shopifyConfig.toasts.enterCredentials"));
       return;
     }
 
@@ -199,7 +200,7 @@ const ShopifyConfig = () => {
         apiKey: newApiKey.trim(),
         apiSecret: newApiSecret.trim(),
       });
-      toast.success("Conexion creada. Ahora haz clic en 'Conectar' para autorizar con Shopify.");
+      toast.success(i18n.t("shopifyConfig.toasts.connectionCreated"));
       setNewShopDomain("");
       setNewApiKey("");
       setNewApiSecret("");
@@ -224,11 +225,11 @@ const ShopifyConfig = () => {
   };
 
   const handleDisconnect = async (connectionId) => {
-    if (!window.confirm("Desconectar esta tienda Shopify?")) return;
+    if (!window.confirm(i18n.t("shopifyConfig.confirmDisconnect"))) return;
 
     try {
       await api.delete(`/shopify-connections/${connectionId}`);
-      toast.success("Tienda desconectada");
+      toast.success(i18n.t("shopifyConfig.toasts.storeDisconnected"));
       await loadConnections();
     } catch (err) {
       toastError(err);
@@ -239,7 +240,7 @@ const ShopifyConfig = () => {
     try {
       setSyncing(true);
       await api.post(`/shopify-connections/${connectionId}/sync`);
-      toast.info("Sincronizacion iniciada en segundo plano");
+      toast.info(i18n.t("shopifyConfig.toasts.syncStarted"));
     } catch (err) {
       toastError(err);
     } finally {
@@ -264,7 +265,7 @@ const ShopifyConfig = () => {
 
   const handleSaveCredentials = async () => {
     if (!editApiKey.trim() || !editApiSecret.trim()) {
-      toast.error("Ambos campos son obligatorios");
+      toast.error(i18n.t("shopifyConfig.toasts.fieldsRequired"));
       return;
     }
     try {
@@ -273,7 +274,7 @@ const ShopifyConfig = () => {
         apiKey: editApiKey.trim(),
         apiSecret: editApiSecret.trim(),
       });
-      toast.success("Credenciales actualizadas");
+      toast.success(i18n.t("shopifyConfig.toasts.credentialsUpdated"));
       handleCloseEditDialog();
       await loadConnections();
     } catch (err) {
@@ -295,7 +296,7 @@ const ShopifyConfig = () => {
         return (
           <Chip
             icon={<CheckCircleIcon />}
-            label="Conectado"
+            label={i18n.t("shopifyConfig.status.connected")}
             className={`${classes.statusChip} ${classes.connected}`}
           />
         );
@@ -303,7 +304,7 @@ const ShopifyConfig = () => {
         return (
           <Chip
             icon={<SyncIcon />}
-            label="Sincronizando"
+            label={i18n.t("shopifyConfig.status.syncing")}
             className={`${classes.statusChip} ${classes.syncing}`}
           />
         );
@@ -311,7 +312,7 @@ const ShopifyConfig = () => {
         return (
           <Chip
             icon={<ErrorIcon />}
-            label="Desconectado"
+            label={i18n.t("shopifyConfig.status.disconnected")}
             className={`${classes.statusChip} ${classes.disconnected}`}
           />
         );
@@ -321,7 +322,7 @@ const ShopifyConfig = () => {
   return (
     <MainContainer>
       <MainHeader>
-        <Title>Shopify</Title>
+        <Title>{i18n.t("shopifyConfig.title")}</Title>
       </MainHeader>
 
       <Paper className={classes.paper}>
@@ -333,7 +334,7 @@ const ShopifyConfig = () => {
         >
           <Typography variant="h6">
             <StoreIcon style={{ verticalAlign: "middle", marginRight: 8 }} />
-            Tiendas Conectadas
+            {i18n.t("shopifyConfig.connectedStores")}
           </Typography>
           <Button
             variant="contained"
@@ -341,7 +342,7 @@ const ShopifyConfig = () => {
             startIcon={<AddIcon />}
             onClick={() => setShowNewForm(true)}
           >
-            Nueva Conexion
+            {i18n.t("shopifyConfig.newConnection")}
           </Button>
         </Box>
 
@@ -350,21 +351,21 @@ const ShopifyConfig = () => {
           <Card className={classes.infoCard}>
             <CardContent>
               <Typography variant="subtitle1" gutterBottom>
-                Conectar nueva tienda Shopify
+                {i18n.t("shopifyConfig.connectNewStore")}
               </Typography>
               <Typography variant="body2" color="textSecondary" gutterBottom>
-                Obtén tus credenciales en{" "}
-                <strong>partners.shopify.com &gt; Apps &gt; Tu App &gt; Client credentials</strong>
+                {i18n.t("shopifyConfig.credentialsHelp")}{" "}
+                <strong>{i18n.t("shopifyConfig.credentialsPath")}</strong>
               </Typography>
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="Dominio de la tienda"
-                    placeholder="mitienda.myshopify.com"
+                    label={i18n.t("shopifyConfig.form.storeDomain")}
+                    placeholder={i18n.t("shopifyConfig.form.storeDomainPlaceholder")}
                     value={newShopDomain}
                     onChange={(e) => setNewShopDomain(e.target.value)}
-                    helperText="Ingresa tu dominio .myshopify.com"
+                    helperText={i18n.t("shopifyConfig.form.storeDomainHelper")}
                     variant="outlined"
                     size="small"
                   />
@@ -372,8 +373,8 @@ const ShopifyConfig = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="API Key (Client ID)"
-                    placeholder="ej: a1b2c3d4e5f6..."
+                    label={i18n.t("shopifyConfig.form.apiKey")}
+                    placeholder={i18n.t("shopifyConfig.form.apiKeyPlaceholder")}
                     value={newApiKey}
                     onChange={(e) => setNewApiKey(e.target.value)}
                     variant="outlined"
@@ -383,8 +384,8 @@ const ShopifyConfig = () => {
                 <Grid item xs={12} sm={6}>
                   <TextField
                     fullWidth
-                    label="API Secret (Client Secret)"
-                    placeholder="ej: shpss_..."
+                    label={i18n.t("shopifyConfig.form.apiSecret")}
+                    placeholder={i18n.t("shopifyConfig.form.apiSecretPlaceholder")}
                     value={newApiSecret}
                     onChange={(e) => setNewApiSecret(e.target.value)}
                     type={showNewSecret ? "text" : "password"}
@@ -415,10 +416,10 @@ const ShopifyConfig = () => {
                         saving ? <CircularProgress size={20} /> : <SaveIcon />
                       }
                     >
-                      Crear Conexion
+                      {i18n.t("shopifyConfig.buttons.create")}
                     </Button>
                     <Button onClick={() => { setShowNewForm(false); setNewShopDomain(""); setNewApiKey(""); setNewApiSecret(""); }}>
-                      Cancelar
+                      {i18n.t("shopifyConfig.buttons.cancel")}
                     </Button>
                   </Box>
                 </Grid>
@@ -434,20 +435,19 @@ const ShopifyConfig = () => {
           </Box>
         ) : connections.length === 0 ? (
           <Typography color="textSecondary" align="center">
-            No hay tiendas conectadas. Haz clic en "Nueva Conexion" para
-            comenzar.
+            {i18n.t("shopifyConfig.noStores")}
           </Typography>
         ) : (
           <Table size="small">
             <TableHead>
               <TableRow>
-                <TableCell>Tienda</TableCell>
-                <TableCell>Dominio</TableCell>
-                <TableCell>API Key</TableCell>
-                <TableCell>Estado</TableCell>
-                <TableCell>Moneda</TableCell>
-                <TableCell>Ultima Sync</TableCell>
-                <TableCell align="right">Acciones</TableCell>
+                <TableCell>{i18n.t("shopifyConfig.table.store")}</TableCell>
+                <TableCell>{i18n.t("shopifyConfig.table.domain")}</TableCell>
+                <TableCell>{i18n.t("shopifyConfig.table.apiKey")}</TableCell>
+                <TableCell>{i18n.t("shopifyConfig.table.status")}</TableCell>
+                <TableCell>{i18n.t("shopifyConfig.table.currency")}</TableCell>
+                <TableCell>{i18n.t("shopifyConfig.table.lastSync")}</TableCell>
+                <TableCell align="right">{i18n.t("shopifyConfig.table.actions")}</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -457,7 +457,7 @@ const ShopifyConfig = () => {
                   <TableCell>{conn.shopDomain}</TableCell>
                   <TableCell>
                     <Typography variant="caption" className={classes.credentialChip}>
-                      {conn.apiKey ? maskSecret(conn.apiKey) : <em style={{ color: "#f44336" }}>Sin configurar</em>}
+                      {conn.apiKey ? maskSecret(conn.apiKey) : <em style={{ color: "#f44336" }}>{i18n.t("shopifyConfig.table.notConfigured")}</em>}
                     </Typography>
                   </TableCell>
                   <TableCell>{getStatusChip(conn.status)}</TableCell>
@@ -465,12 +465,12 @@ const ShopifyConfig = () => {
                   <TableCell>
                     {conn.lastSyncAt
                       ? new Date(conn.lastSyncAt).toLocaleString()
-                      : "Nunca"}
+                      : i18n.t("shopifyConfig.table.never")}
                   </TableCell>
                   <TableCell align="right">
                     <IconButton
                       size="small"
-                      title="Editar credenciales"
+                      title={i18n.t("shopifyConfig.buttons.editCredentials")}
                       onClick={() => handleOpenEditDialog(conn)}
                     >
                       <EditIcon fontSize="small" />
@@ -484,13 +484,13 @@ const ShopifyConfig = () => {
                         onClick={() => handleConnect(conn.id)}
                         disabled={!conn.apiKey}
                       >
-                        Conectar
+                        {i18n.t("shopifyConfig.buttons.connect")}
                       </Button>
                     ) : (
                       <>
                         <IconButton
                           size="small"
-                          title="Sincronizar productos"
+                          title={i18n.t("shopifyConfig.buttons.sync")}
                           onClick={() => handleSync(conn.id)}
                           disabled={syncing}
                         >
@@ -498,7 +498,7 @@ const ShopifyConfig = () => {
                         </IconButton>
                         <IconButton
                           size="small"
-                          title="Desconectar"
+                          title={i18n.t("shopifyConfig.buttons.disconnect")}
                           onClick={() => handleDisconnect(conn.id)}
                         >
                           <LinkOffIcon color="error" />
@@ -516,16 +516,16 @@ const ShopifyConfig = () => {
       {/* Edit Credentials Dialog */}
       <Dialog open={editDialogOpen} onClose={handleCloseEditDialog} maxWidth="sm" fullWidth>
         <DialogTitle>
-          Credenciales Shopify - {editingConn?.shopDomain}
+          {i18n.t("shopifyConfig.credentialDialog.title")} - {editingConn?.shopDomain}
         </DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="textSecondary" gutterBottom>
-            Obtén estas credenciales en{" "}
-            <strong>partners.shopify.com &gt; Apps &gt; Tu App &gt; Client credentials</strong>
+            {i18n.t("shopifyConfig.credentialsHelp")}{" "}
+            <strong>{i18n.t("shopifyConfig.credentialsPath")}</strong>
           </Typography>
           <TextField
             fullWidth
-            label="API Key (Client ID)"
+            label={i18n.t("shopifyConfig.form.apiKey")}
             value={editApiKey}
             onChange={(e) => setEditApiKey(e.target.value)}
             variant="outlined"
@@ -533,7 +533,7 @@ const ShopifyConfig = () => {
           />
           <TextField
             fullWidth
-            label="API Secret (Client Secret)"
+            label={i18n.t("shopifyConfig.form.apiSecret")}
             value={editApiSecret}
             onChange={(e) => setEditApiSecret(e.target.value)}
             type={showEditSecret ? "text" : "password"}
@@ -555,7 +555,7 @@ const ShopifyConfig = () => {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseEditDialog} color="secondary">
-            Cancelar
+            {i18n.t("shopifyConfig.buttons.cancel")}
           </Button>
           <Button
             onClick={handleSaveCredentials}
@@ -564,7 +564,7 @@ const ShopifyConfig = () => {
             disabled={editSaving}
             startIcon={editSaving ? <CircularProgress size={20} /> : <SaveIcon />}
           >
-            Guardar
+            {i18n.t("shopifyConfig.buttons.save")}
           </Button>
         </DialogActions>
       </Dialog>
@@ -573,14 +573,14 @@ const ShopifyConfig = () => {
       {connections.some((c) => c.status === "connected") && (
         <Paper className={classes.paper}>
           <Typography variant="h6" gutterBottom>
-            Catalogo de Productos
+            {i18n.t("shopifyConfig.products.title")}
           </Typography>
 
           <TextField
             fullWidth
             variant="outlined"
             size="small"
-            placeholder="Buscar productos..."
+            placeholder={i18n.t("shopifyConfig.products.searchPlaceholder")}
             value={productSearch}
             onChange={(e) => {
               setProductSearch(e.target.value);
@@ -595,19 +595,19 @@ const ShopifyConfig = () => {
             </Box>
           ) : products.length === 0 ? (
             <Typography color="textSecondary" align="center">
-              No hay productos sincronizados. Haz clic en el boton de sync.
+              {i18n.t("shopifyConfig.products.noProducts")}
             </Typography>
           ) : (
             <>
               <Table size="small">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Imagen</TableCell>
-                    <TableCell>Producto</TableCell>
-                    <TableCell>Tipo</TableCell>
-                    <TableCell>Precio</TableCell>
-                    <TableCell>Stock</TableCell>
-                    <TableCell>Estado</TableCell>
+                    <TableCell>{i18n.t("shopifyConfig.products.image")}</TableCell>
+                    <TableCell>{i18n.t("shopifyConfig.products.product")}</TableCell>
+                    <TableCell>{i18n.t("shopifyConfig.products.type")}</TableCell>
+                    <TableCell>{i18n.t("shopifyConfig.products.price")}</TableCell>
+                    <TableCell>{i18n.t("shopifyConfig.products.stock")}</TableCell>
+                    <TableCell>{i18n.t("shopifyConfig.products.status")}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -674,17 +674,17 @@ const ShopifyConfig = () => {
                   disabled={productPage <= 1}
                   onClick={() => setProductPage((p) => p - 1)}
                 >
-                  Anterior
+                  {i18n.t("shopifyConfig.products.previous")}
                 </Button>
                 <Typography variant="body2" style={{ alignSelf: "center" }}>
-                  Pagina {productPage} de {totalPages}
+                  {i18n.t("shopifyConfig.products.pageOf", { page: productPage, totalPages })}
                 </Typography>
                 <Button
                   size="small"
                   disabled={productPage >= totalPages}
                   onClick={() => setProductPage((p) => p + 1)}
                 >
-                  Siguiente
+                  {i18n.t("shopifyConfig.products.next")}
                 </Button>
               </Box>
             </>

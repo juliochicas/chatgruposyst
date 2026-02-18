@@ -108,13 +108,13 @@ const NotificationsPopOver = (volume) => {
 
 	// Update browser tab title with notification count
 	useEffect(() => {
-		const baseTitle = "ChateaYA";
+		const baseTitle = user?.company?.name || "Chat";
 		if (notifications.length > 0) {
 			document.title = `(${notifications.length}) ${baseTitle}`;
 		} else {
 			document.title = baseTitle;
 		}
-	}, [notifications]);
+	}, [notifications, user]);
 
 	useEffect(() => {
 		ticketIdRef.current = ticketIdUrl;

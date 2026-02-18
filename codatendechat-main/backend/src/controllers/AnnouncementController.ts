@@ -67,7 +67,7 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
   });
 
   const io = getIO();
-  io.emit(`company-announcement`, {
+  io.to(`company-${companyId}-mainchannel`).emit(`company-${companyId}-announcement`, {
     action: "create",
     record
   });
@@ -77,8 +77,9 @@ export const store = async (req: Request, res: Response): Promise<Response> => {
 
 export const show = async (req: Request, res: Response): Promise<Response> => {
   const { id } = req.params;
+  const { companyId } = req.user;
 
-  const record = await ShowService(id);
+  const record = await ShowService(id, companyId);
 
   return res.status(200).json(record);
 };
@@ -88,6 +89,7 @@ export const update = async (
   res: Response
 ): Promise<Response> => {
   const data = req.body as StoreData;
+  const { companyId } = req.user;
 
   const schema = Yup.object().shape({
     title: Yup.string().required()
@@ -107,7 +109,7 @@ export const update = async (
   });
 
   const io = getIO();
-  io.emit(`company-announcement`, {
+  io.to(`company-${companyId}-mainchannel`).emit(`company-${companyId}-announcement`, {
     action: "update",
     record
   });
@@ -148,6 +150,7 @@ export const mediaUpload = async (
   res: Response
 ): Promise<Response> => {
   const { id } = req.params;
+  const { companyId } = req.user;
   const files = req.files as Express.Multer.File[];
   const file = head(files);
 
@@ -161,7 +164,7 @@ export const mediaUpload = async (
     await announcement.reload();
 
     const io = getIO();
-    io.emit(`company-announcement`, {
+    io.to(`company-${companyId}-mainchannel`).emit(`company-${companyId}-announcement`, {
       action: "update",
       record: announcement
     });
@@ -177,6 +180,7 @@ export const deleteMedia = async (
   res: Response
 ): Promise<Response> => {
   const { id } = req.params;
+  const { companyId } = req.user;
 
   try {
     const announcement = await Announcement.findByPk(id);
@@ -193,7 +197,7 @@ export const deleteMedia = async (
     await announcement.reload();
 
     const io = getIO();
-    io.emit(`company-announcement`, {
+    io.to(`company-${companyId}-mainchannel`).emit(`company-${companyId}-announcement`, {
       action: "update",
       record: announcement
     });

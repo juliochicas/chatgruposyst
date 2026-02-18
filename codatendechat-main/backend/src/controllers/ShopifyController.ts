@@ -14,6 +14,7 @@ import * as ShopifyProductService from "../services/ShopifyServices/ShopifyProdu
 import * as ShopifyCartService from "../services/ShopifyServices/ShopifyCartService";
 import * as ShopifyCheckoutService from "../services/ShopifyServices/ShopifyCheckoutService";
 import * as ShopifyWebhookService from "../services/ShopifyServices/ShopifyWebhookService";
+import ShopifyConnection from "../models/ShopifyConnection";
 
 // ==========================================
 // CRUD endpoints for Shopify Connections
@@ -118,7 +119,7 @@ export const remove = async (
     );
   }
 
-  await DeleteShopifyConnectionService(connectionId);
+  await DeleteShopifyConnectionService(connectionId, companyId);
 
   const io = getIO();
   io.to(`company-${companyId}-mainchannel`).emit(
@@ -226,18 +227,40 @@ export const webhookReceive = async (
   req: Request,
   res: Response
 ): Promise<Response> => {
-  // Always respond 200 quickly
-  res.status(200).send("OK");
-
   try {
     const topic = req.headers["x-shopify-topic"] as string;
     const shopDomain = req.headers["x-shopify-shop-domain"] as string;
+    const hmacHeader = req.headers["x-shopify-hmac-sha256"] as string;
 
-    if (topic && shopDomain) {
-      await ShopifyWebhookService.processWebhook(topic, shopDomain, req.body);
+    if (!topic || !shopDomain || !hmacHeader) {
+      return res.status(401).send("Missing required Shopify headers");
     }
+
+    // Look up the connection to get the apiSecret for HMAC verification
+    const connection = await ShopifyConnection.findOne({
+      where: { shopDomain }
+    });
+
+    const apiSecret = connection?.apiSecret || undefined;
+
+    const rawBody = typeof req.body === "string"
+      ? req.body
+      : JSON.stringify(req.body);
+
+    if (!ShopifyAuthService.verifyWebhookHmac(rawBody, hmacHeader, apiSecret)) {
+      logger.warn(`[Shopify] Invalid HMAC signature for webhook from ${shopDomain}`);
+      return res.status(401).send("Invalid HMAC signature");
+    }
+
+    // Respond 200 after verification
+    res.status(200).send("OK");
+
+    await ShopifyWebhookService.processWebhook(topic, shopDomain, req.body);
   } catch (err: any) {
     logger.error(`[Shopify] Webhook error: ${err.message}`);
+    if (!res.headersSent) {
+      return res.status(500).send("Webhook processing error");
+    }
   }
 
   return;

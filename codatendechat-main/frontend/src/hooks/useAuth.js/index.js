@@ -173,7 +173,7 @@ const useAuth = () => {
           (s) => s.key === "campaignsEnabled"
         );
         if (setting && setting.value === "true") {
-          localStorage.setItem("cshow", null); //regla para mostrar campañas
+          localStorage.setItem(`cshow_${companyId}`, null); //regla para mostrar campañas
         }
       }
 
@@ -225,10 +225,13 @@ Contacta con Soporte para más información.`);
       await api.delete("/auth/logout");
       setIsAuth(false);
       setUser({});
+      const logoutCompanyId = localStorage.getItem("companyId");
       localStorage.removeItem("token");
       localStorage.removeItem("companyId");
       localStorage.removeItem("userId");
-      localStorage.removeItem("cshow");
+      if (logoutCompanyId) {
+        localStorage.removeItem(`cshow_${logoutCompanyId}`);
+      }
       api.defaults.headers.Authorization = undefined;
       setLoading(false);
       history.push("/login");
