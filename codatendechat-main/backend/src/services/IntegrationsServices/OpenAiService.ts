@@ -54,9 +54,9 @@ interface IOpenAi {
   maxMessages: number;
 }
 
-const deleteFileSync = (path: string): void => {
+const deleteFile = async (path: string): Promise<void> => {
   try {
-    fs.unlinkSync(path);
+    await fs.promises.unlink(path);
   } catch (error) {
     console.error("Erro ao deletar o arquivo:", error);
   }
@@ -205,8 +205,8 @@ export const handleOpenAi = async (
             false,
             wbot
           );
-          deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
-          deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.wav`);
+          await deleteFile(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
+          await deleteFile(`${publicFolder}/${fileNameWithOutExtension}.wav`);
         } catch (error) {
           console.log(`Erro para responder com audio: ${error}`);
         }
@@ -288,8 +288,8 @@ export const handleOpenAi = async (
             false,
             wbot
           );
-          deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
-          deleteFileSync(`${publicFolder}/${fileNameWithOutExtension}.wav`);
+          await deleteFile(`${publicFolder}/${fileNameWithOutExtension}.mp3`);
+          await deleteFile(`${publicFolder}/${fileNameWithOutExtension}.wav`);
         } catch (error) {
           console.log(`Erro para responder com audio: ${error}`);
         }
