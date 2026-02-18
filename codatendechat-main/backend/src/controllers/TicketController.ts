@@ -207,20 +207,35 @@ export const removeOrphaned = async (
 ): Promise<Response> => {
   const { companyId } = req.user;
 
-  // 1. Get all distinct whatsappIds from open/pending tickets
+  // 1. Close tickets with NULL whatsappId (orphaned by SET NULL constraint)
+  const [nullOrphansCount] = await Ticket.update(
+    { status: "closed" },
+    {
+      where: {
+        companyId,
+        whatsappId: null,
+        status: { [Op.in]: ["open", "pending"] }
+      }
+    }
+  );
+
+  // 2. Get distinct whatsappIds from remaining open/pending tickets
   const tickets: Ticket[] = await Ticket.findAll({
     where: {
       companyId,
-      status: { [Op.in]: ["open", "pending"] }
+      status: { [Op.in]: ["open", "pending"] },
+      whatsappId: { [Op.ne]: null }
     },
     attributes: ["whatsappId"],
     group: ["whatsappId"],
   });
 
-  const whatsappIds = tickets.map((t) => t.whatsappId).filter((id) => id);
+  const whatsappIds = tickets.map((t) => t.whatsappId);
+
+  let missingOrphansCount = 0;
 
   if (whatsappIds.length > 0) {
-    // 2. Find which of these IDs actually exist in the Whatsapp table
+    // 3. Find which of these IDs actually exist in the Whatsapp table
     const existingWhatsapps = await Whatsapp.findAll({
       where: {
         id: { [Op.in]: whatsappIds },
@@ -231,11 +246,11 @@ export const removeOrphaned = async (
 
     const existingIds = existingWhatsapps.map((w) => w.id);
 
-    // 3. Identify IDs that are in Tickets but NOT in Whatsapp table
+    // 4. Identify IDs that are in Tickets but NOT in Whatsapp table
     const missingIds = whatsappIds.filter((id) => !existingIds.includes(id));
 
     if (missingIds.length > 0) {
-      // 4. Close tickets associated with these missing IDs
+      // 5. Close tickets associated with these missing IDs
       const [count] = await Ticket.update(
         { status: "closed" },
         {
@@ -246,9 +261,14 @@ export const removeOrphaned = async (
           }
         }
       );
-
-      return res.status(200).json({ message: `${count} tickets huérfanos cerrados.`, count });
+      missingOrphansCount = count;
     }
+  }
+
+  const totalClosed = nullOrphansCount + missingOrphansCount;
+
+  if (totalClosed > 0) {
+    return res.status(200).json({ message: `${totalClosed} tickets huérfanos cerrados.`, count: totalClosed });
   }
 
   return res.status(200).json({ message: "No se encontraron tickets huérfanos.", count: 0 });
