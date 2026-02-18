@@ -11,6 +11,15 @@ export default {
 
       const { typeArch, fileId } = req.body;      
 
+      // Sanitization
+      const safeRegex = /^[a-zA-Z0-9_-]+$/;
+      if (typeArch && !safeRegex.test(typeArch)) {
+        return cb(new Error("Invalid typeArch"), "");
+      }
+      if (fileId && !safeRegex.test(fileId)) {
+        return cb(new Error("Invalid fileId"), "");
+      }
+
       let folder;
 
       if (typeArch && typeArch !== "announcements") {
@@ -21,6 +30,11 @@ export default {
       else
       {
         folder =  path.resolve(publicFolder) 
+      }
+
+      const relative = path.relative(publicFolder, folder);
+      if ((relative.startsWith('..') && !path.isAbsolute(relative)) || path.isAbsolute(relative)) {
+         return cb(new Error("Invalid path"), "");
       }
 
       if (!fs.existsSync(folder)) {
