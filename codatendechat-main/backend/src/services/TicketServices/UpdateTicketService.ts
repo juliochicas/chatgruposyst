@@ -16,7 +16,6 @@ import ListSettingsServiceOne from "../SettingServices/ListSettingsServiceOne"; 
 import ShowUserService from "../UserServices/ShowUserService"; //NOVO PLW DESIGN//
 import { isNil } from "lodash";
 import Whatsapp from "../../models/Whatsapp";
-import { Op } from "sequelize";
 import AppError from "../../errors/AppError";
 import Company from "../../models/Company";
 
@@ -89,25 +88,6 @@ const UpdateTicketService = async ({
     const oldQueueId = ticket.queueId;
 
     if (oldStatus === "closed" || Number(whatsappId) !== ticket.whatsappId) {
-      // let otherTicket = await Ticket.findOne({
-      //   where: {
-      //     contactId: ticket.contactId,
-      //     status: { [Op.or]: ["open", "pending", "group"] },
-      //     whatsappId
-      //   }
-      // });
-      // if (otherTicket) {
-      //     otherTicket = await ShowTicketService(otherTicket.id, companyId)
-
-      //     await ticket.update({status: "closed"})
-
-      //     io.to(oldStatus).emit(`company-${companyId}-ticket`, {
-      //       action: "delete",
-      //       ticketId: ticket.id
-      //     });
-
-      //     return { ticket: otherTicket, oldStatus, oldUserId }
-      // }
       await CheckContactOpenTickets(ticket.contact.id, whatsappId);
       chatbot = null;
       queueOptionId = null;
