@@ -21,7 +21,9 @@ expect {
   }
 }
 
-send "cd /root/chatgruposyst/codatendechat-main\r"
+send "cd /root/chatgruposyst && git pull origin main\r"
+expect "#"
+send "cd codatendechat-main\r"
 expect "#"
 
 send "docker compose exec backend npx sequelize db:migrate\r"

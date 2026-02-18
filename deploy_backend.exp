@@ -25,7 +25,7 @@ expect {
 send "cd /root/chatgruposyst && git pull origin main\r"
 expect -timeout 30 "#"
 
-send "cd codatendechat-main && docker compose build backend\r"
+send "cd codatendechat-main && docker compose build --no-cache backend\r"
 expect -timeout 180 "#"
 
 send "docker compose up -d --force-recreate backend\r"
