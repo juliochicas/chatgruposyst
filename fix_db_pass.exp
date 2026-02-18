@@ -1,0 +1,24 @@
+#!/usr/bin/expect -f
+set timeout 60
+spawn ssh -o StrictHostKeyChecking=no root@62.72.7.2
+expect {
+  "password:" { send ".3+ml3&LKxGw6N1DbZd5\r" }
+}
+expect "#"
+send "cd /root/chatgruposyst/codatendechat-main/backend\r"
+expect "#"
+# Set DB_PASS to empty string (two quotes) so pg driver gets a string, not null
+send "sed -i 's/^DB_PASS=$/DB_PASS=\"\"/' .env\r"
+expect "#"
+send "cat .env | grep DB_\r"
+expect "#"
+send "cd /root/chatgruposyst/codatendechat-main\r"
+expect "#"
+send "docker compose restart backend\r"
+expect "#"
+send "sleep 15\r"
+expect "#"
+send "docker compose logs --tail 40 backend\r"
+expect "#"
+send "exit\r"
+expect eof

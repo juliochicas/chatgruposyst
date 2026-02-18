@@ -38,14 +38,18 @@ const AuthUserService = async ({
     where: { email },
     include: [
       "queues",
-      { model: Company, include: [{ model: Setting }] },
-      { model: Company, as: "companies", attributes: ["id", "name"] }
+      { model: Company, as: "company", include: [{ model: Setting }] }
     ]
   });
 
   if (!user) {
     throw new AppError("ERR_USER_DONT_EXISTS", 401);
   }
+
+  // Load companies separately to avoid duplicate include conflict
+  await user.$get("companies", { attributes: ["id", "name"] }).then(companies => {
+    user.setDataValue("companies", companies);
+  });
 
   if (!(await user.checkPassword(password))) {
     throw new AppError("ERR_INVALID_CREDENTIALS", 401);

@@ -1,0 +1,8 @@
+#!/usr/bin/expect -f
+set timeout -1
+spawn rsync -avz codatendechat-main/backend/src/database/migrations/ root@62.72.7.2:/root/chatgruposyst/codatendechat-main/backend/src/database/migrations/
+expect {
+  "yes/no" { send "yes\r"; exp_continue }
+  "password:" { send ".3+ml3&LKxGw6N1DbZd5\r" }
+}
+expect eof

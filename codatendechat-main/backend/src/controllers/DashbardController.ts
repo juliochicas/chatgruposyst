@@ -22,21 +22,23 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
 };
 
 export const reportsUsers = async (req: Request, res: Response): Promise<Response> => {
-
-  const { initialDate, finalDate, companyId } = req.query as IndexQuery
-
-  const { data } = await TicketsAttendance({ initialDate, finalDate, companyId });
-
-  return res.json({ data });
-
+  try {
+    const { initialDate, finalDate, companyId } = req.query as IndexQuery;
+    const { data } = await TicketsAttendance({ initialDate, finalDate, companyId });
+    return res.json({ data });
+  } catch (error) {
+    console.error("[DashboardController] reportsUsers error:", error);
+    return res.status(500).json({ error: "Error fetching user report data" });
+  }
 }
 
 export const reportsDay = async (req: Request, res: Response): Promise<Response> => {
-
-  const { initialDate, finalDate, companyId } = req.query as IndexQuery
-
-  const { count, data } = await TicketsDayService({ initialDate, finalDate, companyId });
-
-  return res.json({ count, data });
-
+  try {
+    const { initialDate, finalDate, companyId } = req.query as IndexQuery;
+    const { count, data } = await TicketsDayService({ initialDate, finalDate, companyId });
+    return res.json({ count, data });
+  } catch (error) {
+    console.error("[DashboardController] reportsDay error:", error);
+    return res.status(500).json({ error: "Error fetching day report data" });
+  }
 }

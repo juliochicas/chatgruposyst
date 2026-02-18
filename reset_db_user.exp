@@ -1,0 +1,19 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@62.72.7.2
+expect {
+  "password:" { send ".3+ml3&LKxGw6N1DbZd5\r" }
+}
+expect "#"
+# Try connecting as postgres (trust mode)
+send "cd /root/chatgruposyst/codatendechat-main && docker compose exec postgres psql -U postgres -c \"DO \\$\\$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'user') THEN CREATE ROLE \\\"user\\\" WITH LOGIN PASSWORD 'senha' SUPERUSER; ELSE ALTER ROLE \\\"user\\\" WITH PASSWORD 'senha' SUPERUSER; END IF; END \\$\\$;\"\r"
+expect {
+  "FATAL" {
+    # If postgres role missing, try root (default)
+    send "docker compose exec postgres psql -c \"DO \\$\\$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'user') THEN CREATE ROLE \\\"user\\\" WITH LOGIN PASSWORD 'senha' SUPERUSER; ELSE ALTER ROLE \\\"user\\\" WITH PASSWORD 'senha' SUPERUSER; END IF; END \\$\\$;\"\r"
+  }
+  "#" { }
+}
+expect "#"
+send "exit\r"
+expect eof

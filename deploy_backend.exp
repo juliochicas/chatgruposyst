@@ -22,7 +22,7 @@ expect {
   }
 }
 
-send "cd /root/chatgruposyst && git pull origin main\r"
+send "cd /root/chatgruposyst\r"
 expect -timeout 30 "#"
 
 send "cd codatendechat-main && docker compose build --no-cache backend\r"

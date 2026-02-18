@@ -1,0 +1,29 @@
+#!/usr/bin/expect -f
+set timeout 60
+spawn ssh -o StrictHostKeyChecking=no root@62.72.7.2
+expect {
+  "password:" { send ".3+ml3&LKxGw6N1DbZd5\r" }
+}
+expect "#"
+send "cd /root/chatgruposyst/codatendechat-main/backend\r"
+expect "#"
+# Show current Redis config
+send "cat .env | grep -i redis\r"
+expect "#"
+# Fix Redis host from localhost to redis (Docker service name)
+send "sed -i 's|redis://localhost|redis://redis|g' .env\r"
+expect "#"
+send "sed -i 's|REDIS_URI=localhost|REDIS_URI=redis|g' .env\r"
+expect "#"
+send "cat .env | grep -i redis\r"
+expect "#"
+send "cd /root/chatgruposyst/codatendechat-main\r"
+expect "#"
+send "docker compose up -d --force-recreate backend\r"
+expect "#"
+send "sleep 20\r"
+expect "#"
+send "docker compose logs --tail 40 backend\r"
+expect "#"
+send "exit\r"
+expect eof

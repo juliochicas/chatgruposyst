@@ -1,0 +1,13 @@
+#!/usr/bin/expect -f
+
+set timeout 20
+spawn ssh -o StrictHostKeyChecking=no root@62.72.7.2
+expect "password:"
+send ".3+ml3&LKxGw6N1DbZd5\r"
+expect "#"
+send "cd /root/chatgruposyst/codatendechat-main\r"
+expect "#"
+send "ls -la backend/src/database/migrations/20250225100000-create-user-companies.ts\r"
+expect "#"
+send "exit\r"
+expect eof

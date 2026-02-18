@@ -1,0 +1,12 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@62.72.7.2
+expect {
+  "password:" { send ".3+ml3&LKxGw6N1DbZd5\r" }
+}
+expect "#"
+# Create user 'user' using 'atendechat' account (trust mode active)
+send "cd /root/chatgruposyst/codatendechat-main && docker compose exec postgres psql -U atendechat -c \"DO \\$\\$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'user') THEN CREATE ROLE \\\"user\\\" WITH LOGIN PASSWORD 'senha' SUPERUSER; ELSE ALTER ROLE \\\"user\\\" WITH PASSWORD 'senha' SUPERUSER; END IF; END \\$\\$;\"\r"
+expect "#"
+send "exit\r"
+expect eof

@@ -1,0 +1,18 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@62.72.7.2
+expect {
+  "password:" { send ".3+ml3&LKxGw6N1DbZd5\r" }
+}
+expect "#"
+# Fix DB_HOST in .env
+send "cd /root/chatgruposyst/codatendechat-main/backend && sed -i 's/DB_HOST=localhost/DB_HOST=postgres/' .env\r"
+expect "#"
+# Create/Update DB User to match .env
+send "cd /root/chatgruposyst/codatendechat-main && docker compose exec -u postgres postgres psql -c \"DO \\$\\$ BEGIN IF NOT EXISTS (SELECT FROM pg_catalog.pg_roles WHERE rolname = 'user') THEN CREATE ROLE \\\"user\\\" WITH LOGIN PASSWORD 'senha' SUPERUSER; ELSE ALTER ROLE \\\"user\\\" WITH PASSWORD 'senha' SUPERUSER; END IF; END \\$\\$;\"\r"
+expect "#"
+# Restart backend to pick up .env changes
+send "docker compose restart backend\r"
+expect "#"
+send "exit\r"
+expect eof

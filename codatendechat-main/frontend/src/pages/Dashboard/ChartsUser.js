@@ -75,6 +75,7 @@ export const ChatsUser = () => {
     const [initialDate, setInitialDate] = useState(new Date());
     const [finalDate, setFinalDate] = useState(new Date());
     const [ticketsData, setTicketsData] = useState({ data: [] });
+    const [hasError, setHasError] = useState(false);
 
     const companyId = localStorage.getItem("companyId");
 
@@ -98,11 +99,14 @@ export const ChatsUser = () => {
 
     const handleGetTicketsInformation = async () => {
         try {
-
             const { data } = await api.get(`/dashboard/ticketsUsers?initialDate=${format(initialDate, 'yyyy-MM-dd')}&finalDate=${format(finalDate, 'yyyy-MM-dd')}&companyId=${companyId}`);
             setTicketsData(data);
+            setHasError(false);
         } catch (error) {
-            toast.error(i18n.t("dashboard.toasts.userChartError"));
+            if (!hasError) {
+                toast.error(i18n.t("dashboard.toasts.userChartError"));
+                setHasError(true);
+            }
         }
     }
 

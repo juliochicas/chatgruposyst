@@ -1,0 +1,22 @@
+#!/usr/bin/expect -f
+set timeout 30
+spawn ssh -o StrictHostKeyChecking=no root@62.72.7.2
+expect {
+  "password:" { send ".3+ml3&LKxGw6N1DbZd5\r" }
+}
+expect "#"
+send "cd /root/chatgruposyst/codatendechat-main\r"
+expect "#"
+# Stop running postgres to release lock
+send "docker compose stop postgres\r"
+expect "#"
+# Run single user mode query
+send "docker compose run --rm --entrypoint \"postgres --single -D /var/lib/postgresql/data\" postgres template1 <<< \"SELECT rolname FROM pg_roles;\"\r"
+expect "#"
+# Allow some time for output
+sleep 2
+# Restart postgres
+send "docker compose start postgres\r"
+expect "#"
+send "exit\r"
+expect eof

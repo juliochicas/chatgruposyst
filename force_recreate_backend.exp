@@ -1,0 +1,18 @@
+#!/usr/bin/expect -f
+set timeout 90
+spawn ssh -o StrictHostKeyChecking=no root@62.72.7.2
+expect {
+  "password:" { send ".3+ml3&LKxGw6N1DbZd5\r" }
+}
+expect "#"
+send "cd /root/chatgruposyst/codatendechat-main\r"
+expect "#"
+# Force recreate backend to pick up new .env
+send "docker compose up -d --force-recreate backend\r"
+expect "#"
+send "sleep 20\r"
+expect "#"
+send "docker compose logs --tail 50 backend\r"
+expect "#"
+send "exit\r"
+expect eof

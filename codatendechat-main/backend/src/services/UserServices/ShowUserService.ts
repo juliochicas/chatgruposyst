@@ -14,11 +14,13 @@ const ShowUserService = async (id: string | number): Promise<User> => {
       "super",
       "tokenVersion",
       "whatsappId",
-	    "allTicket"
+      "allTicket",
+      "nickname"
     ],
     include: [
       { model: Queue, as: "queues", attributes: ["id", "name", "color"] },
-      { model: Company, as: "company", attributes: ["id", "name"] }
+      { model: Company, as: "company", attributes: ["id", "name"] },
+      { model: Company, as: "companies", attributes: ["id", "name"] }
     ]
   });
 
