@@ -311,21 +311,6 @@ const typebotListener = async ({
 
                     }
 
-                    // if (message.type === 'embed') {
-                    //     await wbot.presenceSubscribe(msg.key.remoteJid)
-                    //     //await delay(2000)
-                    //     await wbot.sendPresenceUpdate('composing', msg.key.remoteJid)
-                    //     await delay(typebotDelayMessage)
-                    //     await wbot.sendPresenceUpdate('paused', msg.key.remoteJid)
-                    //     const media = {
-
-                    //         document: { url: message.content.url },
-                    //         mimetype: 'application/pdf',
-                    //         caption: ""
-
-                    //     }
-                    //     await wbot.sendMessage(msg.key.remoteJid, media);
-                    // }
 
                     if (message.type === 'image') {
                         await wbot.presenceSubscribe(msg.key.remoteJid)
