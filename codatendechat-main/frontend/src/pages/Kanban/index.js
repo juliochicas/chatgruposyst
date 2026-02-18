@@ -68,7 +68,7 @@ const Kanban = () => {
   const [tickets, setTickets] = useState([]);
   const { user } = useContext(AuthContext);
   const { profile, queues } = user;
-  const jsonString = user.queues.map((queue) => queue.UserQueue.queueId);
+  const jsonString = (user.queues || []).map((queue) => queue?.UserQueue?.queueId).filter(Boolean);
 
   const fetchTickets = async (jsonString) => {
     try {

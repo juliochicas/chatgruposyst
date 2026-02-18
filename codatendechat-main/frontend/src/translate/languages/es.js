@@ -1388,6 +1388,14 @@ const messages = {
           title: "No hay contenido de ayuda",
           description: "Aún no se han agregado videos o recursos de ayuda. Un administrador puede agregar contenido desde la configuración.",
         },
+        buttons: {
+          add: "Agregar",
+          cancel: "Cancelar",
+        },
+        dialog: {
+          add: "Agregar Ayuda",
+          edit: "Editar Ayuda",
+        },
       },
       schedules: {
         title: "Programaciones",
