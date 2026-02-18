@@ -1,39 +1,17 @@
-import sequelize from "sequelize";
-import database from "../../database";
 import { hash } from "bcryptjs";
-const ResetPassword = async (
-  email: string,
-  token: string,
-  password: string
-) => {
-  const { hasResult, data } = await filterUser(email, token);
-  if (!hasResult) {
-    return { status: 404, message: "Email não encontrado" };
-  }
-  if (hasResult === true) {
-    try {
-      const convertPassword: string = await hash(password, 8);
-      const { hasResults, datas } = await insertHasPassword(
-        email,
-        token,
-        convertPassword
-      );
-      if (datas.length === 0) {
-        return { status: 404, message: "Token não encontrado" };
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  }
-};
-export default ResetPassword;
-const filterUser = async (email: string, token: string) => {
+import sequelize from "sequelize";
+import AppError from "../../errors/AppError";
+import { logger } from "../../utils/logger";
+import database from "../../database";
+
+const filterUser = async (email: string, _token: string) => {
   const sql = `SELECT * FROM "Users"  WHERE email = '${email}' AND "resetPassword" != ''`;
   const result = await database.query(sql, {
     type: sequelize.QueryTypes.SELECT
   });
   return { hasResult: result.length > 0, data: result };
 };
+
 const insertHasPassword = async (
   email: string,
   token: string,
@@ -49,3 +27,29 @@ const insertHasPassword = async (
   });
   return { hasResults: results.length > 0, datas: resultado };
 };
+
+const ResetPassword = async (
+  email: string,
+  token: string,
+  password: string
+) => {
+  const { hasResult } = await filterUser(email, token);
+  if (!hasResult) {
+    return { status: 404, message: "Email não encontrado" };
+  }
+  if (hasResult === true) {
+    try {
+      const convertPassword: string = await hash(password, 8);
+      const { datas } = await insertHasPassword(email, token, convertPassword);
+      if (datas.length === 0) {
+        return { status: 404, message: "Token não encontrado" };
+      }
+    } catch (err) {
+      logger.error(err);
+      throw new AppError("ERR_RESET_PASSWORD", 404);
+    }
+  }
+  return null;
+};
+
+export default ResetPassword;
