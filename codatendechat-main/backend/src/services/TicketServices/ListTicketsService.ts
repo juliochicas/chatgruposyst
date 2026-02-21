@@ -9,7 +9,6 @@ import User from "../../models/User";
 import ShowUserService from "../UserServices/ShowUserService";
 import Tag from "../../models/Tag";
 import TicketTag from "../../models/TicketTag";
-import { intersection } from "lodash";
 import Whatsapp from "../../models/Whatsapp";
 
 interface Request {
@@ -78,7 +77,7 @@ const ListTicketsService = async ({
       model: Whatsapp,
       as: "whatsapp",
       attributes: ["name"]
-    },
+    }
   ];
 
   if (showAll === "true") {
@@ -166,45 +165,46 @@ const ListTicketsService = async ({
   }
 
   if (Array.isArray(tags) && tags.length > 0) {
-    const ticketsTagFilter: any[] | null = [];
-    for (let tag of tags) {
-      const ticketTags = await TicketTag.findAll({
-        where: { tagId: tag }
-      });
-      if (ticketTags) {
-        ticketsTagFilter.push(ticketTags.map(t => t.ticketId));
-      }
-    }
+    const uniqueTags = [...new Set(tags)];
+    const ticketsTagFilter = await TicketTag.findAll({
+      attributes: ["ticketId"],
+      where: {
+        tagId: {
+          [Op.in]: uniqueTags
+        }
+      },
+      group: ["ticketId"],
+      having: where(fn("count", col("ticketId")), "=", uniqueTags.length as any)
+    });
 
-    const ticketsIntersection: number[] = intersection(...ticketsTagFilter);
+    const ticketIds = ticketsTagFilter.map(t => t.ticketId);
 
     whereCondition = {
       ...whereCondition,
       id: {
-        [Op.in]: ticketsIntersection
+        [Op.in]: ticketIds
       }
     };
   }
 
   if (Array.isArray(users) && users.length > 0) {
-    const ticketsUserFilter: any[] | null = [];
-    for (let user of users) {
-      const ticketUsers = await Ticket.findAll({
-        where: { userId: user }
-      });
-      if (ticketUsers) {
-        ticketsUserFilter.push(ticketUsers.map(t => t.id));
-      }
+    const uniqueUsers = [...new Set(users)];
+
+    // If there is only one user, we can filter by userId directly
+    if (uniqueUsers.length === 1) {
+      whereCondition = {
+        ...whereCondition,
+        userId: uniqueUsers[0]
+      };
+    } else {
+      // Since a ticket belongs to only one user, the intersection of tickets
+      // from multiple different users is always empty.
+      // Optimization: Force empty result without querying
+      whereCondition = {
+        ...whereCondition,
+        id: -1
+      };
     }
-
-    const ticketsIntersection: number[] = intersection(...ticketsUserFilter);
-
-    whereCondition = {
-      ...whereCondition,
-      id: {
-        [Op.in]: ticketsIntersection
-      }
-    };
   }
 
   const limit = 40;
