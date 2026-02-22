@@ -1,4 +1,12 @@
-import { Op, fn, where, col, Filterable, Includeable } from "sequelize";
+import {
+  Op,
+  fn,
+  where,
+  col,
+  Filterable,
+  Includeable,
+  literal
+} from "sequelize";
 import { startOfDay, endOfDay, parseISO } from "date-fns";
 
 import Ticket from "../../models/Ticket";
@@ -9,7 +17,6 @@ import User from "../../models/User";
 import ShowUserService from "../UserServices/ShowUserService";
 import Tag from "../../models/Tag";
 import TicketTag from "../../models/TicketTag";
-import { intersection } from "lodash";
 import Whatsapp from "../../models/Whatsapp";
 
 interface Request {
@@ -78,7 +85,7 @@ const ListTicketsService = async ({
       model: Whatsapp,
       as: "whatsapp",
       attributes: ["name"]
-    },
+    }
   ];
 
   if (showAll === "true") {
@@ -166,17 +173,21 @@ const ListTicketsService = async ({
   }
 
   if (Array.isArray(tags) && tags.length > 0) {
-    const ticketsTagFilter: any[] | null = [];
-    for (let tag of tags) {
-      const ticketTags = await TicketTag.findAll({
-        where: { tagId: tag }
-      });
-      if (ticketTags) {
-        ticketsTagFilter.push(ticketTags.map(t => t.ticketId));
-      }
-    }
+    const distinctTags = [...new Set(tags)];
+    // Optimized: Find tickets that have ALL specified tags (AND logic).
+    // We group by ticketId and ensure the count of distinct tags matches the number of requested tags.
+    const ticketTags = await TicketTag.findAll({
+      attributes: ["ticketId"],
+      where: {
+        tagId: {
+          [Op.in]: distinctTags
+        }
+      },
+      group: ["ticketId"],
+      having: literal(`count(distinct "tagId") = ${distinctTags.length}`)
+    });
 
-    const ticketsIntersection: number[] = intersection(...ticketsTagFilter);
+    const ticketsIntersection = ticketTags.map(t => t.ticketId);
 
     whereCondition = {
       ...whereCondition,
@@ -187,24 +198,19 @@ const ListTicketsService = async ({
   }
 
   if (Array.isArray(users) && users.length > 0) {
-    const ticketsUserFilter: any[] | null = [];
-    for (let user of users) {
-      const ticketUsers = await Ticket.findAll({
-        where: { userId: user }
-      });
-      if (ticketUsers) {
-        ticketsUserFilter.push(ticketUsers.map(t => t.id));
-      }
+    const distinctUsers = [...new Set(users)];
+
+    if (distinctUsers.length > 1) {
+      whereCondition = {
+        ...whereCondition,
+        id: -1
+      };
+    } else if (distinctUsers.length === 1) {
+      whereCondition = {
+        ...whereCondition,
+        userId: distinctUsers[0]
+      };
     }
-
-    const ticketsIntersection: number[] = intersection(...ticketsUserFilter);
-
-    whereCondition = {
-      ...whereCondition,
-      id: {
-        [Op.in]: ticketsIntersection
-      }
-    };
   }
 
   const limit = 40;
