@@ -9,7 +9,6 @@ import User from "../../models/User";
 import ShowUserService from "../UserServices/ShowUserService";
 import Tag from "../../models/Tag";
 import TicketTag from "../../models/TicketTag";
-import { intersection } from "lodash";
 import Whatsapp from "../../models/Whatsapp";
 
 interface Request {
@@ -78,7 +77,7 @@ const ListTicketsService = async ({
       model: Whatsapp,
       as: "whatsapp",
       attributes: ["name"]
-    },
+    }
   ];
 
   if (showAll === "true") {
@@ -166,17 +165,26 @@ const ListTicketsService = async ({
   }
 
   if (Array.isArray(tags) && tags.length > 0) {
-    const ticketsTagFilter: any[] | null = [];
-    for (let tag of tags) {
-      const ticketTags = await TicketTag.findAll({
-        where: { tagId: tag }
-      });
-      if (ticketTags) {
-        ticketsTagFilter.push(ticketTags.map(t => t.ticketId));
-      }
-    }
+    const ticketTags = await TicketTag.findAll({
+      attributes: ["ticketId"],
+      where: {
+        tagId: {
+          [Op.in]: tags
+        }
+      },
+      group: ["ticketId"],
+      having: where(fn("COUNT", col("tagId")), { [Op.eq]: tags.length } as any)
+    });
 
-    const ticketsIntersection: number[] = intersection(...ticketsTagFilter);
+    const ticketsIntersection = ticketTags.map(t => t.ticketId);
+
+    if (ticketsIntersection.length === 0) {
+      return {
+        tickets: [],
+        count: 0,
+        hasMore: false
+      };
+    }
 
     whereCondition = {
       ...whereCondition,
@@ -187,24 +195,18 @@ const ListTicketsService = async ({
   }
 
   if (Array.isArray(users) && users.length > 0) {
-    const ticketsUserFilter: any[] | null = [];
-    for (let user of users) {
-      const ticketUsers = await Ticket.findAll({
-        where: { userId: user }
-      });
-      if (ticketUsers) {
-        ticketsUserFilter.push(ticketUsers.map(t => t.id));
-      }
+    if (users.length === 1) {
+      whereCondition = {
+        ...whereCondition,
+        userId: users[0]
+      };
+    } else {
+      return {
+        tickets: [],
+        count: 0,
+        hasMore: false
+      };
     }
-
-    const ticketsIntersection: number[] = intersection(...ticketsUserFilter);
-
-    whereCondition = {
-      ...whereCondition,
-      id: {
-        [Op.in]: ticketsIntersection
-      }
-    };
   }
 
   const limit = 40;
