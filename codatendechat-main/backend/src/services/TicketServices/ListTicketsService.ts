@@ -1,4 +1,12 @@
-import { Op, fn, where, col, Filterable, Includeable } from "sequelize";
+import {
+  Op,
+  fn,
+  where,
+  col,
+  Filterable,
+  Includeable,
+  literal
+} from "sequelize";
 import { startOfDay, endOfDay, parseISO } from "date-fns";
 
 import Ticket from "../../models/Ticket";
@@ -8,8 +16,6 @@ import Queue from "../../models/Queue";
 import User from "../../models/User";
 import ShowUserService from "../UserServices/ShowUserService";
 import Tag from "../../models/Tag";
-import TicketTag from "../../models/TicketTag";
-import { intersection } from "lodash";
 import Whatsapp from "../../models/Whatsapp";
 
 interface Request {
@@ -78,7 +84,7 @@ const ListTicketsService = async ({
       model: Whatsapp,
       as: "whatsapp",
       attributes: ["name"]
-    },
+    }
   ];
 
   if (showAll === "true") {
@@ -166,45 +172,42 @@ const ListTicketsService = async ({
   }
 
   if (Array.isArray(tags) && tags.length > 0) {
-    const ticketsTagFilter: any[] | null = [];
-    for (let tag of tags) {
-      const ticketTags = await TicketTag.findAll({
-        where: { tagId: tag }
-      });
-      if (ticketTags) {
-        ticketsTagFilter.push(ticketTags.map(t => t.ticketId));
-      }
+    const tagsIds = tags.map(t => +t).filter(t => !Number.isNaN(t));
+    const uniqueTags = [...new Set(tagsIds)];
+
+    if (uniqueTags.length > 0) {
+      const ticketsIntersection = literal(`(
+        SELECT "ticketId"
+        FROM "TicketTags"
+        WHERE "tagId" IN (${uniqueTags.join(",")})
+        GROUP BY "ticketId"
+        HAVING COUNT("ticketId") >= ${uniqueTags.length}
+      )`);
+
+      whereCondition = {
+        ...whereCondition,
+        id: {
+          [Op.in]: ticketsIntersection
+        }
+      };
     }
-
-    const ticketsIntersection: number[] = intersection(...ticketsTagFilter);
-
-    whereCondition = {
-      ...whereCondition,
-      id: {
-        [Op.in]: ticketsIntersection
-      }
-    };
   }
 
   if (Array.isArray(users) && users.length > 0) {
-    const ticketsUserFilter: any[] | null = [];
-    for (let user of users) {
-      const ticketUsers = await Ticket.findAll({
-        where: { userId: user }
-      });
-      if (ticketUsers) {
-        ticketsUserFilter.push(ticketUsers.map(t => t.id));
-      }
+    const usersIds = users.map(u => +u).filter(u => !Number.isNaN(u));
+    const uniqueUsersIds = [...new Set(usersIds)];
+
+    if (uniqueUsersIds.length === 1) {
+      whereCondition = {
+        ...whereCondition,
+        userId: uniqueUsersIds[0]
+      };
+    } else if (uniqueUsersIds.length > 1) {
+      whereCondition = {
+        ...whereCondition,
+        id: -1
+      };
     }
-
-    const ticketsIntersection: number[] = intersection(...ticketsUserFilter);
-
-    whereCondition = {
-      ...whereCondition,
-      id: {
-        [Op.in]: ticketsIntersection
-      }
-    };
   }
 
   const limit = 40;
