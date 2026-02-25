@@ -1,0 +1,3 @@
+## 2024-05-22 - [Optimizing Tags Filter in ListTicketsService]
+**Learning:** Efficiently filtering by multiple attributes (like tags) using `GROUP BY` and `HAVING COUNT` is significantly more performant than iterative queries and in-memory intersection. The original implementation made N database calls (where N is the number of tags), leading to an N+1 query problem. The optimization reduced this to a single query.
+**Action:** When implementing filters requiring multiple conditions on a related model (AND logic), prefer SQL aggregation over application-level loop-and-filter logic to avoid N+1 queries.
