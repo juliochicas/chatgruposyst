@@ -1,6 +1,15 @@
-import { Op, fn, where, col, Filterable, Includeable } from "sequelize";
+import {
+  Op,
+  fn,
+  where,
+  col,
+  Filterable,
+  Includeable,
+  literal
+} from "sequelize";
 import { startOfDay, endOfDay, parseISO } from "date-fns";
 
+import { intersection } from "lodash";
 import Ticket from "../../models/Ticket";
 import Contact from "../../models/Contact";
 import Message from "../../models/Message";
@@ -9,7 +18,6 @@ import User from "../../models/User";
 import ShowUserService from "../UserServices/ShowUserService";
 import Tag from "../../models/Tag";
 import TicketTag from "../../models/TicketTag";
-import { intersection } from "lodash";
 import Whatsapp from "../../models/Whatsapp";
 
 interface Request {
@@ -78,7 +86,7 @@ const ListTicketsService = async ({
       model: Whatsapp,
       as: "whatsapp",
       attributes: ["name"]
-    },
+    }
   ];
 
   if (showAll === "true") {
@@ -166,29 +174,32 @@ const ListTicketsService = async ({
   }
 
   if (Array.isArray(tags) && tags.length > 0) {
-    const ticketsTagFilter: any[] | null = [];
-    for (let tag of tags) {
-      const ticketTags = await TicketTag.findAll({
-        where: { tagId: tag }
-      });
-      if (ticketTags) {
-        ticketsTagFilter.push(ticketTags.map(t => t.ticketId));
-      }
-    }
+    // Optimization: Use a single query with GROUP BY and HAVING to find tickets with all tags.
+    // This replaces the previous N+1 query loop.
+    const ticketsTagFilter = await TicketTag.findAll({
+      attributes: ["ticketId"],
+      where: {
+        tagId: {
+          [Op.in]: tags
+        }
+      },
+      group: ["ticketId"],
+      having: literal(`count(distinct "tagId") = ${tags.length}`)
+    });
 
-    const ticketsIntersection: number[] = intersection(...ticketsTagFilter);
+    const ticketIds = ticketsTagFilter.map(t => t.ticketId);
 
     whereCondition = {
       ...whereCondition,
       id: {
-        [Op.in]: ticketsIntersection
+        [Op.in]: ticketIds
       }
     };
   }
 
   if (Array.isArray(users) && users.length > 0) {
     const ticketsUserFilter: any[] | null = [];
-    for (let user of users) {
+    for (const user of users) {
       const ticketUsers = await Ticket.findAll({
         where: { userId: user }
       });
