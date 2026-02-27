@@ -1,0 +1,21 @@
+/* eslint-disable import/no-import-module-exports */
+import { QueryInterface } from "sequelize";
+
+module.exports = {
+  up: (queryInterface: QueryInterface) => {
+    return queryInterface.addIndex(
+      "Messages",
+      ["companyId", "ticketId", "createdAt"],
+      {
+        name: "idx_ms_company_ticket_created"
+      }
+    );
+  },
+
+  down: (queryInterface: QueryInterface) => {
+    return queryInterface.removeIndex(
+      "Messages",
+      "idx_ms_company_ticket_created"
+    );
+  }
+};
