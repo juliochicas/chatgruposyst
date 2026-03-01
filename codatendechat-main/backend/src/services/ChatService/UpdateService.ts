@@ -19,12 +19,13 @@ export default async function UpdateService(data: ChatData) {
 
   if (Array.isArray(users)) {
     await ChatUser.destroy({ where: { chatId: record.id } });
-    await ChatUser.create({ chatId: record.id, userId: ownerId });
-    for (let user of users) {
+    const chatUsers = [{ chatId: record.id, userId: ownerId }];
+    users.forEach(user => {
       if (user.id !== ownerId) {
-        await ChatUser.create({ chatId: record.id, userId: user.id });
+        chatUsers.push({ chatId: record.id, userId: user.id });
       }
-    }
+    });
+    await ChatUser.bulkCreate(chatUsers);
   }
 
   await record.reload({
